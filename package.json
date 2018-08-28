@@ -1,0 +1,66 @@
+{
+  "name": "toptrade",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest",
+    "postinstall": "rndebugger-open react-native link",
+    "format": "standard --fix 'src/common/**/*.js' 'src/common/*.js' 'src/modules/**/*.js' 'src/modules/*.js' 'src/screens/*.js'"
+  },
+  "dependencies": {
+    "assert": "^1.4.1",
+    "async": "^2.6.0",
+    "axios": "^0.17.1",
+    "buffer": "^5.0.8",
+    "crypto-js": "^3.1.9-1",
+    "i18n-js": "https://github.com/fnando/i18n-js/tarball/v3.0.0",
+    "lodash": "^4.17.4",
+    "moment": "^2.19.2",
+    "prop-types": "^15.6.0",
+    "react": "16.0.0",
+    "react-native": "0.51.0",
+    "react-native-camera": "^0.13.0",
+    "react-native-datepicker": "^1.7.1",
+    "react-native-device-info": "^0.21.5",
+    "react-native-elements": "^0.19.1",
+    "react-native-exception-handler": "^2.6.2",
+    "react-native-firebase": "4.2.0",
+    "react-native-gesture-handler": "^1.0.0-alpha.42",
+    "react-native-image-picker": "^0.26.7",
+    "react-native-image-resizer": "^1.0.0",
+    "react-native-iphone-x-helper": "^1.0.3",
+    "react-native-material-dropdown": "^0.11.1",
+    "react-native-modal": "^5.4.0",
+    "react-native-multiple-select": "^0.4.4",
+    "react-native-permissions": "^1.1.1",
+    "react-native-qrcode": "^0.2.6",
+    "react-native-snap-carousel": "^3.7.0",
+    "react-native-star-rating": "^1.0.9",
+    "react-native-tab-view": "^0.0.77",
+    "react-native-vector-icons": "^4.6.0",
+    "react-navigation": "^1.0.0-beta.22",
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.2",
+    "redux-actions": "^2.2.1",
+    "redux-persist": "^5.4.0",
+    "redux-saga": "^0.16.0",
+    "stacktrace-parser": "^0.1.4",
+    "tarball": "0.0.5"
+  },
+  "devDependencies": {
+    "babel-jest": "21.2.0",
+    "babel-preset-react-native": "4.0.0",
+    "jest": "21.2.1",
+    "react-native-debugger-open": "^0.3.15",
+    "react-test-renderer": "16.0.0",
+    "standard": "^10.0.3"
+  },
+  "jest": {
+    "preset": "react-native"
+  },
+  "rnpm": {
+    "assets": [
+      "./src/assets/fonts"
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AD_UNIT_ID_FOR_BANNER_TEST</key>
+	<string>ca-app-pub-3940256099942544/2934735716</string>
+	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
+	<string>ca-app-pub-3940256099942544/4411468910</string>
+	<key>CLIENT_ID</key>
+	<string>475013266439-8h09nbaspq7h7d0nhsmb1vi976rdb7hb.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.475013266439-8h09nbaspq7h7d0nhsmb1vi976rdb7hb</string>
+	<key>API_KEY</key>
+	<string>AIzaSyD2NoRxc_BkvBqto8GFs6_7_1v-F2aTQIY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>475013266439</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.gts.toptrade</string>
+	<key>PROJECT_ID</key>
+	<string>toptrade-5cbbe</string>
+	<key>STORAGE_BUCKET</key>
+	<string>toptrade-5cbbe.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<true></true>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<false></false>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:475013266439:ios:fe03a556bdc0000e</string>
+	<key>DATABASE_URL</key>
+	<string>https://toptrade-5cbbe.firebaseio.com</string>
+</dict>
+</plist>

@@ -1,0 +1,5 @@
+ - Init project 
+ - Implement Redux, Redux-Saga to React-navigation
+ - Drawer Menu
+ - Tabview
+ - Simple module "Market"

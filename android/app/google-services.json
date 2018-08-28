@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "475013266439",
+    "firebase_url": "https://toptrade-5cbbe.firebaseio.com",
+    "project_id": "toptrade-5cbbe",
+    "storage_bucket": "toptrade-5cbbe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:475013266439:android:fe03a556bdc0000e",
+        "android_client_info": {
+          "package_name": "com.gts.toptrade"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "475013266439-c3gnmc6d123mdcvta9p6l69i3vhbn1r0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiC0nwFRg5Dwqa_bXquQkH_n-OUsY8N3U"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

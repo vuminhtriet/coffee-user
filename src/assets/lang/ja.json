@@ -1,0 +1,15 @@
+{
+    "app_name": "Cryptal Center",
+    "market": "Market",
+    "wallet": "Wallet",
+    "news": "News",
+    "common": {
+        "select_language": "Select Language",
+        "next": "Next",
+        "accept": "Accept",
+        "ok": "OK",
+        "network_error": "Network error! Please check your connection and try again",
+        "cancel": "Cancel",
+        "done": "Done"
+    }
+}
