@@ -16,8 +16,8 @@ const ITEM_HEIGHT = 300
 
 export default class ShopProduct extends Component {
   componentDidMount () {
-    const { shopInfo, getShopProducts } = this.props
-    shopInfo && shopInfo.id && getShopProducts(shopInfo.id)
+    // const { shopProduct, getShopProducts } = this.props
+    // shopInfo && shopInfo.id && getShopProducts(shopInfo.id)
   }
 
   keyExtractor = (item, index) => {
@@ -25,7 +25,7 @@ export default class ShopProduct extends Component {
   }
 
   render () {
-    const { products, currencyUnits } = this.props
+    const { shopProduct, currencyUnits } = this.props
 
     return (
       <View style={{
@@ -72,7 +72,7 @@ export default class ShopProduct extends Component {
         /> */}
         <FlatList
           key='data'
-          data={products}
+          data={shopProduct}
           horizontal
           // refreshing={refreshing}
           // extraData={{ coins, offset }}
@@ -80,7 +80,6 @@ export default class ShopProduct extends Component {
           renderItem={(item, index) => <ProductItem
             currencyUnits={currencyUnits}
             item={item.item}
-            index={index}
             itemWith={ITEM_WITDH}
             itemHeight={ITEM_HEIGHT}
           />}

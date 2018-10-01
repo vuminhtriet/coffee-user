@@ -5,7 +5,7 @@ import {
 } from 'react-native'
 import DefaultPage from '../common/hocs/defaultPage'
 import HeaderTitle from '../common/components/elements/HeaderTitle'
-import ProcessingCart from '../modules/shop/containers/ProcessingCart'
+// import ProcessingCart from '../modules/shop/containers/ProcessingCart'
 import SortList from '../modules/shop/components/SortList'
 
 export default class ProcessingCartPage extends Component {
@@ -39,7 +39,7 @@ export default class ProcessingCartPage extends Component {
           />
         </View>
         <View style={{ width: '100%', flex: 1 }}>
-          <ProcessingCart navigation={navigation} isUser={false} />
+          {/* <ProcessingCart navigation={navigation} isUser={false} /> */}
         </View>
         <Modal
           animationType='slide'

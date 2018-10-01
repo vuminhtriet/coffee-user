@@ -3,15 +3,17 @@ import { connect } from 'react-redux'
 import PagePopularProducts from '../components/PagePopularProducts'
 import { MODULE_NAME } from '../models'
 import { BASE_URL } from '../../../common/models'
+import { TEST_URL } from '../../../common/models'
 import { PAGE_SIZE } from '../../../common/configs'
 import { getPopularProducts, loadMorePopularProducts } from '../actions'
 
 const mapDispatchToProps = (dispatch, props) => ({
-  getPopularProducts: async (page = 0, sort = 'totalView DESC', options = {}) => {
+  getPopularProducts: async (page = 0, sort = 'productTotalRating DESC', options = {}) => {
     try {
       // const filter = {
       //   'include': [
       //     'images',
+      //     'shop',
       //     {
       //       'relation': 'productPrices',
       //       'scope': {
@@ -29,12 +31,14 @@ const mapDispatchToProps = (dispatch, props) => ({
       //   'where': {
       //     'status': 1
       //   },
-      //   'limit': PAGE_SIZE,
-      //   'offset': page * PAGE_SIZE,
-      //   'order': sort
+      //   'limit': PAGE_SIZE
       // }
       // const url = `${BASE_URL}/api/products?filter=${JSON.stringify(filter)}`
-      const url = `${BASE_URL}/api/products/popular?page=${page}&pageSize=${PAGE_SIZE}&sort=${sort}&options=${JSON.stringify(options)}`
+      // const filter = {
+      //   'include': ['shop']
+      // }
+      // const url = `${BASE_URL}/api/products/search?searchStr=&page=${page}&pageSize=${PAGE_SIZE}&sort=${sort}&options=${JSON.stringify(options)}`
+      const url = `${TEST_URL}/api/products?filter%5Bwhere%5D%5BproductIsPopular%5D=true&filter[order]=${sort}`
       const response = await axios({ url })
       if (response && response.data) {
         // if (response.data.length === 0) {

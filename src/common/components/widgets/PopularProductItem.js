@@ -6,42 +6,53 @@ import {
   TouchableOpacity
 } from 'react-native'
 import { withNavigation } from 'react-navigation'
+import axios from 'axios'
+import { TEST_URL } from '../../../common/models'
 import { SCREENS } from '../../screens'
 import { getTop2ActivePrice, getFirstImgUrl } from '../../utils/productUtils'
 
-function showPrices (price, index, currencyUnits) {
-  const cashUnit = price.cashUnitId ? currencyUnits.find(item => item.id === price.cashUnitId) : null
-  const electricUnit = price.electricUnitId ? currencyUnits.find(item => item.id === price.electricUnitId) : null
-  return (
-    <View
-      key={index}
-      style={{ display: 'flex', flexDirection: 'row' }}
-    >
-      {
-        cashUnit && electricUnit
-          ? <Text style={{ fontSize: 14, color: '#6F4E37', fontWeight: 'bold' }} numberOfLines={1}>
-            {price.cashValue}<Text style={{ fontSize: 10 }}>{cashUnit ? cashUnit.code : ''}</Text> + {price.electricValue}<Text style={{ fontSize: 10 }}>{electricUnit ? electricUnit.code : ''}</Text>
-          </Text>
-          : cashUnit && !price.electricValue
-            ? <Text style={{ fontSize: 14, color: '#6F4E37', fontWeight: 'bold' }} numberOfLines={1}>{price.cashValue}<Text style={{ fontSize: 10 }}>{cashUnit ? cashUnit.code : ''}</Text></Text>
-            : electricUnit && !price.cashValue
-              ? <Text style={{ fontSize: 14, color: '#6F4E37', fontWeight: 'bold' }} numberOfLines={1}>{price.electricValue}<Text style={{ fontSize: 10 }}>{electricUnit ? electricUnit.code : ''}</Text></Text>
-              : null
-      }
-    </View>
-  )
-}
-
 class PopularProductItem extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      shopName: null,
+    }
+  }
+
   onPress = () => {
     const { navigation, item } = this.props
     navigation.navigate(SCREENS.ProductDetail, { productItem: item })
   }
 
+  componentDidMount() {
+    const { navigation, item } = this.props
+    const url = `${TEST_URL}/api/shops/${item.shopId}?filter=%7B"fields":"shopName"%7D`
+
+    this.setState({ loading: true }, () => {
+      axios({
+        url,
+        timeout: 5000
+      })
+        .then(response => {
+          const shop = response.data
+          this.setState({
+            shopName: shop.shopName,
+            loading: false
+          })
+        })
+        .catch(e => {
+          this.setState({ shopName: null })
+        })
+    })
+    
+  }
+
   render () {
     const { item, itemWith, itemHeight, currencyUnits } = this.props
-    const { images } = item
-    const fullUrl = getFirstImgUrl(images)
+    const { productCoverImage } = item
+    const { shopName } = this.state
+    // const fullUrl = getFirstImgUrl(images)
 
     return (
       <TouchableOpacity
@@ -62,18 +73,29 @@ class PopularProductItem extends Component {
             flex: 1
           }}
         >
-          {fullUrl
+          {productCoverImage
             ? <Image
               style={{ height: 124, width: '100%' }}
-              source={{ uri: fullUrl }}
+              source={{ uri: productCoverImage[0] }}
             /> : <Image
               style={{ height: 124, width: '100%' }}
-              source={require('../../../assets/placeholder.png')}
+              source={require('../../../assets/drinkplaceholder.png')}
             />
           }
-          <Text numberOfLines={2} style={{ marginTop: 5, marginBottom: 0, textAlign: 'center', paddingLeft: 5, paddingRight: 5 }}>
-            {`${item.name}`}
+          <Text numberOfLines={2} style={{ marginTop: 5, marginBottom: 0, textAlign: 'center', 
+          paddingLeft: 5, paddingRight: 5, fontSize: 17, fontWeight: 'bold' }}>
+            {`${item.productName}`}
           </Text>
+          {shopName
+            ? <Text numberOfLines={2} style={{ marginTop: 5, marginBottom: 0, textAlign: 'center', 
+            paddingLeft: 5, paddingRight: 5 }}>
+              {`${shopName}`}
+            </Text>
+            : <Text numberOfLines={2} style={{ marginTop: 5, marginBottom: 0, textAlign: 'center', 
+            paddingLeft: 5, paddingRight: 5 }}>
+              {`unknown`}
+            </Text>
+          }
           <View style={{
             marginBottom: 0,
             marginTop: 3,
@@ -83,7 +105,12 @@ class PopularProductItem extends Component {
             alignItems: 'center',
             width: '100%'
           }}>
-            {item.productPrices && getTop2ActivePrice(item.productPrices).map((price, index) => showPrices(price, index, currencyUnits))}
+            <View
+              style={{ display: 'flex', flexDirection: 'row', marginLeft: 7 }}
+            >
+              <Text style={{ fontSize: 16, color: '#6F4E37', fontWeight: 'bold' }} numberOfLines={1}>
+              {item.productPrice}<Text style={{ fontSize: 16 }}>đ</Text></Text>
+            </View>
           </View>
         </View>
       </TouchableOpacity>

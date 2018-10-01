@@ -10,8 +10,9 @@ import { SCREENS } from '../../../common/screens'
 export default class ShopInfo extends Component {
   render () {
     const { shopInfo, navigation } = this.props
-    const { images } = shopInfo
-    const logo = images && images.length > 0 ? images.find(item => item.type === 1) : undefined
+    const { shopLogo } = shopInfo
+    // const logo = images && images.length > 0 ? images.find(item => item.type === 1) : undefined
+    const logo = shopInfo.shopLogo
     return (
       <View style={{
         marginTop: 7,
@@ -54,26 +55,31 @@ export default class ShopInfo extends Component {
           <View style={{ width: 60 }}>
             <Image
               style={{ width: 50, height: 50 }}
-              source={{
-                uri: !logo || !logo.fullUrl
-                  ? 'https://facebook.github.io/react-native/docs/assets/favicon.png'
-                  : logo.fullUrl
-              }}
+              // source={{
+              //   uri: !logo || !logo.fullUrl
+              //     ? 'https://image.flaticon.com/icons/png/128/1114/1114350.png'
+              //     : logo.fullUrl
+              // }}
+              source={
+                !logo
+                  ? require('../../../assets/logo/shoplogo.png')
+                  : { uri: logo }
+              }
             />
           </View>
           <View style={{ flex: 1 }}>
-            <Text>{shopInfo.name}</Text>
+            <Text>{shopInfo.shopName}</Text>
             <Text>Online</Text>
           </View>
         </View>
         <View style={{ height: 1, backgroundColor: '#D4D4D4', marginBottom: 10, marginTop: 10 }} />
         <View style={{ display: 'flex', flexDirection: 'row' }}>
           <View style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: 'red', fontSize: 22 }}>{shopInfo.numberOfProducts || 0}</Text>
+            <Text style={{ color: 'red', fontSize: 22 }}>{shopInfo.products.length || 0}</Text>
             <Text>Products</Text>
           </View>
           <View style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: 'red', fontSize: 22 }}>{shopInfo.totalRating || 0}</Text>
+            <Text style={{ color: 'red', fontSize: 22 }}>{shopInfo.shopRating || 0}</Text>
             <Text>Ratings</Text>
           </View>
         </View>

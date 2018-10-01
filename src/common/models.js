@@ -16,7 +16,9 @@ export const RELEASE_MODE = 'RELEASE_MODE'
 export const SETTING_STORE = 'state'
 export const DATA_STORE = 'data'
 
-export const BASE_URL = 'http://ec2-18-216-5-126.us-east-2.compute.amazonaws.com:5001'
+export const BASE_URL = 'http://188.166.183.113:5001'
+
+export const TEST_URL = 'https://drinkaway.herokuapp.com'
 
 export const CART_STATUS = {
   SHOPPING: 0,
@@ -111,25 +113,25 @@ export const PRODUCT_SORT_LIST = [
   {
     id: 1,
     title: 'Popularity',
-    value: 'totalView DESC',
+    value: 'productTotalRating DESC',
     type: 1
   },
   {
     id: 2,
-    title: 'Highest rating',
-    value: 'averageRatingValue DESC',
+    title: 'Letter Order',
+    value: 'productName ASC',
     type: 0
   },
   {
     id: 3,
     title: 'Oldest',
-    value: 'updatedAt ASC',
+    value: 'productCreatedAt ASC',
     type: 0
   },
   {
     id: 4,
     title: 'Newest',
-    value: 'updatedAt DESC',
+    value: 'productCreatedAt DESC',
     type: 0
   },
 ]
@@ -138,25 +140,25 @@ export const SHOP_SORT_LIST = [
   {
     id: 1,
     title: 'Popularity',
-    value: 'averageRatingValue DESC',
+    value: 'shopRating DESC',
     type: 1
   },
   {
     id: 2,
-    title: 'Number Of Products',
-    value: 'numberOfProducts DESC',
+    title: 'Letter Order',
+    value: 'shopName ASC',
     type: 0
   },
   {
     id: 3,
     title: 'Oldest',
-    value: 'registeredDate ASC',
+    value: 'dateCreatedAt ASC',
     type: 0
   },
   {
     id: 4,
     title: 'Newest',
-    value: 'registeredDate DESC',
+    value: 'dateCreatedAt DESC',
     type: 0
   },
 ]

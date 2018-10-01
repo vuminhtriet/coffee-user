@@ -19,14 +19,16 @@ class ShopItem extends Component {
       onPress(item)
     }
     else {
-        navigation.navigate(SCREENS.StoreDetail, { id: item.id })
+        navigation.navigate(SCREENS.StoreDetail, { id: item.id, name: item.productName })
     }
   }
 
   render() {
     const { item, itemWith, itemHeight } = this.props
-    const { images } = item
-    const fullUrl = getFirstImgUrl(images)
+    // const { images } = item
+    // const fullUrl = getFirstImgUrl(images)
+    const {shopFeaturedImages} = item
+
     return (
       <TouchableOpacity
         style={{
@@ -46,20 +48,20 @@ class ShopItem extends Component {
             flex: 1
           }}
         >
-          {fullUrl
+          {shopFeaturedImages
             ? <Image
               style={{ height: 155 }}
-              source={{ uri: fullUrl }}
+              source={{ uri: shopFeaturedImages[0] }}
             /> : <Image
               style={{ height: 155, width: '100%' }}
-              source={require('../../../assets/placeholder.png')}
+              source={require('../../../assets/shopplaceholder.jpg')}
             />
           }
           <Text
             numberOfLines={2}
             style={{ fontSize: 16, marginBottom: 0, textAlign: 'left', marginTop: 10 }}
           >
-            {`${item.name}`}
+            {`${item.shopName}`}
           </Text>
           <View
             style={{
@@ -78,7 +80,7 @@ class ShopItem extends Component {
               flexDirection: 'column',
               justifyContent: 'flex-start'
             }}>
-              <Text>no address</Text>
+              <Text>{`${item.shopAddress}`}</Text>
             </View>
             <View
               style={{
@@ -92,7 +94,7 @@ class ShopItem extends Component {
                   <Rating
                     type='custom'
                     fractions={1}
-                    startingValue={item.averageRatingValue || 0}
+                    startingValue={item.shopRating || 0}
                     readonly
                     imageSize={14}
                     showRating={false}
@@ -102,9 +104,9 @@ class ShopItem extends Component {
                     style={{ paddingVertical: 10 }} />
                 </View>
                 <View>
-                  <Text style={{ marginBottom: 0, paddingTop: 7, textAlign: 'left' }}>
+                  {/* <Text style={{ marginBottom: 0, paddingTop: 7, textAlign: 'left' }}>
                     {` (${item.totalUserRating || 0})`}
-                  </Text>
+                  </Text> */}
                 </View>
               </View>
               {/* <View style={{ display: 'flex', flexDirection: 'row' }}>

@@ -73,19 +73,19 @@ export default class PagePopularShops extends Component {
   }
 
   _onLoadMore = async () => {
-    const { getPopularShops } = this.props
-    const { page, isLastedPage, sortType } = this.state
-    if (isLastedPage || this.onEndReachedCalledDuringMomentum) {
-      return //
-    }
-    const options = this.submitFilter()
-    const rs = await getPopularShops(page, sortType.value, options)
-    if (rs) {
-      setTimeout(() => this.setState({ page: page + 1 }))
-    } else {
-      setTimeout(() => this.setState({ isLastedPage: true }))
-    }
-    this.onEndReachedCalledDuringMomentum = true
+    // const { getPopularShops } = this.props
+    // const { page, isLastedPage, sortType } = this.state
+    // if (isLastedPage || this.onEndReachedCalledDuringMomentum) {
+    //   return //
+    // }
+    // const options = this.submitFilter()
+    // const rs = await getPopularShops(page, sortType.value, options)
+    // if (rs) {
+    //   setTimeout(() => this.setState({ page: page + 1 }))
+    // } else {
+    //   setTimeout(() => this.setState({ isLastedPage: true }))
+    // }
+    // this.onEndReachedCalledDuringMomentum = true
   }
 
   _keyExtractor = (item) => item.id

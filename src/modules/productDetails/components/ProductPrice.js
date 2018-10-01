@@ -61,11 +61,11 @@ export default class ProductPrice extends Component {
       productItem,
       currencyUnits
     } = this.props
-    const { isFlashSale, newPrice, oldPrice } = isFlashSaleProduct(productItem.productPrices)
+    // const { isFlashSale, newPrice, oldPrice } = isFlashSaleProduct(productItem.productPrices)
 
-    if (!productItem || productItem.productPrices.length === 0) {
-      return <View />
-    }
+    // if (!productItem || productItem.productPrices.length === 0) {
+    //   return <View />
+    // }
 
     return (
       <View
@@ -81,10 +81,8 @@ export default class ProductPrice extends Component {
           alignItems: 'center'
         }}
       >
-        {isFlashSale
-          ? flashSalePrice({ newPrice, oldPrice, currencyUnits })
-          : normalPrice(productItem.productPrices, currencyUnits)
-        }
+        <Text style={{ color: '#6F4E37', textAlign: 'center', width: '100%', 
+        fontSize: 20, fontWeight: 'bold' }}>{productItem.productPrice}đ</Text>
       </View>
     )
   }

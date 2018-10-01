@@ -4,10 +4,12 @@ import DashboardProductToday from '../components/DashboardProductToday'
 import { getTodayProducts } from '../actions'
 import { MODULE_NAME } from '../models'
 import { BASE_URL } from '../../../common/models'
+import { TEST_URL } from '../../../common/models'
 
 const filter = {
   'include': [
     'images',
+    'shop',
     {
       'relation': 'productPrices',
       'scope': {
@@ -32,7 +34,8 @@ const filter = {
 const mapDispatchToProps = (dispatch, props) => ({
   getTodayProducts: async () => {
     try {
-      const url = `${BASE_URL}/api/products?filter=${JSON.stringify(filter)}`
+      // const url = `${BASE_URL}/api/products?filter=${JSON.stringify(filter)}`
+      const url = `${TEST_URL}/api/products?filter[order]=dateCreatedAt%20DESC`
       const response = await axios({ url })
       if (response && response.data) {
         dispatch(getTodayProducts([...response.data]))
@@ -46,7 +49,7 @@ const mapDispatchToProps = (dispatch, props) => ({
 })
 
 const mapStateToProps = state => ({
-  products: state[MODULE_NAME].todayProducts
+  products: state[MODULE_NAME].todayProducts.slice(0,15)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardProductToday)

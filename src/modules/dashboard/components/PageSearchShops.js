@@ -69,27 +69,28 @@ export default class PageSearchShops extends Component {
 
   _onRefresh = () => {
     const { searchShops, keyword } = this.props
-
+    const { sortType } = this.state
+    const options = this.submitFilter()
     this.setState({ refreshing: true }, async () => {
-      await searchShops(keyword)
+      await searchShops(keyword, 0, sortType.value, options)
       this.setState({ refreshing: false, page: 1, isLastedPage: false })
     })
   }
 
   _onLoadMore = async () => {
-    const { searchShops, keyword } = this.props
-    const { page, isLastedPage, sortType } = this.state
-    if (isLastedPage || this.onEndReachedCalledDuringMomentum) {
-      return //
-    }
-    const options = this.submitFilter()
-    const rs = await searchShops(keyword, page, sortType.value, options)
-    if (rs) {
-      setTimeout(() => this.setState({ page: page + 1 }))
-    } else {
-      setTimeout(() => this.setState({ isLastedPage: true }))
-    }
-    this.onEndReachedCalledDuringMomentum = true
+    // const { searchShops, keyword } = this.props
+    // const { page, isLastedPage, sortType } = this.state
+    // if (isLastedPage || this.onEndReachedCalledDuringMomentum) {
+    //   return //
+    // }
+    // const options = this.submitFilter()
+    // const rs = await searchShops(keyword, page, sortType.value, options)
+    // if (rs) {
+    //   setTimeout(() => this.setState({ page: page + 1 }))
+    // } else {
+    //   setTimeout(() => this.setState({ isLastedPage: true }))
+    // }
+    // this.onEndReachedCalledDuringMomentum = true
   }
 
   _keyExtractor = (item) => item.id

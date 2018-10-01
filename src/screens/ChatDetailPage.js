@@ -26,7 +26,7 @@ export default class ChatDetailPage extends Component {
         styles={{ flexDirection: 'column' }}
       >
         <View style={{ width: '100%', flex: 1 }}>
-          <ChatDetail navigation={navigation} />
+          {/* <ChatDetail navigation={navigation} /> */}
         </View>
       </DefaultPage>
     )

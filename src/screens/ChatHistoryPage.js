@@ -20,7 +20,7 @@ export default class ChatHistoryPage extends Component {
         styles={{ flexDirection: 'column' }}
       >
         <View style={{ width: '100%', flex: 1 }}>
-          <ChatHistory navigation={navigation} />
+          {/* <ChatHistory navigation={navigation} /> */}
         </View>
       </DefaultPage>
     )

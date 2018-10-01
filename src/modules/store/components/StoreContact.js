@@ -18,7 +18,8 @@ export default class StoreContact extends Component {
 
   render() {
     const { shop } = this.props
-    const address = shop.addresses && shop.addresses.length > 0 ? shop.addresses.find(address => address.isDefault == true) : {}
+    // const address = shop.addresses && shop.addresses.length > 0 ? shop.addresses.find(address => address.isDefault == true) : {}
+    const address = shop.shopAddress
     return (
       <View style={{
         marginTop: 7,
@@ -84,8 +85,8 @@ export default class StoreContact extends Component {
               color: '#1f89de'
             }}
           />
-          <Text style={{ paddingLeft: 10, color: '#b5b5b5', lineHeight: 22, fontSize: 14 }} onPress={() => this.setClipboardContent(address.phoneNumber)}>
-            <Text style={{ color: '#212121' }}>Phone:</Text> {address.phoneNumber}
+          <Text style={{ paddingLeft: 10, color: '#b5b5b5', lineHeight: 22, fontSize: 14 }} onPress={() => this.setClipboardContent(shop.shopPhoneNumber)}>
+            <Text style={{ color: '#212121' }}>Phone:</Text> {shop.shopPhoneNumber}
           </Text>
         </View>
         <View style={{ display: 'flex', flexDirection: 'row' }}>
@@ -98,8 +99,8 @@ export default class StoreContact extends Component {
               color: '#ff6600'
             }}
           />
-          <Text style={{ paddingLeft: 10, color: '#b5b5b5', lineHeight: 22, fontSize: 14 }} onPress={() => this.setClipboardContent(address.fullAddress)}>
-            <Text style={{ color: '#212121' }}>Address:</Text> {address.fullAddress}
+          <Text style={{ paddingLeft: 10, color: '#b5b5b5', lineHeight: 22, fontSize: 14 }} onPress={() => this.setClipboardContent(address)}>
+            <Text style={{ color: '#212121' }}>Address:</Text> {address}
           </Text>
         </View>
       </View>

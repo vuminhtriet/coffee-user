@@ -56,18 +56,18 @@ const MENU_LIST = [
     iconType: 'font-awesome',
     screen: SCREENS.ProductManagement
   },
-  {
-    title: 'Processing Cart',
-    iconName: 'shopping-cart',
-    iconType: 'font-awesome',
-    screen: SCREENS.ProcessingCart
-  },
-  {
-    title: 'Order Management',
-    iconName: 'file-check',
-    iconType: 'material-community',
-    screen: SCREENS.OrderManagement
-  },
+  // {
+  //   title: 'Processing Cart',
+  //   iconName: 'shopping-cart',
+  //   iconType: 'font-awesome',
+  //   screen: SCREENS.ProcessingCart
+  // },
+  // {
+  //   title: 'Order Management',
+  //   iconName: 'file-check',
+  //   iconType: 'material-community',
+  //   screen: SCREENS.OrderManagement
+  // },
   // {
   //   title: 'In Processing Orders',
   //   iconName: 'hourglass-2',
@@ -378,6 +378,7 @@ export default class ShopSetting extends Component {
   _navigatePage = (screen) => {
     const { navigation, token } = this.props
     token ? navigation.navigate(screen) : navigation.navigate(SCREENS.AuthenticatePage)
+    // navigation.navigate(screen)
   }
 
   render() {

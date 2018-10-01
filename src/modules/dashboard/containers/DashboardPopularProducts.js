@@ -3,12 +3,14 @@ import { connect } from 'react-redux'
 import { MODULE_NAME } from '../../dashboard/models'
 import DashboardPopularProducts from '../components/DashboardPopularProducts'
 import { BASE_URL } from '../../../common/models'
+import { TEST_URL } from '../../../common/models'
 import { PAGE_SIZE } from '../../../common/configs'
-import { getPopularProducts } from '../actions'
+import { getDashboardPopularProducts } from '../actions'
 
 const filter = {
   'include': [
     'images',
+    'shop',
     {
       'relation': 'productPrices',
       'scope': {
@@ -32,10 +34,11 @@ const filter = {
 const mapDispatchToProps = (dispatch, props) => ({
   getPopularProducts: async (token) => {
     try {
-      const url = `${BASE_URL}/api/products?filter=${JSON.stringify(filter)}`
+      // const url = `${BASE_URL}/api/products?filter=${JSON.stringify(filter)}`
+      const url = `${TEST_URL}/api/products?filter%5Bwhere%5D%5BproductIsPopular%5D=true&filter[order]=productTotalRating%20DESC`
       const response = await axios({ url })
       if (response && response.data) {
-        dispatch(getPopularProducts([...response.data]))
+        dispatch(getDashboardPopularProducts([...response.data]))
         return true
       }
       return false
@@ -46,7 +49,7 @@ const mapDispatchToProps = (dispatch, props) => ({
 })
 
 const mapStateToProps = state => ({
-  products: state[MODULE_NAME].popularProducts.slice(0, 6),
+  products: state[MODULE_NAME].dashboardPopularProducts.slice(0, 6),
   currencyUnits: state.common.units
 })
 

@@ -6,6 +6,7 @@ export const loadMoreFlashSaleProducts = createAction(`${MODULE_NAME}_loadMoreFl
 export const getPopularProducts = createAction(`${MODULE_NAME}_getPopularProducts`)
 export const getPopularShops = createAction(`${MODULE_NAME}_getPopularShops`)
 export const getDashboardPopularShops = createAction(`${MODULE_NAME}_getDashboardPopularShops`)
+export const getDashboardPopularProducts = createAction(`${MODULE_NAME}_getDashboardPopularProducts`)
 export const loadMorePopularProducts = createAction(`${MODULE_NAME}_loadMorePopularProducts`)
 export const loadMorePopularShops = createAction(`${MODULE_NAME}_loadMorePopularShops`)
 export const getTodayProducts = createAction(`${MODULE_NAME}_getTodayProducts`)

@@ -49,37 +49,38 @@ export default class PageCategoryProduct extends Component {
   }
 
   async componentDidMount() {
-    const { categoryId, getCategoryProducts } = this.props
+    const { categoryId, shopId, getCategoryProducts } = this.props
     this.setState({ refreshing: true }, async () => {
-      await getCategoryProducts(categoryId)
+      await getCategoryProducts(categoryId, shopId)
       this.setState({ refreshing: false, page: 1, isLastedPage: false })
     })
   }
 
 
   _onRefresh = () => {
-    const { categoryId, getCategoryProducts } = this.props
-
+    const { categoryId, shopId, getCategoryProducts } = this.props
+    const { sortType } = this.state
+    const options = this.submitFilter()
     this.setState({ refreshing: true }, async () => {
-      await getCategoryProducts(categoryId)
+      await getCategoryProducts(categoryId, shopId, sortType.value, options)
       this.setState({ refreshing: false, page: 1, isLastedPage: false })
     })
   }
 
   _onLoadMore = async () => {
-    const { categoryId, getCategoryProducts } = this.props
-    const { page, isLastedPage, sortType } = this.state
-    if (isLastedPage || this.onEndReachedCalledDuringMomentum) {
-      return //
-    }
-    const options = this.submitFilter()
-    const rs = await getCategoryProducts(categoryId, page, sortType.value, options)
-    if (rs) {
-      setTimeout(() => this.setState({ page: page + 1 }))
-    } else {
-      setTimeout(() => this.setState({ isLastedPage: true }))
-    }
-    this.onEndReachedCalledDuringMomentum = true
+    // const { categoryId, getCategoryProducts } = this.props
+    // const { page, isLastedPage, sortType } = this.state
+    // if (isLastedPage || this.onEndReachedCalledDuringMomentum) {
+    //   return //
+    // }
+    // const options = this.submitFilter()
+    // const rs = await getCategoryProducts(categoryId, page, sortType.value, options)
+    // if (rs) {
+    //   setTimeout(() => this.setState({ page: page + 1 }))
+    // } else {
+    //   setTimeout(() => this.setState({ isLastedPage: true }))
+    // }
+    // this.onEndReachedCalledDuringMomentum = true
   }
 
   toggleSort = () => {

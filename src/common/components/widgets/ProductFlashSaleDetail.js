@@ -82,7 +82,7 @@ class ProductFlashSaleDetail extends Component {
             source={{ uri: fullUrl }}
           /> : <Image
             style={{ height: 160, width: '100%' }}
-            source={require('../../../assets/placeholder.png')}
+            source={require('../../../assets/drinkplaceholder.png')}
           />
         }
         <View

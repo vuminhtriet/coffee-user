@@ -212,7 +212,7 @@ export default class UserSetting extends Component {
               hideChevron
               containerStyle={{ borderBottomWidth: 0, borderTopWidth: 0 }}
             />
-            <ListItem
+            {/* <ListItem
               onPress={() => token && navigation.navigate(SCREENS.UserPaymentMethod)}
               leftIcon={{ name: 'credit-card', type: 'material-community' }}
               title='User Payment Methods'
@@ -232,20 +232,20 @@ export default class UserSetting extends Component {
               title='My bought products - Write a review'
               hideChevron
               containerStyle={{ borderBottomWidth: 0, borderTopWidth: 0 }}
-            />
+            /> */}
             {/* <ListItem
               leftIcon={{ name: 'file-restore', type: 'material-community' }}
               title='Return Orders'
               hideChevron
               containerStyle={{ borderBottomWidth: 0, borderTopWidth: 0 }}
             /> */}
-            <ListItem
+            {/* <ListItem
               onPress={() => token && navigation.navigate(SCREENS.ChatHistoryPage)}
               leftIcon={{ name: 'comment', type: 'font-awesome' }}
               title='My messages'
               hideChevron
               containerStyle={{ borderBottomWidth: 0, borderTopWidth: 0 }}
-            />
+            /> */}
             {/* <ListItem
               leftIcon={{ name: 'settings', type: 'material-community' }}
               title='Setting'

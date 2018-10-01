@@ -77,10 +77,10 @@ class DashboardPopularProducts extends Component {
         paddingBottom: 5
       }}>
         <View key='header'
-          style={{ width: '100%', flexDirection: 'row', height: 40, alignItems: 'center' }}
+          style={{ width: '100%', flexDirection: 'row', height: 40, alignItems: 'center', backgroundColor: '#FFFFFF' }}
         >
           <View style={{ flex: 1, paddingLeft: 10 }}>
-            <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#E64B47' }}>Popular products</Text>
+            <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#E64B47' }}>Popular drinks</Text>
           </View>
           <View style={{ flex: 1, paddingRight: 10 }}>
             <TouchableOpacity onPress={this._onNavigateToPopularProductsPage}>
@@ -92,6 +92,7 @@ class DashboardPopularProducts extends Component {
         <View style={{ paddingHorizontal: 5 }}>
           <FlatList
             data={products}
+            showsHorizontalScrollIndicator={false}
             horizontal
             refreshing={refreshing}
             keyExtractor={this._keyExtractor}

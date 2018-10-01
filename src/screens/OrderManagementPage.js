@@ -5,7 +5,7 @@ import {
 } from 'react-native'
 import DefaultPage from '../common/hocs/defaultPage'
 import HeaderTitle from '../common/components/elements/HeaderTitle'
-import OrderManagement from '../modules/shop/containers/OrderManagement'
+// import OrderManagement from '../modules/shop/containers/OrderManagement'
 import SortList from '../modules/shop/components/SortList'
 
 export default class OrderManagementPage extends Component {
@@ -39,7 +39,7 @@ export default class OrderManagementPage extends Component {
           />
         </View>
         <View style={{ width: '100%', flex: 1 }}>
-          <OrderManagement navigation={navigation} isUser={false} />
+          {/* <OrderManagement navigation={navigation} isUser={false} /> */}
         </View>
         <Modal
           animationType='slide'

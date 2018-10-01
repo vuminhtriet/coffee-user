@@ -19,8 +19,9 @@ class PopularShopItem extends Component {
 
   render () {
     const { item, itemWith, itemHeight } = this.props
-    const { images } = item
-    const fullUrl = getFirstImgUrl(images)
+    // const { images } = item
+    // const fullUrl = getFirstImgUrl(images)
+    const {shopFeaturedImages} = item
 
     return (
       <TouchableOpacity
@@ -36,26 +37,24 @@ class PopularShopItem extends Component {
 
         <View style={{ flexDirection: 'row'}}>
           <View style= {{flexDirection: 'column'}}>
-          {fullUrl
+          {shopFeaturedImages
             ? <Image
               style={{ height: 124, width: 180 }}
-              source={{ uri: fullUrl }}
+              source={{ uri: shopFeaturedImages[0] }}
             /> : <Image
               style={{ height: 124, width: 180 }}
-              source={{
-                uri:'https://facebook.github.io/react-native/docs/assets/favicon.png'
-              }}
+              source={require('../../../assets/shopplaceholder.jpg')}
             />
           }
           <Text numberOfLines = {2} style={{ fontWeight: 'bold', 
           fontSize: 17, paddingLeft: 3}}>
-              {`${item.name}`}
+              {`${item.shopName}`}
           </Text>
           <View style = {{flexDirection: 'row', paddingLeft: 3}}>
             <Rating
               type='custom'
               fractions={1}
-              startingValue={item.averageRatingValue || 0}
+              startingValue={item.shopRating || 0}
               readonly
               imageSize={16}
               showRating={false}
@@ -65,7 +64,7 @@ class PopularShopItem extends Component {
               style={{ paddingVertical: 10 }} />
           </View>
           <View style = {{ paddingLeft: 3}}>
-              <Text numberOfLines = {1} style={{ }}>34 nghĩa hòa</Text>
+              <Text numberOfLines = {1} style={{ }}>{`${item.shopAddress}`}</Text>
           </View>
           </View>
           <View style={{width: 20}}/>

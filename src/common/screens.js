@@ -38,6 +38,7 @@ import EditProductPage from '../screens/EditProductPage'
 import StoreCategoryProductPage from '../screens/StoreCategoryProductPage'
 import SearchProductPage from '../screens/SearchProductPage'
 import SearchShopPage from '../screens/SearchShopPage'
+import SearchPage from '../screens/SearchPage'
 import TabbarIcon from './components/elements/TabbarIcon'
 import ShopPaymentMethodPage from '../screens/ShopPaymentMethodPage'
 import ShopShippingTypePage from '../screens/ShopShippingTypePage'
@@ -80,7 +81,7 @@ export const SCREENS = {
   EditProductPage: 'EditProductPage',
   UserCart: 'UserCartPage',
   SearchProductPage: 'SearchProductPage',
-  SearchShopPage: 'SearchShopPage',
+  SearchPage: 'SearchPage',
 
   // Cart:
   Cart: 'CartPage',
@@ -88,6 +89,7 @@ export const SCREENS = {
   // Store:
   StoreDetail: 'StoreDetailPage',
   StoreCategoryProduct: 'StoreCategoryProductPage',
+  SearchShopPage: 'SearchShopPage',
 
   // Chat
   ChatHistoryPage: 'ChatHistoryPage',
@@ -375,6 +377,9 @@ export default ({ token = undefined, store = {} }) => {
     },
     [SCREENS.SearchShopPage]: {
       screen: SearchShopPage
+    },
+    [SCREENS.SearchPage]: {
+      screen: SearchPage
     }
   }, defaultStackConfig)
 

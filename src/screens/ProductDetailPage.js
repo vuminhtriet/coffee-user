@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import axios from 'axios'
 import { BASE_URL } from '../common/models'
+import { TEST_URL } from '../common/models'
 import Header from '../common/components/elements/HeaderSearchProduct'
 import DefaultPage from '../common/hocs/defaultPage'
 import ProductImages from '../modules/productDetails/components/ProductImages'
@@ -210,60 +211,61 @@ export default class ProductDetailPage extends Component {
   componentDidMount() {
     const { navigation } = this.props
     const productItem = navigation.getParam('productItem', {})
-    const filter = {
-      'include': [
-        {
-          'shop': [
-            'shopShippingTypes',
-            {
-              'relation': 'shopPaymentMethods',
-              'scope': {
-                'where': {
-                  'status': 'active'
-                },
-                'include': 'paymentType'
-              }
-            },
-            'images'
-          ]
-        },
-        'publicCategory',
-        {
-          'relation': 'productVariations',
-          'scope': {
-            'where': {
-              'status': 1
-            }
-          }
-        },
-        {
-          'relation': 'productPrices',
-          'scope': {
-            'where': {
-              'status': 1
-            },
-            'include': [
-              'cashUnit',
-              'electricUnit',
-              'promotionPrice'
-            ]
-          }
-        },
-        'countries',
-        'images',
-        {
-          'relation': 'productRatings',
-          'scope': {
-            'where': {
-              'status': 1
-            },
-            'include': { 'user': 'images' },
-            'order': 'createdAt DESC'
-          }
-        }
-      ]
-    }
-    const url = `${BASE_URL}/api/products/${productItem.id}?filter=${JSON.stringify(filter)}`
+    // const filter = {
+    //   'include': [
+    //     {
+    //       'shop': [
+    //         'shopShippingTypes',
+    //         {
+    //           'relation': 'shopPaymentMethods',
+    //           'scope': {
+    //             'where': {
+    //               'status': 'active'
+    //             },
+    //             'include': 'paymentType'
+    //           }
+    //         },
+    //         'images'
+    //       ]
+    //     },
+    //     'publicCategory',
+    //     {
+    //       'relation': 'productVariations',
+    //       'scope': {
+    //         'where': {
+    //           'status': 1
+    //         }
+    //       }
+    //     },
+    //     {
+    //       'relation': 'productPrices',
+    //       'scope': {
+    //         'where': {
+    //           'status': 1
+    //         },
+    //         'include': [
+    //           'cashUnit',
+    //           'electricUnit',
+    //           'promotionPrice'
+    //         ]
+    //       }
+    //     },
+    //     'countries',
+    //     'images',
+    //     {
+    //       'relation': 'productRatings',
+    //       'scope': {
+    //         'where': {
+    //           'status': 1
+    //         },
+    //         'include': { 'user': 'images' },
+    //         'order': 'createdAt DESC'
+    //       }
+    //     }
+    //   ]
+    // }
+    // const url = `${BASE_URL}/api/products/${productItem.id}?filter=${JSON.stringify(filter)}`
+    const url = `${TEST_URL}/api/shops/${productItem.shopId}?filter%5Binclude%5D%5Bproducts%5D`
 
     this.setState({ loading: true }, () => {
       axios({
@@ -271,23 +273,26 @@ export default class ProductDetailPage extends Component {
         timeout: 5000
       })
         .then(response => {
-          const thisProduct = response.data
-          const priceSelected = thisProduct.productPrices.length > 0
-            ? getActivePrices(thisProduct.productPrices)[0].id
-            : null
-          let variantSelected = null
-          if (thisProduct.productVariations.length > 0) {
-            thisProduct.productVariations.forEach(variant => {
-              if (variant.quantity > 0 && !variantSelected) {
-                variantSelected = variant
-              }
-            })
-          }
+          const shopDetail = response.data
+          const thisProduct = productItem
+          // const priceSelected = thisProduct.productPrices.length > 0
+          //   ? getActivePrices(thisProduct.productPrices)[0].id
+          //   : null
+          // let variantSelected = null
+          // if (thisProduct.productVariations.length > 0) {
+          //   thisProduct.productVariations.forEach(variant => {
+          //     if (variant.quantity > 0 && !variantSelected) {
+          //       variantSelected = variant
+          //     }
+          //   })
+          // }
+          // const response_ = axios({
+          //   url: `${TEST_URL}/api/shops/${thisProduct.shopId}`
+          // })
+          // const shopDetail = response_.data
           this.setState({
             thisProduct,
-            priceSelected,
-            variantSelected,
-            shopInfo: thisProduct.shop,
+            shopInfo: shopDetail,
             loading: false
           })
         })
@@ -295,6 +300,7 @@ export default class ProductDetailPage extends Component {
           this.setState({ thisProduct: null, shopInfo: null, loading: false })
         })
     })
+    
   }
 
   onChangeProductAdded = (totalProductAdded) => {
@@ -339,7 +345,7 @@ export default class ProductDetailPage extends Component {
 
   checkProductExist = () => {
     const { thisProduct } = this.state
-    if (thisProduct && thisProduct.status !== 1) {
+    if (thisProduct && !thisProduct.productStatus) {
       Alert.alert(
         'Thông Báo',
         'Sản phẩm không tồn tại',
@@ -384,8 +390,7 @@ export default class ProductDetailPage extends Component {
             <View style={{ width: '100%', flex: 1 }}>
               <HeaderTitle
                 onBack={this.onBack}
-                title={thisProduct.name} />
-
+                title={thisProduct.productName.toUpperCase()} />
               <View style={{ flex: 1 }}>
                 <ScrollView
                   style={{ paddingBottom: 100 }}
@@ -403,24 +408,24 @@ export default class ProductDetailPage extends Component {
                     onToggleWriteReview={this.onToggleWriteReview}
                   />
                   <ProductRatingAndComment
-                    ratings={thisProduct.productRatings}
-                    totalRatingValue={thisProduct.totalRatingValue}
-                    totalUserRating={thisProduct.totalUserRating}
-                    newestRatings={thisProduct.productRatings && thisProduct.productRatings.slice(0, 2)}
+                    ratings={thisProduct.productTotalRating}
+                    totalRatingValue={thisProduct.productTotalRating}
+                    totalUserRating={thisProduct.productTotalRating}
+                    // newestRatings={thisProduct.productTotalRating && thisProduct.productTotalRating.slice(0, 2)}
                     productId={thisProduct && thisProduct.id}
-                    images={thisProduct.images}
-                    productName={thisProduct.name}
+                    images={thisProduct.productCoverImage}
+                    productName={thisProduct.productName}
                   />
-                  {shopInfo && <ShopProduct shopInfo={shopInfo} />}
+                  {shopInfo && <ShopProduct shopProduct={shopInfo.products} />}
                 </ScrollView>
 
-                <ProductSubMenu
+                {/* <ProductSubMenu
                   onToggleAddToCart={this.onToggleAddToCart}
                   navigation={navigation}
                   shopInfo={shopInfo}
-                />
+                /> */}
 
-                <Modal
+                {/* <Modal
                   animationType='slide'
                   transparent={true}
                   visible={showAddToCart}
@@ -436,7 +441,7 @@ export default class ProductDetailPage extends Component {
                     onSelectProductVariant={this.onSelectProductVariant}
                     onSelectProductPrice={this.onSelectProductPrice}
                   />
-                </Modal>
+                </Modal> */}
 
                 <Modal
                   animationType='slide'
@@ -446,8 +451,8 @@ export default class ProductDetailPage extends Component {
                   <WriteReview
                     productId={thisProduct && thisProduct.id}
                     onBack={this.onToggleWriteReview}
-                    images={thisProduct.images}
-                    productName={thisProduct.name}
+                    images={thisProduct.productCoverImage}
+                    productName={thisProduct.productName}
                   />
                 </Modal>
               </View>

@@ -69,7 +69,7 @@ class DashboardCategoryList extends PureComponent {
           paddingBottom: 5
         }}>
         <View key='header'
-          style={{ width: '100%', flexDirection: 'row', height: 40, alignItems: 'center' }}
+          style={{ width: '100%', flexDirection: 'row', height: 40, alignItems: 'center', backgroundColor: '#FFFFFF' }}
         >
           <View style={{ flex: 1, paddingLeft: 10 }}>
             <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#E64B47' }}>Categories</Text>

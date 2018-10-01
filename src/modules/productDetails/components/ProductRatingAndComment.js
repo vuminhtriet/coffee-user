@@ -72,7 +72,7 @@ export default class ProductRatingAndComment extends PureComponent {
             <Rating
               type='custom'
               fractions={1}
-              startingValue={totalUserRating > 0 ? totalRatingValue / totalUserRating : 0}
+              startingValue={totalUserRating || 0}
               readonly
               imageSize={14}
               showRating={false}
@@ -83,7 +83,7 @@ export default class ProductRatingAndComment extends PureComponent {
           </View>
           <View>
             <Text style={{ marginBottom: 0, paddingTop: 7, textAlign: 'left' }}>
-              {` ${totalUserRating > 0 ? (totalRatingValue / totalUserRating).toFixed(1) : 0}/5 (${totalUserRating || 0} ratings)`}
+              {` ${totalUserRating.toFixed(1) || 0}/5`}
             </Text>
           </View>
         </View>

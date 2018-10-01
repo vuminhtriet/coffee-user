@@ -18,7 +18,7 @@ export default class StoreImages extends Component {
         overflow: 'visible' // for custom animations
       }}>
         <Image
-          source={item.fullUrl ? { uri: item.fullUrl } : require('../../../assets/placeholder.png')}
+          source={item.fullUrl ? { uri: item.fullUrl } : require('../../../assets/shopplaceholder.jpg')}
           style={{ position: 'absolute', width: '100%', height: '100%' }} />
       </View>
     )

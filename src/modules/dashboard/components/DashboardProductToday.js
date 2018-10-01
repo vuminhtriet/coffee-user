@@ -73,7 +73,7 @@ class DashboardProductToday extends Component {
           paddingBottom: 5
         }}>
         <View key='header'
-          style={{ width: '100%', flexDirection: 'row', height: 40, alignItems: 'center' }}
+          style={{ width: '100%', flexDirection: 'row', height: 40, alignItems: 'center', backgroundColor: '#FFFFFF' }}
         >
           <View style={{ flex: 1, paddingLeft: 10 }}>
             <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#E64B47' }}>Today for you</Text>
@@ -82,6 +82,7 @@ class DashboardProductToday extends Component {
 
         <FlatList
           data={products}
+          showsVerticalScrollIndicator = {false}
           numColumns={NUMBER_OF_ITEM}
           refreshing={refreshing}
           extraData={refreshing}

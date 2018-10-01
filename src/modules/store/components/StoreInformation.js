@@ -22,7 +22,7 @@ export default class StoreInformation extends Component {
         <View style={{ flex: 1 }}>
           {detail &&
             <ScrollView>
-              <StoreImages images={detail.images} />
+              <StoreImages images={detail.shopFeaturedImages} />
               <StoreTitle shop={detail} />
               <StoreContact shop={detail} />
               <StoreSummary shop={detail} />

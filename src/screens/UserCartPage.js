@@ -6,8 +6,8 @@ import {
 } from 'react-native'
 import HeaderTitle from '../common/components/elements/HeaderTitle'
 import DefaultPage from '../common/hocs/defaultPage'
-import ProcessingCart from '../modules/userCart/containers/ProcessingCart'
-import UserCart from '../modules/cart/containers/ProcessingCart'
+// import ProcessingCart from '../modules/userCart/containers/ProcessingCart'
+// import UserCart from '../modules/cart/containers/ProcessingCart'
 export default class ProductsPage extends Component {
   render () {
     const { navigation } = this.props
@@ -25,10 +25,10 @@ export default class ProductsPage extends Component {
             navigation={navigation}
             cartPage
           /> */}
-          <UserCart
+          {/* <UserCart
             navigation={navigation}
             cartPage
-          />
+          /> */}
         </View>
       </DefaultPage>
     )

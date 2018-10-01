@@ -6,6 +6,7 @@ import { imgUtils } from '../../common/imgUtils'
 const defaultState = {
   flashSaleProducts: [],
   popularProducts: [],
+  dashboardPopularProducts: [],
   popularShops: [],
   dashboardPopularShops: [],
   todayProducts: [],
@@ -28,6 +29,10 @@ const handlers = {
   [actions.getPopularProducts]: (state, action) => ({
     ...state,
     ...{ popularProducts: action.payload }
+  }),
+  [actions.getDashboardPopularProducts]: (state, action) => ({
+    ...state,
+    ...{ dashboardPopularProducts: action.payload }
   }),
   [actions.getPopularShops]: (state, action) => ({
     ...state,

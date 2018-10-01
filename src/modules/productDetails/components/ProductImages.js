@@ -21,16 +21,16 @@ export default class ProductImages extends Component {
         height: 200,
         overflow: 'visible' // for custom animations
       }}>
-        <Text style={{
+        {/* <Text style={{
           paddingHorizontal: 30,
           backgroundColor: 'transparent',
           color: 'rgba(255, 255, 255, 0.9)',
           fontSize: 20,
           fontWeight: 'bold',
           textAlign: 'center'
-        }}>{item.title}</Text>
+        }}>{item}</Text> */}
         <Image
-          source={item.fullUrl ? { uri: item.fullUrl } : require('../../../assets/placeholder.png')}
+          source={item ? { uri: item } : require('../../../assets/drinkplaceholder.png')}
           style={{ position: 'absolute', width: '100%', height: '100%' }}
           resizeMode='contain'
         />
@@ -40,7 +40,7 @@ export default class ProductImages extends Component {
 
   render () {
     const { productItem } = this.props
-    const images = productItem && productItem.images && productItem.images.filter(item => item.type === 3 || item.type === 2)
+    const images = productItem.productCoverImage
     console.log(images)
     return (
       <View style={{ height: 200 }}>

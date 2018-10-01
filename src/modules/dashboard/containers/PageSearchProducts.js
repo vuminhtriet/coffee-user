@@ -4,12 +4,15 @@ import PageSearchProducts from '../components/PageSearchProducts'
 import { MODULE_NAME } from '../models'
 import { getSearchProducts, loadMoreSearchProducts } from '../actions'
 import { BASE_URL } from '../../../common/models'
+import { TEST_URL } from '../../../common/models'
 import { PAGE_SIZE } from '../../../common/configs'
 
+
 const mapDispatchToProps = (dispatch, props) => ({
-  searchProducts: async (keyword, page = 0, sort = 'totalView DESC', options = {}) => {
+  searchProducts: async (keyword, page = 0, sort = 'productTotalRating DESC', options = {}) => {
     try {
-      const url = `${BASE_URL}/api/products/search?searchStr=${keyword}&page=${page}&pageSize=${PAGE_SIZE}&sort=${sort}&options=${JSON.stringify(options)}`
+      // const url = `${BASE_URL}/api/products/search?searchStr=${keyword}&page=${page}&pageSize=${PAGE_SIZE}&sort=${sort}&options=${JSON.stringify(options)}`
+      const url = `${TEST_URL}/api/products/?filter%5Bwhere%5D%5BproductName%5D%5Blike%5D=${keyword}&filter[order]=${sort}`
       const response = await axios({
         url
       })

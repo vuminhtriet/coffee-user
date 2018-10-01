@@ -67,6 +67,7 @@ export default class DashboardPage extends Component {
         </View>
         <ScrollView
           contentContainerStyle={{}}
+          showsVerticalScrollIndicator = {false}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
@@ -79,14 +80,14 @@ export default class DashboardPage extends Component {
             refreshing={refreshing}
             stopRefresh={this.stopRefresh}
           />
-          <DashboardFlashSaleProducts
+          {/* <DashboardFlashSaleProducts
             refreshing={refreshing}
             stopRefresh={this.stopRefresh}
-          />
-          <DashboardCategoryList
+          /> */}
+          {/* <DashboardCategoryList
             refreshing={refreshing}
             stopRefresh={this.stopRefresh}
-          />
+          /> */}
           <DashboardPopularShops
             refreshing={refreshing}
             stopRefresh={this.stopRefresh}

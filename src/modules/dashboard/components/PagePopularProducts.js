@@ -54,6 +54,16 @@ export default class PagePopularProducts extends Component {
 
   _onRefresh = () => {
     const { getPopularProducts } = this.props
+    const { chosenCategories, chosenLocation, chosenPrice, sortType } = this.state
+    const options = this.submitFilter()
+    this.setState({ refreshing: true }, async () => {
+      await getPopularProducts(0, sortType.value, options)
+      this.setState({ refreshing: false, page: 1, isLastedPage: false })
+    })
+  }
+
+  componentWillMount() {
+    const { getPopularProducts } = this.props
 
     this.setState({ refreshing: true }, async () => {
       await getPopularProducts()
@@ -62,19 +72,19 @@ export default class PagePopularProducts extends Component {
   }
 
   _onLoadMore = async () => {
-    const { getPopularProducts } = this.props
-    const { page, isLastedPage, sortType } = this.state
-    if (isLastedPage || this.onEndReachedCalledDuringMomentum) {
-      return //
-    }
-    const options = this.submitFilter()
-    const rs = await getPopularProducts(page, sortType.value, options)
-    if (rs) {
-      setTimeout(() => this.setState({ page: page + 1 }))
-    } else {
-      setTimeout(() => this.setState({ isLastedPage: true }))
-    }
-    this.onEndReachedCalledDuringMomentum = true
+    // const { getPopularProducts } = this.props
+    // const { page, isLastedPage, sortType } = this.state
+    // if (isLastedPage || this.onEndReachedCalledDuringMomentum) {
+    //   return //
+    // }
+    // const options = this.submitFilter()
+    // const rs = await getPopularProducts(page, sortType.value, options)
+    // if (rs) {
+    //   setTimeout(() => this.setState({ page: page + 1 }))
+    // } else {
+    //   setTimeout(() => this.setState({ isLastedPage: true }))
+    // }
+    // this.onEndReachedCalledDuringMomentum = true
   }
 
   _keyExtractor = (item) => item.id

@@ -27,7 +27,7 @@ export default class BoughtProductsPage extends Component {
           />
         </View>
         <View style={{ width: '100%', flex: 1 }}>
-          <BoughtProductList navigation={navigation} />
+          {/* <BoughtProductList navigation={navigation} /> */}
         </View>
       </DefaultPage>
     )

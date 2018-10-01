@@ -8,6 +8,8 @@ import {
 import Carousel from 'react-native-snap-carousel'
 
 const { width } = Dimensions.get('window')
+const test_images = ["https://cdn.shopify.com/s/files/1/0271/7209/files/high-end-coffee-ordering.jpg?v=1496176279","https://www.intelligentsiacoffee.com/media/wysiwyg/cms/experiences/iPhone-App-Banner-1.jpg"]
+  
 
 class SliderItem extends PureComponent {
   render() {
@@ -56,11 +58,11 @@ class DashboardSlider extends PureComponent {
   }
 
   renderItem = ({ item, index }) => {
-    const { images } = item
-    const uri = images[0].fullUrl
+    // const { images } = item
+    // const uri = images[0].fullUrl
     return (
       <SliderItem
-        uri={uri}
+        uri={item}
       />
     )
   }
@@ -72,8 +74,8 @@ class DashboardSlider extends PureComponent {
       <View style={{ height: 200 }}>
         <Carousel
           ref={(c) => { this._carousel = c }}
-          data={bannerData}
-          extraData={bannerData}
+          data={bannerData.length != 0 ? bannerData : test_images}
+          extraData={bannerData.length != 0 ? bannerData : test_images}
           renderItem={this.renderItem}
           sliderWidth={width}
           itemWidth={width}

@@ -40,7 +40,7 @@ export default class UserOrderManagementPage extends Component {
             title='My orders'
           />
         </View>
-        <View style={{ width: '100%', flex: 1 }}>
+        {/* <View style={{ width: '100%', flex: 1 }}>
           <OrderManagement navigation={navigation} isUser />
         </View>
         <ModalWrapper
@@ -49,7 +49,7 @@ export default class UserOrderManagementPage extends Component {
           visible={openSort}
         >
           <SortList toggleSort={this.onSortType} />
-        </ModalWrapper>
+        </ModalWrapper> */}
       </DefaultPage>
     )
   }

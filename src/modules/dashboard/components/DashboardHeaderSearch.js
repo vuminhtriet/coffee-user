@@ -27,7 +27,7 @@ class DashboardHeaderSearch extends Component {
   }
 
   onSearch = (keyword) => {
-    this.props.navigation.navigate(SCREENS.SearchShopPage, { keyword: keyword })
+    this.props.navigation.navigate(SCREENS.SearchPage, { keyword: keyword })
   }
 
   render() {

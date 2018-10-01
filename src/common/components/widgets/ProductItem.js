@@ -6,36 +6,24 @@ import {
   TouchableOpacity
 } from 'react-native'
 import { connect } from 'react-redux'
+import axios from 'axios'
 import { Rating } from 'react-native-elements'
+import { TEST_URL } from '../../../common/models'
 import { SCREENS } from '../../screens'
 import Ion from 'react-native-vector-icons/Ionicons'
 import { withNavigation } from 'react-navigation'
 import { getTop2ActivePrice, getFirstImgUrl } from '../../utils/productUtils'
 
-function showPrices(price, index, currencyUnits) {
-  const cashUnit = price.cashUnitId ? currencyUnits.find(item => item.id === price.cashUnitId) : null
-  const electricUnit = price.electricUnitId ? currencyUnits.find(item => item.id === price.electricUnitId) : null
-  return (
-    <View
-      key={index}
-      style={{ display: 'flex', flexDirection: 'row' }}
-    >
-      {
-        cashUnit && electricUnit
-          ? <Text style={{ fontSize: 14, color: '#6F4E37', fontWeight: 'bold' }} numberOfLines={1}>
-            {price.cashValue}<Text style={{ fontSize: 10 }}>{cashUnit ? cashUnit.code : ''}</Text> + {price.electricValue}<Text style={{ fontSize: 10 }}>{electricUnit ? electricUnit.code : ''}</Text>
-          </Text>
-          : cashUnit && !price.electricValue
-            ? <Text style={{ fontSize: 14, color: '#6F4E37', fontWeight: 'bold' }} numberOfLines={1}>{price.cashValue}<Text style={{ fontSize: 10 }}>{cashUnit ? cashUnit.code : ''}</Text></Text>
-            : electricUnit && !price.cashValue
-              ? <Text style={{ fontSize: 14, color: '#6F4E37', fontWeight: 'bold' }} numberOfLines={1}>{price.electricValue}<Text style={{ fontSize: 10 }}>{electricUnit ? electricUnit.code : ''}</Text></Text>
-              : null
-      }
-    </View>
-  )
-}
-
 class ProductItem extends Component {
+
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      shopName: null,
+    }
+  }
+
   onPress = () => {
     const { item, navigation, onPress } = this.props
     if (onPress) {
@@ -46,10 +34,34 @@ class ProductItem extends Component {
     }
   }
 
+  componentDidMount() {
+    const { navigation, item } = this.props
+    const url = `${TEST_URL}/api/shops/${item.shopId}?filter=%7B"fields":"shopName"%7D`
+
+    this.setState({ loading: true }, () => {
+      axios({
+        url,
+        timeout: 5000
+      })
+        .then(response => {
+          const shop = response.data
+          this.setState({
+            shopName: shop.shopName,
+            loading: false
+          })
+        })
+        .catch(e => {
+          this.setState({ shopName: null })
+        })
+    })
+    
+  }
+
   render() {
     const { item, itemWith, itemHeight, currencyUnits } = this.props
-    const { images } = item
-    const fullUrl = getFirstImgUrl(images)
+    const { shopName } = this.state
+    const { productCoverImage } = item
+    // const fullUrl = getFirstImgUrl(images)
     return (
       <TouchableOpacity
         style={{
@@ -69,21 +81,35 @@ class ProductItem extends Component {
             flex: 1
           }}
         >
-          {fullUrl
-            ? <Image
-              style={{ height: 155 }}
-              source={{ uri: fullUrl }}
-            /> : <Image
-              style={{ height: 155, width: '100%' }}
-              source={require('../../../assets/placeholder.png')}
-            />
-          }
           <Text
             numberOfLines={2}
-            style={{ fontSize: 16, marginBottom: 0, textAlign: 'left', marginTop: 10 }}
+            style={{ fontWeight: 'bold',fontSize: 17, marginBottom: 0, textAlign: 'left' }}
           >
-            {`${item.name}`}
+            {`${item.productName}`}
           </Text>
+          {shopName
+            ? <Text
+              numberOfLines={2}
+              style={{ fontSize: 15, marginBottom: 0, textAlign: 'left' }}
+            >
+              {`${shopName}`}
+            </Text>
+            : <Text
+              numberOfLines={2}
+              style={{ fontSize: 15, marginBottom: 0, textAlign: 'left' }}
+            >
+              {`unknown`}
+            </Text>
+          }
+          {productCoverImage
+            ? <Image
+              style={{ height: 155, marginTop: 10 }}
+              source={{ uri: productCoverImage[0] }}
+            /> : <Image
+              style={{ height: 155, width: '100%' }}
+              source={require('../../../assets/drinkplaceholder.png')}
+            />
+          }
           <View
             style={{
               position: 'absolute',
@@ -101,9 +127,10 @@ class ProductItem extends Component {
               flexDirection: 'column',
               justifyContent: 'flex-start'
             }}>
-              {item.productPrices && getTop2ActivePrice(item.productPrices).map((prices, index) =>
-                showPrices(prices, index, currencyUnits)
-              )}
+              <View style={{ display: 'flex', flexDirection: 'row' }}>
+                <Text style={{ fontSize: 16, color: '#6F4E37', fontWeight: 'bold' }} numberOfLines={1}>
+                {item.productPrice}<Text style={{ fontSize: 16 }}>đ</Text></Text>
+              </View>
             </View>
             <View
               style={{
@@ -117,7 +144,7 @@ class ProductItem extends Component {
                   <Rating
                     type='custom'
                     fractions={1}
-                    startingValue={item.averageRatingValue || 0}
+                    startingValue={item.productTotalRating || 0}
                     readonly
                     imageSize={14}
                     showRating={false}
@@ -127,12 +154,12 @@ class ProductItem extends Component {
                     style={{ paddingVertical: 10 }} />
                 </View>
                 <View>
-                  <Text style={{ marginBottom: 0, paddingTop: 7, textAlign: 'left' }}>
+                  {/* <Text style={{ marginBottom: 0, paddingTop: 7, textAlign: 'left' }}>
                     {` (${item.totalUserRating || 0})`}
-                  </Text>
+                  </Text> */}
                 </View>
               </View>
-              <View style={{ display: 'flex', flexDirection: 'row' }}>
+              {/* <View style={{ display: 'flex', flexDirection: 'row' }}>
                 <View style={{ marginTop: 1, marginRight: 2 }}>
                   {
                     item.isLike
@@ -145,7 +172,7 @@ class ProductItem extends Component {
                     ({item.totalUserFavorite || 1})
                   </Text>
                 </View>
-              </View>
+              </View> */}
             </View>
           </View>
         </View>

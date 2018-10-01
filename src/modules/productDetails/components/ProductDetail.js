@@ -18,9 +18,9 @@ export default class OwnerShop extends Component {
         paddingRight: 10,
         backgroundColor: '#fff'
       }}>
-        <Text style={{ fontSize: 18, paddingBottom: 3, color: '#6F4E37' }}>Product Details</Text>
+        <Text style={{ fontSize: 18, paddingBottom: 3, color: '#6F4E37' }}>Drink Details</Text>
         <Text>
-          {productItem.description}
+          {productItem.productDescription}
         </Text>
       </View>
     )

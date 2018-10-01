@@ -11,6 +11,8 @@ import { TabViewAnimated, TabBar } from 'react-native-tab-view'
 import HeaderSearchProduct from '../../../common/components/elements/HeaderSearchProduct';
 import { Button, Rating, Icon } from 'react-native-elements'
 import StoreInformation from '../containers/StoreInformation';
+import { TEST_URL } from '../../../common/models'
+import axios from 'axios'
 import CategoryList from '../containers/CategoryList';
 import ProductList from '../containers/ProductList';
 import { SCREENS } from '../../../common/screens'
@@ -27,10 +29,11 @@ export default class StoreHeader extends Component {
     this.state = {
       cover: {},
       index: 0,
+      categories: null,
       routes: [
         { key: 'information', title: 'Information' },
         { key: 'categories', title: 'Categories' },
-        { key: 'products', title: 'All products' }
+        { key: 'products', title: 'All drinks' }
       ]
     }
     this.renderScene = this.renderScene.bind(this)
@@ -41,6 +44,25 @@ export default class StoreHeader extends Component {
   componentDidMount() {
     const { getStoreInformation, id } = this.props
     id && getStoreInformation(id)
+
+    const url = `${TEST_URL}/api/categories?filter[where][shopId]=${id}`
+
+    this.setState({ loading: true }, () => {
+      axios({
+        url,
+        timeout: 5000
+      })
+        .then(response => {
+          const privateCategories = response.data
+          this.setState({
+            categories: privateCategories,
+            loading: false
+          })
+        })
+        .catch(e => {
+          this.setState({ categories: null, loading: false })
+        })
+    })
   }
 
   onChatWithShop = () => {
@@ -74,12 +96,13 @@ export default class StoreHeader extends Component {
   }
 
   renderScene({ route }) {
-    const { detail, shippingTypes, paymentTypes } = this.props
+    const { detail, shippingTypes, paymentTypes, privateCategories } = this.props
+    const { categories } = this.state
     switch (route.key) {
       case 'information':
         return <StoreInformation detail={detail} shippingTypes={shippingTypes} paymentTypes={paymentTypes} />
       case 'categories':
-        return <CategoryList categories={detail.privateCategories} />
+        return <CategoryList categories={categories} />
       case 'products':
         return <ProductList products={detail.products} />
       default:
@@ -93,8 +116,10 @@ export default class StoreHeader extends Component {
 
   render() {
     const { detail, navigation } = this.props
-    const cover = detail && detail.images ? detail.images.find(item => item.type === 2) : null
-    const logo = detail && detail.images ? detail.images.find(item => item.type === 1) : null
+    // const cover = detail && detail.images ? detail.images.find(item => item.type === 2) : null
+    // const logo = detail && detail.images ? detail.images.find(item => item.type === 1) : null
+    const cover = detail.shopFeaturedImages ? detail.shopFeaturedImages[0] : null
+    const logo = detail.shopLogo ? detail.shopLogo : null
     return (
       <View style={{ flex: 1 }}>
         {
@@ -103,7 +128,7 @@ export default class StoreHeader extends Component {
               {/* <HeaderSearchProduct /> */}
               <HeaderTitle
                 canBack={false} onBack={() => navigation.goBack()}
-                title='Store detail'
+                title= {detail.shopName.toUpperCase()}
                 rightIcon={(<Text
                   style={{
                     paddingHorizontal: 10,
@@ -121,9 +146,9 @@ export default class StoreHeader extends Component {
               />
               <Animated.Image
                 source={
-                  !cover || !cover.fullUrl
+                  !cover
                     ? require('../../../assets/banner/Banner4.jpg')
-                    : { uri: cover.fullUrl }
+                    : { uri: cover }
                 }
                 style={{ width: '100%', height: 150 }}
                 resizeMode='cover'
@@ -140,11 +165,16 @@ export default class StoreHeader extends Component {
                 <View style={{ width: 60 }}>
                   <Image
                     style={{ width: 50, height: 50, borderRadius: 25 }}
-                    source={{
-                      uri: !logo || !logo.fullUrl
-                        ? 'https://facebook.github.io/react-native/docs/assets/favicon.png'
-                        : logo.fullUrl
-                    }}
+                    // source={{
+                    //   uri: !logo || !logo.fullUrl
+                    //     ? 'https://image.flaticon.com/icons/png/128/1114/1114350.png'
+                    //     : logo.fullUrl
+                    // }}
+                    source={
+                      !logo
+                        ? require('../../../assets/logo/shoplogo.png')
+                        : { uri: logo }
+                    }
                   />
                 </View>
                 <View
@@ -154,8 +184,8 @@ export default class StoreHeader extends Component {
                     justifyContent: 'center',
                     flexDirection: 'column'
                   }}>
-                  <Text style={{ color: '#003366', fontWeight: 'bold', fontSize: 16 }}>
-                    {detail.name}
+                  <Text style={{ color: '#FFFFFF', fontWeight: 'bold', fontSize: 16 }}>
+                    {detail.shopName}
                   </Text>
                   {/* <Text style={{ color: '#2089E1' }}>
                     Online
@@ -175,7 +205,7 @@ export default class StoreHeader extends Component {
                     <Text style={{ paddingLeft: 5, paddingVertical: 10, color: '#003366' }}>
                       ({detail.numberOfFollowers || '0'})
                     </Text> */}
-                  <Text style={{ flex: 1, color: '#2089E1' }}>
+                  <Text style={{ flex: 1, color: '#00FF00' }}>
                     Online
                     </Text>
                   {/* <View style={{ paddingLeft: 10 }}>

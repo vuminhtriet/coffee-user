@@ -46,7 +46,7 @@ export default class StoreSummary extends Component {
               <Rating
                 type='custom'
                 fractions={1}
-                startingValue={shop.totalRatingValue || 0}
+                startingValue={shop.shopRating || 0}
                 readonly
                 imageSize={14}
                 showRating={false}
@@ -57,13 +57,13 @@ export default class StoreSummary extends Component {
             </View>
             <View>
               <Text style={{ marginBottom: 0, paddingTop: 7, paddingLeft: 5, textAlign: 'left', color: '#b5b5b5' }}>
-                {` ${shop.totalRatingValue || 0}/5 (${shop.totalUserRating || 0} ratings)`}
+                {` ${shop.shopRating || 0}/5 (${shop.totalUserRating || 0} ratings)`}
               </Text>
             </View>
           </View>
           <View style={{ display: 'flex', flexDirection: 'row' }}>
             <Text style={{ paddingRight: 10, color: '#b5b5b5', lineHeight: 26, fontSize: 14 }}>
-              <Text style={{ color: '#212121' }}>Joined:</Text> {shop.registeredDate ? moment(shop.registeredDate).format('LL') : ''}
+              <Text style={{ color: '#212121' }}>Joined:</Text> {shop.dateCreatedAt ? moment(shop.dateCreatedAt).format('LL') : ''}
             </Text>
           </View>
         </View>

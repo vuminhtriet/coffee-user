@@ -22,8 +22,9 @@ export default class ProductTitle extends Component {
         paddingRight: 10,
         backgroundColor: '#fff'
       }}>
-        <Text style={{ fontSize: 18, lineHeight: 24 }}>
-          {productItem && productItem.name}
+        <Text numberOfLines = {2} style={{ fontWeight: 'bold', 
+          fontSize: 18, paddingLeft: 3}}>
+          {productItem && productItem.productName}
         </Text>
         <View
           style={{
@@ -37,7 +38,7 @@ export default class ProductTitle extends Component {
               <Rating
                 type='custom'
                 fractions={1}
-                startingValue={productItem.totalUserRating > 0 ? productItem.totalRatingValue / productItem.totalUserRating : 0}
+                startingValue={productItem.productTotalRating || 0}
                 readonly
                 imageSize={14}
                 showRating={false}
@@ -48,17 +49,17 @@ export default class ProductTitle extends Component {
             </View>
             <View>
               <Text style={{ marginBottom: 0, paddingTop: 7, textAlign: 'left' }}>
-                {` ${productItem.totalUserRating > 0 ? (productItem.totalRatingValue / productItem.totalUserRating).toFixed(1) : 0}/5 (${productItem.totalUserRating || 0} ratings)`}
+                {` ${productItem.productTotalRating.toFixed(1) || 0}/5`}
               </Text>
             </View>
           </View>
           <View style={{ display: 'flex', flexDirection: 'row' }}>
             <View style={{ marginTop: 1, marginRight: 2, paddingTop: 3 }}>
-              <Ion name={'ios-heart'} style={{ fontSize: 22, color: '#FF6A00' }} />
+              {/* <Ion name={'ios-heart'} style={{ fontSize: 22, color: '#FF6A00' }} /> */}
             </View>
             <View>
               <Text style={{ marginBottom: 0, paddingTop: 5, textAlign: 'left' }}>
-                ({productItem.totalUserFavorite || 1})
+                {/* ({productItem.totalUserFavorite || 1}) */}
               </Text>
             </View>
           </View>
