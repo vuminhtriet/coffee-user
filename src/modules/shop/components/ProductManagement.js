@@ -45,6 +45,15 @@ class ProductManagement extends Component {
 
   _onRefresh = () => {
     const { getShopProducts, shop } = this.props
+    const { sortType } = this.state
+    this.setState({ refreshing: true }, async () => {
+      await getShopProducts(shop, 0, sortType.value)
+      this.setState({ refreshing: false, page: 1, isLastedPage: false })
+    })
+  }
+
+  componentWillMount() {
+    const { getShopProducts, shop } = this.props
 
     this.setState({ refreshing: true }, async () => {
       await getShopProducts(shop)
@@ -53,18 +62,18 @@ class ProductManagement extends Component {
   }
 
   _onLoadMore = async () => {
-    const { getShopProducts, shop } = this.props
-    const { page, isLastedPage, sortType } = this.state
-    if (isLastedPage || this.onEndReachedCalledDuringMomentum) {
-      return //
-    }
-    const rs = await getShopProducts(shop, page, sortType.value)
-    if (rs) {
-      setTimeout(() => this.setState({ page: page + 1 }))
-    } else {
-      setTimeout(() => this.setState({ isLastedPage: true }))
-    }
-    this.onEndReachedCalledDuringMomentum = true
+    // const { getShopProducts, shop } = this.props
+    // const { page, isLastedPage, sortType } = this.state
+    // if (isLastedPage || this.onEndReachedCalledDuringMomentum) {
+    //   return //
+    // }
+    // const rs = await getShopProducts(shop, page, sortType.value)
+    // if (rs) {
+    //   setTimeout(() => this.setState({ page: page + 1 }))
+    // } else {
+    //   setTimeout(() => this.setState({ isLastedPage: true }))
+    // }
+    // this.onEndReachedCalledDuringMomentum = true
   }
 
   _keyExtractor = (item) => item.id
@@ -102,42 +111,46 @@ class ProductManagement extends Component {
 
   }
 
-  _renderItem = ({ item }) => (
-    <View
-      style={{
-        width: ITEM_WITDH,
-        height: ITEM_HEIGHT
-      }}
-    >
-      {item.status === -1 && <View
+  _renderItem = ({ item }) => {
+    const { shop } = this.props
+    return (
+      <View
         style={{
-          position: 'absolute',
-          zIndex: 999,
-          right: 10,
-          top: 10,
-          width: 60,
-          height: 40,
-          borderTopLeftRadius: 20,
-          borderBottomRightRadius: 20,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'red'
+          width: ITEM_WITDH,
+          height: ITEM_HEIGHT
         }}
       >
-        <Text style={{ fontWeight: 'bold', color: 'white' }}>
-          Deleted
-        </Text>
-      </View>}
+        {item.status === -1 && <View
+          style={{
+            position: 'absolute',
+            zIndex: 999,
+            right: 10,
+            top: 10,
+            width: 60,
+            height: 40,
+            borderTopLeftRadius: 20,
+            borderBottomRightRadius: 20,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'red'
+          }}
+        >
+          <Text style={{ fontWeight: 'bold', color: 'white' }}>
+            Deleted
+          </Text>
+        </View>}
 
-      <ProductItem
-        item={item}
-        itemWith={ITEM_WITDH}
-        itemHeight={ITEM_HEIGHT}
-        onPress={this.editProduct}
-      />
-    </View>
-  )
+        <ProductItem
+          item={item}
+          itemWith={ITEM_WITDH}
+          itemHeight={ITEM_HEIGHT}
+          shopName={shop.shopName}
+          onPress={this.editProduct}
+        />
+      </View>
+    )
+  }
 
   render() {
     const { refreshing, showFilter, showSort, filterType, sortType } = this.state
@@ -160,7 +173,7 @@ class ProductManagement extends Component {
               <TouchableOpacity
                 onPress={this.toggleSort}
               >
-                <Text style={{ fontSize: 16 }}>Sort by {sortType.title.toLowerCase()}</Text>
+                <Text style={{ fontSize: 16 }}>Tìm theo {sortType.title.toLowerCase()}</Text>
               </TouchableOpacity>
             </View>
           }
@@ -175,7 +188,7 @@ class ProductManagement extends Component {
                 color='black'
                 containerStyle={{}}
               />
-              <Text style={{ fontSize: 16, lineHeight: 26 }}>Filter</Text>
+              <Text style={{ fontSize: 16, lineHeight: 26 }}>Bộ lọc</Text>
             </TouchableOpacity>
           }
         />

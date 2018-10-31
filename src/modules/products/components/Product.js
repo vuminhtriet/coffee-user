@@ -8,10 +8,14 @@ import {
   Dimensions,
   TouchableOpacity,
   // ListView,
-  Platform
+  Platform,
+  Alert
 } from 'react-native'
 import ImageResizer from 'react-native-image-resizer'
 import { Dropdown } from 'react-native-material-dropdown'
+import { TextInputMask } from 'react-native-masked-text'
+import { validatePhoneNumber } from '../../../common/utils/validate'
+import { isEmpty } from 'lodash'
 import {
   FormValidationMessage,
   FormInput,
@@ -52,11 +56,12 @@ export default class Product extends Component {
       name: '',
       description: '',
       weight: '',
+      mask: '',
       isNew: 1,
-      errors: [],
-      privateCategoryId: null,
+      errors: {},
       publicCategoryId: null,
-      productPrices: [],
+      quantity: 0,
+      productPrices: 0,
       productVariants: [],
       productCountries: [],
       enableScrollViewScroll: true,
@@ -66,60 +71,25 @@ export default class Product extends Component {
 
     this.submit = this.submit.bind(this)
     this.onChoose = this.onChoose.bind(this)
-    this.addVariant = this.addVariant.bind(this)
-    this.onAddPrice = this.onAddPrice.bind(this)
-    this.addCountry = this.addCountry.bind(this)
     this.removeImage = this.removeImage.bind(this)
-    this.removeCountry = this.removeCountry.bind(this)
     this.onChooseCover = this.onChooseCover.bind(this)
-    this.addPriceModal = this.addPriceModal.bind(this)
-    this.AddNewVariant = this.AddNewVariant.bind(this)
-    this.renderCountry = this.renderCountry.bind(this)
     this.selectCategories = this.selectCategories.bind(this)
     this.addCategoryModal = this.addCategoryModal.bind(this)
-    this.renderCountryKey = this.renderCountryKey.bind(this)
-    this.onChangeProductName = this.onChangeProductName.bind(this)
-    this.onChangeProductDescription = this.onChangeProductDescription.bind(this)
+    this.onChangeText = this.onChangeText.bind(this)
   }
-  renderCountry (item) {
-    const { productCountries } = this.state
-    const exist = productCountries && productCountries.includes(item.id)
-    if (exist) {
-      return null
-    }
-    return (
-      <Badge
-        onPress={() => this.addCountry(item.id)}
-        key={item.id}
-        containerStyle={{
-          width: undefined,
-          height: 40,
-          backgroundColor: '#E0E0E0',
-          paddingVertical: 10,
-          marginRight: 10,
-          marginVertical: 5
-        }}
-      >
-        <Text>{item.name}</Text>
-      </Badge>
-    )
-  }
-  renderCountryKey (item) {
-    return item.id
-  }
+
   async submit () {
-    this.setState({ disabled: true })
     const {
       images,
       name,
       weight,
       isNew,
-      privateCategoryId,
       publicCategoryId,
       description,
       productCountries,
       productPrices,
-      productVariants
+      productVariants,
+      quantity
     } = this.state
     const {
       getShopProducts,
@@ -130,100 +100,64 @@ export default class Product extends Component {
       shopDeliveryMethods
     } = this.props
 
-    const errors = []
-    if (!shopDeliveryMethods || !shopDeliveryMethods.length) {
-      errors.push('* Shop delivery method required for create product.')
+    const errors = {}
+    // if (!shopDeliveryMethods || !shopDeliveryMethods.length) {
+    //   errors.push('* Shop delivery method required for create product.')
+    // }
+    if (!name) {
+      errors.name = '* Thiếu tên đồ uống.'
     }
-    if (!productPrices || !productPrices.length) {
-      errors.push('* Product price required.')
+    if (!description) {
+      errors.description = '* Thiếu mô tả.'
     }
-    if (!publicCategoryId && !privateCategoryId) {
-      errors.push('* Product category required.')
+    if (!productPrices) {
+      errors.productPrices = '* Thiếu giá tiền.'
+    }else if (!validatePhoneNumber(productPrices)) {
+      errors.productPrices = '* Giá tiền không hợp lệ.'
     }
-    if (!productVariants || !productVariants.length) {
-      errors.push('* Product variants required.')
+    if (!quantity) {
+      errors.quantity = '* Thiếu số lượng.'
+    }else if (!validatePhoneNumber(quantity)) {
+      errors.quantity = '* Số lượng không hợp lệ.'
     }
-    if (weight && !parseFloat(weight)) {
-      errors.push('* Weight invalid format.')
+    // return Alert.alert(
+    //   'KHÔNG THỂ CẬP NHẬT',
+    //   JSON.stringify(errors),
+    //   [
+    //     {text: 'OK', onPress: () => console.log('OK Pressed')}
+    //   ],
+    //   { cancelable: false }
+    // )
+    if (!isEmpty(errors)) {
+      return this.setState({ errors })
     }
-
-    const total = productVariants
-      ? productVariants.reduce((all, item) => {
-        return all + item.quantity
-      }, 0)
-      : 0
-    if (total < 0) {
-      errors.push('* Product quantity much large than 0.')
-    }
-    if (errors.length) {
-      return this.setState({
-        errors,
-        disabled: true
-      })
-    }
-
-    await addProduct(
+    this.setState({ disabled: true })
+    const result = await addProduct(
       token,
       {
         name,
         description,
         publicCategoryId,
-        privateCategoryId,
         productPrices,
         productVariants,
-        weight,
-        isNew,
-        productCountries
+        quantity
       },
       images,
       shop
     )
-    await getShopProducts(shop)
-    this.setState({ disabled: false })
-    navigation.goBack()
-  }
-  addPriceModal () {
-    const { addPrice } = this.state
-    this.setState({
-      addPrice: !addPrice
-    })
-  }
-  addCountry (ids) {
-    const { countries } = this.props
-    const newId = ids[ids.length - 1]
-    if (countries.find(item => item.id === newId)) {
-      this.setState({
-        productCountries: [
-          ...ids
-        ],
-        errors: []
-      })
-    } else {
-      return false
+    if (result) {
+      await getShopProducts(shop)
+      this.setState({ disabled: false })
+      navigation.goBack()
     }
+    this.setState({ disabled: false })
   }
-  removeCountry (id) {
-    let { productCountries } = this.state
-    const index = productCountries.findIndex(item => item === id)
-    productCountries.splice(index, 1)
-    this.setState({
-      productCountries: [
-        ...productCountries
-      ],
-      errors: []
-    })
-  }
-  addVariant () {
-    const { addVariant } = this.state
-    this.setState({
-      addVariant: !addVariant
-    })
-  }
+
   addCategoryModal () {
     const { addCategories } = this.state
     this.setState({
       addCategories: !addCategories,
-      errors: []
+      errors: {}
     })
   }
   removeImage (index) {
@@ -235,26 +169,7 @@ export default class Product extends Component {
       ]
     })
   }
-  AddNewVariant () {
-    let { variant, productVariants } = this.state
-    if (!variant.name || !variant.quantity || !parseInt(variant.quantity)) {
-      return false
-    }
-    productVariants.push({
-      name: variant.name,
-      quantity: parseInt(variant.quantity),
-      originalQuantity: parseInt(variant.quantity),
-      onhandQuantity: 0
-    })
-    this.setState({
-      productVariants: [
-        ...productVariants
-      ],
-      variant: {},
-      errors: [],
-      addVariant: false
-    })
-  }
+
   selectCategories (item) {
     if (!item || !item.id) {
       return this.setState({
@@ -262,9 +177,9 @@ export default class Product extends Component {
       })
     }
     this.setState({
-      [item.shopId ? 'privateCategoryId' : 'publicCategoryId']: item,
+      ['publicCategoryId']: item,
       addCategories: false,
-      errors: []
+      errors: {}
     })
   }
   onChooseCover (index) {
@@ -343,52 +258,15 @@ export default class Product extends Component {
         })
     })
   }
-  onAddPrice (newPrice) {
-    let { productPrices } = this.state
-    // if (productPrices.length > 2) {
-    //   return false
-    // }
-    productPrices.push(newPrice)
-    this.setState({
-      addPrice: false,
-      productPrices: [
-        ...productPrices
-      ],
-      errors: []
-    })
-  }
-  onChangeProductName (text) {
-    this.setState({
-      name: text
-    })
-  }
-  onChangeProductDescription (text) {
-    this.setState({
-      description: text
-    })
-  }
 
-  removeVariant (item, index) {
-    let { productVariants } = this.state
-
-    productVariants.splice(index, 1)
+  onChangeText (text, field) {
+    const { errors } = this.state
     this.setState({
-      productVariants: [
-        ...productVariants
-      ],
-      variant: {},
-      addVariant: false
-    })
-  }
-
-  removePrice (item, index) {
-    let { productPrices } = this.state
-    productPrices.splice(index, 1)
-    this.setState({
-      addPrice: false,
-      productPrices: [
-        ...productPrices
-      ]
+      [field]: text,
+      errors: {
+        ...errors,
+        [field]: undefined
+      }
     })
   }
 
@@ -407,11 +285,11 @@ export default class Product extends Component {
       // dataSource,
       productPrices,
       productVariants,
-      privateCategoryId,
       publicCategoryId,
       enableScrollViewScroll,
-      addCategories
-      // disabled
+      addCategories,
+      disabled,
+      quantity
     } = this.state
     const { countries } = this.props
     return (
@@ -544,15 +422,16 @@ export default class Product extends Component {
               height: undefined
             }}>
             <FormInput
-              multiline
-              numberOfLines={2}
               value={name}
               containerStyle={{ margin: 0, padding: 0 }}
               style={{ margin: 0, padding: 0 }}
-              inputStyle={{ margin: 0, padding: 0 }}
-              placeholder='Enter product name'
-              onChangeText={this.onChangeProductName}
+              inputStyle={{ margin: 0, padding: 0, textDecorationColor: 'black', color: 'black' }}
+              placeholder='Nhập tên đồ uống'
+              onChangeText={(text) => {
+                this.onChangeText(text, 'name') }}
             />
+            {errors.name &&
+              (<FormValidationMessage>{errors.name}</FormValidationMessage>)}
 
             <View style={{ width: undefined }}>
               <FormInput
@@ -561,11 +440,49 @@ export default class Product extends Component {
                 style={{
                   height: undefined
                 }}
-                inputStyle={{ width: '100%' }}
-                containerStyle={{ minHeight: 60, marginVertical: 0, padding: 0 }}
-                placeholder='Enter product description'
-                onChangeText={this.onChangeProductDescription}
+                inputStyle={{ width: '100%', textDecorationColor: 'black', color: 'black' }}
+                containerStyle={{ minHeight: 20, marginVertical: 0, padding: 0 }}
+                placeholder='Nhập mô tả'
+                onChangeText={(text) => {
+                  this.onChangeText(text, 'description') }}
               />
+              {errors.description &&
+              (<FormValidationMessage>{errors.description}</FormValidationMessage>)}
+
+              <FormInput
+                value={quantity}
+                style={{
+                  height: undefined
+                }}
+                keyboardType='phone-pad'
+                inputStyle={{ width: '100%', textDecorationColor: 'black', color: 'black' }}
+                containerStyle={{ minHeight: 20, marginVertical: 0, padding: 0 }}
+                placeholder='Nhập số lượng tương đối'
+                onChangeText={(text) => {
+                  this.onChangeText(text, 'quantity') }}
+              />
+              {errors.quantity &&
+              (<FormValidationMessage>{errors.quantity}</FormValidationMessage>)}
+
+              <TextInputMask
+                ref={ref => (this.inputRef = ref)}
+                type={'money'}
+                options={{
+                  suffixUnit: '',
+                  unit: 'VND ',
+                  separator: ' ',
+                  precision: 0
+                }}
+                style={{ 
+                  width: '80%', fontSize: 15, marginLeft: 15
+                }}
+                value={ productPrices}
+                onChangeText={(text) => {
+                  this.onChangeText(this.inputRef.getRawValue(), 'productPrices') }}
+              />
+              {errors.productPrices &&
+              (<FormValidationMessage>{errors.productPrices}</FormValidationMessage>)}
+
             </View>
           </Card>
           <ListItem
@@ -574,18 +491,6 @@ export default class Product extends Component {
             title='Category'
             onPress={this.addCategoryModal}
           />
-
-          {privateCategoryId && (<ListItem
-            containerStyle={{ backgroundColor: '#FFFFFF' }}
-            key={privateCategoryId.id}
-            title={`${privateCategoryId.name}`}
-            rightIcon={{ name: 'delete', color: '#E44C4C' }}
-            onPressRightIcon={() => {
-              this.setState({
-                privateCategoryId: null
-              })
-            }}
-          />)}
 
           {publicCategoryId && (<ListItem
             containerStyle={{ backgroundColor: '#FFFFFF' }}
@@ -597,7 +502,7 @@ export default class Product extends Component {
             })}
           />)}
 
-          <Card containerStyle={{
+          {/* <Card containerStyle={{
             margin: 0,
             marginTop: 20,
             paddingVertical: 10,
@@ -635,8 +540,8 @@ export default class Product extends Component {
                 )
               })}
             </View>
-          </Card>
-          <Card containerStyle={{
+          </Card> */}
+          {/* <Card containerStyle={{
             margin: 0,
             paddingVertical: 10,
             paddingHorizontal: 20,
@@ -664,8 +569,8 @@ export default class Product extends Component {
                 />)
               })}
             </View>
-          </Card>
-          <View
+          </Card> */}
+          {/* <View
             style={{
               width: '100%',
               backgroundColor: '#FFFFFF',
@@ -687,8 +592,8 @@ export default class Product extends Component {
                 }, 0)
                 : 0}
             </Text>
-          </View>
-          <Card containerStyle={{
+          </View> */}
+          {/* <Card containerStyle={{
             margin: 0,
             paddingVertical: 10,
             paddingHorizontal: 20,
@@ -762,8 +667,8 @@ export default class Product extends Component {
                 </View>
               </View>
             </View>
-          </Card>
-          <Card
+          </Card> */}
+          {/* <Card
             containerStyle={{
               margin: 0,
               paddingVertical: 10,
@@ -858,33 +763,21 @@ export default class Product extends Component {
                   dataSource={dataSource}
                   renderRow={this.renderCountry}
                 /> */}
-              </View>
+              {/* </View>
             </View>
-          </Card>
-          <FormValidationMessage>
+          </Card> */}
+          {/* <FormValidationMessage>
             {errors.length > 0 && errors.map(item => {
               return `${item}\n`
             })}
-          </FormValidationMessage>
+          </FormValidationMessage> */}
           <Button
-            title='Submit'
+            title='Tạo'
             backgroundColor='#E44C4C'
             onPress={this.submit}
-            containerViewStyle={{ paddingVertical: 10 }} />
+            containerViewStyle={{ paddingVertical: 10 }}
+            disabled={disabled} />
         </View>
-        <Modal
-          animationType='slide'
-          transparent={false}
-          visible={addPrice}
-        >
-          <View style={{ width: '100%', height }}>
-            <ProductPrice
-              productPrices={productPrices}
-              onAddPrice={this.onAddPrice}
-              onBack={this.addPriceModal}
-            />
-          </View>
-        </Modal>
         <Modal
           animationType='slide'
           transparent={false}
@@ -897,67 +790,7 @@ export default class Product extends Component {
             />
           </View>
         </Modal>
-        <Modal
-          transparent
-          animationType='slide'
-          visible={addVariant}
-        >
-          <View style={{
-            width: '100%',
-            height: '100%',
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}>
-            <TouchableOpacity
-              onPress={this.addVariant}
-              style={{
-                width: '100%',
-                height: '100%',
-                position: 'absolute',
-                zIndex: 1,
-                backgroundColor:
-                  '#000',
-                opacity: 0.2
-              }}
-            />
-            <View style={{ width: '100%', height: 320, zIndex: 2 }}>
-              <Card title='Add variant'>
-                <FormLabel>
-                  Variant name
-                </FormLabel>
-                <FormInput
-                  value={variant.name || ''}
-                  placeholder='Enter your variant name for your product'
-                  onChangeText={text => this.setState({
-                    variant: {
-                      ...variant,
-                      name: text
-                    }
-                  })}
-                />
-                <FormLabel>
-                  Variant quantity
-                </FormLabel>
-                <FormInput
-                  value={variant.quantity || ''}
-                  placeholder='Enter original quantity for your variant name'
-                  onChangeText={text => this.setState({
-                    variant: {
-                      ...variant,
-                      quantity: text
-                    }
-                  })}
-                  keyboardType={'numeric'}
-                />
-                <Button
-                  containerViewStyle={{ marginTop: 10, marginBottom: 10 }}
-                  onPress={this.AddNewVariant}
-                  title='Add'
-                />
-              </Card>
-            </View>
-          </View>
-        </Modal>
+        
       </ScrollView>
     )
   }

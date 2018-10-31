@@ -18,6 +18,7 @@ const ITEM_HEIGHT = 300
 export default class ProductList extends Component {
   constructor (props) {
     super(props)
+    this.onEndReachedCalledDuringMomentum = null
     this.state = {
       showFilter: false,
       showSort: false,
@@ -43,6 +44,19 @@ export default class ProductList extends Component {
   onLoadMore () {
   }
 
+  _renderItem = ({ item }) => {
+    const { detail } = this.props
+    // item.shop = detail
+    return (
+      <ProductItem
+        item={item}
+        itemWith={ITEM_WITDH}
+        itemHeight={ITEM_HEIGHT}
+        shopName={detail.shopName}
+      />
+    )
+  }
+
   keyExtractor (item) {
     return item.id
   }
@@ -65,16 +79,16 @@ export default class ProductList extends Component {
   }
 
   render() {
-    const { products } = this.props
+    const { detail } = this.props
     return (
       <View
         style={{
           width: '100%',
           backgroundColor: '#ffffff',
-          marginBottom: 5,
+          flex: 1,
           paddingBottom: 5
         }}>
-        <SubHeader
+        {/* <SubHeader
           onLeftComponent={
             <View style={{ marginLeft: 12 }}>
               <TouchableOpacity
@@ -98,22 +112,21 @@ export default class ProductList extends Component {
               <Text style={{ fontSize: 16, lineHeight: 26 }}>Filter</Text>
             </TouchableOpacity>
           }
-        />
+        /> */}
         <FlatList
           columnWrapperStyle={{
             marginLeft: 5,
             marginRight: 5
           }}
           key='data'
-          data={products}
+          data={detail.products}
           numColumns={2}
           keyExtractor={this.keyExtractor}
-          renderItem={(item, index) => <ProductItem
-            item={item.item}
-            index={index}
-            itemWith={ITEM_WITDH}
-            itemHeight={ITEM_HEIGHT}
-          />}
+          renderItem={this._renderItem}
+          onEndReachedThreshold={0.3}
+          onMomentumScrollBegin={() => {
+            this.onEndReachedCalledDuringMomentum = false
+          }}
         />
       </View>)
   }

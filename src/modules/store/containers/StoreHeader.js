@@ -92,7 +92,8 @@ const mapDispatchToProps = (dispatch, props) => ({
         //   }
         // }
         if (response && response.data) {
-          return dispatch(setStoreInformation({ ...response.data }))
+          // return dispatch(setStoreInformation({ ...response.data, privateCategories: {} }))
+          return dispatch(setStoreInformation(response.data))
         } else {
           return false
         }

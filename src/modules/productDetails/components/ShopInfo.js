@@ -24,7 +24,7 @@ export default class ShopInfo extends Component {
         backgroundColor: '#fff'
       }}>
         <View style={{ display: 'flex', flexDirection: 'row', height: 32 }}>
-          <Text style={{ fontSize: 18, color: '#6F4E37' }}>Sold By</Text>
+          <Text style={{ fontSize: 18, color: '#6F4E37' }}>Bán bởi</Text>
           <TouchableOpacity
             onPress={() => {
               navigation.navigate(SCREENS.StoreDetail, { id: shopInfo.id })
@@ -47,7 +47,7 @@ export default class ShopInfo extends Component {
             <Text
               style={{ color: 'red', textAlign: 'center' }}
             >
-              Visit shop
+              Xem quán
             </Text>
           </TouchableOpacity>
         </View>
@@ -76,11 +76,11 @@ export default class ShopInfo extends Component {
         <View style={{ display: 'flex', flexDirection: 'row' }}>
           <View style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignContent: 'center', alignItems: 'center' }}>
             <Text style={{ color: 'red', fontSize: 22 }}>{shopInfo.products.length || 0}</Text>
-            <Text>Products</Text>
+            <Text>Đồ uống</Text>
           </View>
           <View style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignContent: 'center', alignItems: 'center' }}>
             <Text style={{ color: 'red', fontSize: 22 }}>{shopInfo.shopRating || 0}</Text>
-            <Text>Ratings</Text>
+            <Text>Đánh giá</Text>
           </View>
         </View>
       </View>

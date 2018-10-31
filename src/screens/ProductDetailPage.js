@@ -416,7 +416,7 @@ export default class ProductDetailPage extends Component {
                     images={thisProduct.productCoverImage}
                     productName={thisProduct.productName}
                   />
-                  {shopInfo && <ShopProduct shopProduct={shopInfo.products} />}
+                  {shopInfo && <ShopProduct shopProduct={shopInfo.products} shopName={shopInfo.shopName} />}
                 </ScrollView>
 
                 {/* <ProductSubMenu

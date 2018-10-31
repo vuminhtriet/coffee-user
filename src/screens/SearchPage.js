@@ -24,8 +24,8 @@ export default class SearchShopsPage extends Component {
       keyword,
       index: 0,
       routes: [
-        { key: 'shops', title: 'Shops' },
-        { key: 'drinks', title: 'Drinks' }
+        { key: 'shops', title: 'Quán cafe' },
+        { key: 'drinks', title: 'Đồ uống' }
       ]
     }
     this.renderScene = this.renderScene.bind(this)

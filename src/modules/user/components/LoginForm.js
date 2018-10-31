@@ -34,6 +34,16 @@ export default class LoginForm extends Component {
     this.keyboardWillHideSub = Keyboard.addListener('keyboardDidHide', this.onKeyboardWillHide.bind(this))
   }
 
+  componentDidMount(){
+    // const { email, pass } = this.props
+    // const { username, password, errors } = this.state
+    // if (username.length == 0 && password.length == 0){
+    //   this.setState({
+    //   username: email,  
+    //   password: pass
+    // })}
+  }
+
   onKeyboardWillShow (frames) {
     this.setState({
       keyboard: true
@@ -60,10 +70,12 @@ export default class LoginForm extends Component {
     const { login } = this.props
     const errors = {}
     if (!username || !username.trim()) {
-      errors.username = 'Username required.'
+    // if (username.length == 0 || username.trim().length == 0) {
+      errors.username = 'Thiếu địa chỉ email.'
     }
     if (!password || !password.trim()) {
-      errors.password = 'Password required.'
+    // if (password.length == 0 || password.trim().length == 0) {
+      errors.password = 'Thiếu mật khẩu.'
     }
     if (Object.keys(errors).length) {
       return this.setState({
@@ -73,37 +85,38 @@ export default class LoginForm extends Component {
     const result = await login(username, password)
     if (!result) {
       this.setState({
-        error: 'Email or Password incorrect.'
+        error: 'Email hoặc mật khẩu không chính xác.'
       })
     }
   }
 
   async forgetPassword () {
-    const { username } = this.state
-    const { forgetPassword } = this.props
-    const errors = {}
-    if (!username || !username.trim()) {
-      errors.username = '* Email required for reset password.'
-    }
-    if (Object.keys(errors).length) {
-      return this.setState({
-        errors
-      })
-    }
-    const result = await forgetPassword(username)
-    if (!result) {
-      this.setState({
-        error: '* Email not found.'
-      })
-    } else {
-      this.setState({
-        resetPassword: true
-      })
-    }
+    // const { username } = this.state
+    // const { forgetPassword } = this.props
+    // const errors = {}
+    // if (!username || !username.trim()) {
+    //   errors.username = '* Email required for reset password.'
+    // }
+    // if (Object.keys(errors).length) {
+    //   return this.setState({
+    //     errors
+    //   })
+    // }
+    // const result = await forgetPassword(username)
+    // if (!result) {
+    //   this.setState({
+    //     error: '* Email not found.'
+    //   })
+    // } else {
+    //   this.setState({
+    //     resetPassword: true
+    //   })
+    // }
   }
 
   render () {
     const { username, resetPassword, error, keyboard, errors } = this.state
+    const {email, pass} = this.props
     return (
       <View style={{ width: '100%', height: '100%', flexDirection: 'column', backgroundColor: '#E9E9EF' }}>
         <View style={{ width: '100%', flex: 1 }}>
@@ -117,10 +130,11 @@ export default class LoginForm extends Component {
                 }
               })}
               autoCapitalize='none'
+              // defaultValue={email}
               containerStyle={{ marginTop: 20 }}
               inputStyle={{ fontSize: 22 }}
               underlineColorAndroid='#D7D9E2'
-              placeholder='Email address/Phone number' />
+              placeholder={'Nhập địa chỉ email'} />
             {errors.username && <FormValidationMessage>
               {errors.username}
             </FormValidationMessage>}
@@ -134,10 +148,11 @@ export default class LoginForm extends Component {
                 }
               })}
               secureTextEntry
+              // defaultValue={pass}
               containerStyle={{ marginTop: 20 }}
               inputStyle={{ fontSize: 22 }}
               underlineColorAndroid='#D7D9E2'
-              placeholder='Password' />
+              placeholder={'Nhập mật khẩu'} />
             {errors.password && <FormValidationMessage>
               {errors.password}
             </FormValidationMessage>}
@@ -153,7 +168,7 @@ export default class LoginForm extends Component {
                   paddingRight: 15,
                   paddingVertical: 20
                 }}>
-                Forget password ?
+                Quên mật khẩu ?
               </Text>
             </TouchableOpacity>
             {error && <FormValidationMessage>
@@ -163,12 +178,12 @@ export default class LoginForm extends Component {
             <Button
               onPress={this.login}
               backgroundColor='#E44C4B'
-              title='SIGN IN'
+              title='ĐĂNG NHẬP'
               containerViewStyle={{ marginTop: 0 }}
             />
           </ScrollView>
         </View>
-        {!keyboard && <View style={{ width: '100%', height: 175, flexDirection: 'column' }}>
+        {/* {!keyboard && <View style={{ width: '100%', height: 175, flexDirection: 'column' }}>
           <View style={{ width: '100%', height: 50, justifyContent: 'center', alignItems: 'center' }}>
             <Divider style={{ backgroundColor: '#9C9C9C', height: 2, width: '90%' }} />
             <Text
@@ -196,7 +211,7 @@ export default class LoginForm extends Component {
               containerViewStyle={{ width: '90%', marginBottom: 10 }}
             />
           </View>
-        </View>}
+        </View>} */}
         <Modal
           animationType='none'
           transparent={false}

@@ -27,31 +27,31 @@ const options = {
 
 const MENU_LIST = [
   {
-    title: 'Shop Information',
+    title: 'Thông Tin Quán',
     iconName: 'store',
     iconType: 'material-community',
     screen: SCREENS.ShopInformation
   },
   {
-    title: 'Shop Payment Methods',
+    title: 'Phương Thức Thanh Toán',
     iconName: 'credit-card',
     iconType: 'material-community',
     screen: SCREENS.ShopPaymentMethod
   },
   {
-    title: 'Shop Delivery Methods',
+    title: 'Phương Thức Giao Hàng',
     iconName: 'truck-delivery',
     iconType: 'material-community',
     screen: SCREENS.ShopShippingType
   },
   {
-    title: 'Category Management',
+    title: 'Quản Lý Danh Mục',
     iconName: 'format-align-left',
     iconType: 'material',
     screen: SCREENS.CategoryManagement
   },
   {
-    title: 'Product Management',
+    title: 'Quản Lý Đồ Uống',
     iconName: 'product-hunt',
     iconType: 'font-awesome',
     screen: SCREENS.ProductManagement
@@ -384,14 +384,15 @@ export default class ShopSetting extends Component {
   render() {
     const { logo, images, addImage } = this.state
     const { cover, shop } = this.props
+    const {shopFeaturedImages, shopLogo} = shop
     const imageScale = this.getImageScale()
     return (
       <View style={{ flexDirection: 'column', width: '100%', height: '100%' }}>
         <Animated.Image
           source={
-            !cover || !cover.fullUrl
+            !shopFeaturedImages || !shopFeaturedImages[0]
               ? require('../../../assets/banner/Banner4.jpg')
-              : { uri: cover.fullUrl }
+              : { uri: shopFeaturedImages[0] }
           }
           style={{ width: '100%', height: 150, transform: [{ scale: imageScale }] }}
           resizeMode='cover'
@@ -424,7 +425,7 @@ export default class ShopSetting extends Component {
             width: undefined,
             height: undefined
           }}
-            title={shop.name || 'Shop name'}>
+            title={shop.shopName || 'Shop name'}>
             {
               MENU_LIST.map(item => {
                 return (

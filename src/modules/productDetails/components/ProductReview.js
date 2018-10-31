@@ -90,7 +90,7 @@ export default class UserCartDetail extends Component {
           }}
           onPress={onToggleWriteReview}
         >
-          <Text style={{ fontSize: 16, color: '#67B6F4', fontWeight: 'bold' }}>Write a review</Text>
+          <Text style={{ fontSize: 16, color: '#67B6F4', fontWeight: 'bold' }}>Viết đánh giá</Text>
         </TouchableOpacity>
       </View>
     )

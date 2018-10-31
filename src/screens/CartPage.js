@@ -15,7 +15,7 @@ export default class ProductsPage extends Component {
         style={{ flexDirection: 'column' }}
       >
         <View style={{ display: 'flex', width: '100%' }}>
-          <HeaderTitle title='My shopping carts' />
+          <HeaderTitle title='Giỏ hàng của tôi' />
         </View>
         <View style={{ width: '100%', flex: 1 }}>
           {/* <ProcessingCart

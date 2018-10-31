@@ -40,7 +40,7 @@ export default class ShopPaymentMethodPage extends Component {
       >
         <View style={{ width: '100%' }}>
           <HeaderTitle
-            title='Shop payment methods'
+            title='Phương thức thanh toán'
             onBack={this.goBack}
             rightIcon={
               <TouchableOpacity
@@ -54,7 +54,7 @@ export default class ShopPaymentMethodPage extends Component {
                 }}
                 onPress={this.togglePayment}
               >
-                <Text style={{ color: '#FFFFFF', fontSize: 18 }}>+ Add</Text>
+                <Text style={{ color: '#FFFFFF', fontSize: 18 }}>+ Thêm</Text>
               </TouchableOpacity>
             }
           />

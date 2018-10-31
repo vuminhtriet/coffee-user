@@ -94,7 +94,7 @@ export default class StorePayment extends Component {
         removeClippedSubviews={false}
       >
         <Text style={{ fontSize: 16, paddingBottom: 3, color: '#000', fontWeight: 'bold' }}>
-          Payment information
+          Thông tin thanh toán
         </Text>
         {/* <View> */}
         {shop.shopPaymentMethods && shop.shopPaymentMethods.map(item => {

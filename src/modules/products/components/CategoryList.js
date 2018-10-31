@@ -14,8 +14,7 @@ export default class CategoryList extends Component {
     super(props)
     this.state = {
       refreshing: false,
-      categories: {},
-      allCategory: []
+      categories: {}
     }
 
     this.goBack = this.goBack.bind(this)
@@ -44,26 +43,26 @@ export default class CategoryList extends Component {
       <ListItem
         roundAvatar
         onPress={() => this.select(item)}
-        avatar={item.images && item.images.length > 0 ? { uri: item.images[0].fullUrl } : require('../../../assets/placeholder.png')}
+        avatar={{source: require('../../../assets/placeholder.png')}}
+        // {item.images && item.images.length > 0 ? { uri: item.images[0].fullUrl } : require('../../../assets/placeholder.png')}
         key={index}
         title={item.name}
         rightIcon={
-          categories.id === item.id && item.shopId === categories.shopId
+          categories.id === item.id
             ? { name: 'check', color: 'green' }
             : undefined
         }
-        subtitle={`${item.totalProduct} products`}
+        subtitle={`${item.products && item.products.length} đồ uống`}
       />
     )
   }
 
-  componentDidMount () {
-    const { categories, publicCategories } = this.props
-    this.setState({
-      allCategory: [
-        // ...categories || [],
-        ...publicCategories || []
-      ]
+  async componentDidMount () {
+    const { getPrivateCategories, shop } = this.props
+
+    this.setState({ refreshing: true }, async () => {
+      await getPrivateCategories(shop)
+      this.setState({ refreshing: false, page: 1, isLastedPage: false })
     })
   }
 
@@ -79,6 +78,7 @@ export default class CategoryList extends Component {
 
   render () {
     const { refreshing, allCategory } = this.state
+    const { categories } = this.props
     return (
       <DefaultPage
         styles={{ flexDirection: 'column', height }}
@@ -88,9 +88,9 @@ export default class CategoryList extends Component {
         </View>
         <View style={{ width: '100%', flex: 1 }}>
           <FlatList
-            data={allCategory || []}
+            data={categories}
             refreshing={refreshing}
-            extraData={{ ...allCategory || [] }}
+            extraData={{ ...categories || [] }}
             keyExtractor={this.keyExtractor}
             renderItem={this.renderItem}
             onRefresh={this.onRefresh}

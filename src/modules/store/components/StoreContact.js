@@ -19,7 +19,7 @@ export default class StoreContact extends Component {
   render() {
     const { shop } = this.props
     // const address = shop.addresses && shop.addresses.length > 0 ? shop.addresses.find(address => address.isDefault == true) : {}
-    const address = shop.shopAddress
+    const address = shop.address && shop.address.fullAddress ? shop.address.fullAddress : 'No Address'
     return (
       <View style={{
         marginTop: 7,
@@ -31,7 +31,7 @@ export default class StoreContact extends Component {
         backgroundColor: '#fff'
       }}>
         <Text style={{ fontSize: 16, paddingBottom: 3, color: '#000', fontWeight: 'bold' }}>
-          Contact
+          Liên lạc
         </Text>
         <View style={{ display: 'flex', flexDirection: 'row' }}>
           <Icon
@@ -86,7 +86,7 @@ export default class StoreContact extends Component {
             }}
           />
           <Text style={{ paddingLeft: 10, color: '#b5b5b5', lineHeight: 22, fontSize: 14 }} onPress={() => this.setClipboardContent(shop.shopPhoneNumber)}>
-            <Text style={{ color: '#212121' }}>Phone:</Text> {shop.shopPhoneNumber}
+            <Text style={{ color: '#212121' }}>SĐT:</Text> {shop.shopPhoneNumber}
           </Text>
         </View>
         <View style={{ display: 'flex', flexDirection: 'row' }}>
@@ -100,7 +100,7 @@ export default class StoreContact extends Component {
             }}
           />
           <Text style={{ paddingLeft: 10, color: '#b5b5b5', lineHeight: 22, fontSize: 14 }} onPress={() => this.setClipboardContent(address)}>
-            <Text style={{ color: '#212121' }}>Address:</Text> {address}
+            <Text style={{ color: '#212121' }}>Địa chỉ:</Text> {address}
           </Text>
         </View>
       </View>

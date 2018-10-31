@@ -17,11 +17,11 @@ export default class Loading extends Component {
     } = this.props
     await Promise.all([
       getCountries().catch(() => { }),
-      getPaymentTypes().catch(() => { }),
-      getCurrencyUnits().catch(() => { }),
-      getCategories().catch(() => { }),
-      getShippingTypes().catch(() => { })
-      // getCities().catch(() => { })
+      // getPaymentTypes().catch(() => { }),
+      // getCurrencyUnits().catch(() => { }),
+      // getCategories().catch(() => { }),
+      // getShippingTypes().catch(() => { })
+      getCities().catch(() => { })
     ])
     navigation.navigate(SCREENS.TabStack)
   }

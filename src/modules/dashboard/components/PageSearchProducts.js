@@ -69,27 +69,28 @@ export default class PageSearchProducts extends Component {
 
   _onRefresh = () => {
     const { searchProducts, keyword } = this.props
-
+    const { sortType } = this.state
+    const options = this.submitFilter()
     this.setState({ refreshing: true }, async () => {
-      await searchProducts(keyword)
+      await searchProducts(keyword, 0, sortType.value, options)
       this.setState({ refreshing: false, page: 1, isLastedPage: false })
     })
   }
 
   _onLoadMore = async () => {
-    const { searchProducts, keyword } = this.props
-    const { page, isLastedPage, sortType } = this.state
-    if (isLastedPage || this.onEndReachedCalledDuringMomentum) {
-      return //
-    }
-    const options = this.submitFilter()
-    const rs = await searchProducts(keyword, page, sortType.value, options)
-    if (rs) {
-      setTimeout(() => this.setState({ page: page + 1 }))
-    } else {
-      setTimeout(() => this.setState({ isLastedPage: true }))
-    }
-    this.onEndReachedCalledDuringMomentum = true
+    // const { searchProducts, keyword } = this.props
+    // const { page, isLastedPage, sortType } = this.state
+    // if (isLastedPage || this.onEndReachedCalledDuringMomentum) {
+    //   return //
+    // }
+    // const options = this.submitFilter()
+    // const rs = await searchProducts(keyword, page, sortType.value, options)
+    // if (rs) {
+    //   setTimeout(() => this.setState({ page: page + 1 }))
+    // } else {
+    //   setTimeout(() => this.setState({ isLastedPage: true }))
+    // }
+    // this.onEndReachedCalledDuringMomentum = true
   }
 
   _keyExtractor = (item) => item.id
@@ -212,7 +213,7 @@ export default class PageSearchProducts extends Component {
               <TouchableOpacity
                 onPress={this.toggleSort}
               >
-                <Text style={{ fontSize: 16 }}>Sort by {sortType.title.toLowerCase()}</Text>
+                <Text style={{ fontSize: 16 }}>Tìm theo {sortType.title.toLowerCase()}</Text>
               </TouchableOpacity>
             </View>
           }
@@ -227,7 +228,7 @@ export default class PageSearchProducts extends Component {
                 color='black'
                 containerStyle={{}}
               />
-              <Text style={{ fontSize: 16, lineHeight: 26 }}>Filter</Text>
+              <Text style={{ fontSize: 16, lineHeight: 26 }}>Bộ lọc</Text>
             </TouchableOpacity>
           }
         />

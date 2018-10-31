@@ -3,11 +3,14 @@ import React, { Component } from 'react'
 import {
   ScrollView,
   View,
+  Alert,
   Modal,
   TouchableOpacity,
   KeyboardAvoidingView
 } from 'react-native'
 import QRCode from 'react-native-qrcode'
+import { ADDRESS_URL, TEST_URL } from '../../../common/models'
+import axios from 'axios'
 import DatePicker from 'react-native-datepicker'
 import MultiSelect from '../../../libraries/components/MultipleSelect'
 import { Dropdown } from 'react-native-material-dropdown'
@@ -21,23 +24,28 @@ import {
 } from 'react-native-elements'
 import { isEmpty } from 'lodash'
 
+const sex = [{value:true,title:'Nam'},{value:false,title:'Nữ'}]
+
 export default class UserInformation extends Component {
   constructor (props) {
     super(props)
     const { user } = props
-    const addresses = user.addresses && user.addresses.find(item => item.isDefault)
+    const addresses = user.address && user.address
     this.state = {
       displayName: user.displayName || '',
-      birthdate: moment(user.birthdate).format('YYYY-MM-DD') || '',
-      gender: user.gender || 'male',
+      birthdate: moment(user.birthdate).format('YYYY-MM-DD') || null,
+      gender: (user && `${user.isMale}`) || true,
       nationality: (addresses && `${addresses.countryId}`) || '',
-      addressId: (addresses && `${addresses.id}`) || undefined,
+      selectedCity: (addresses && `${addresses.cityId}`) || '',
+      selectedDistrict: (addresses && `${addresses.districtId}`) || '',
       address: (addresses && `${addresses.fullAddress}`) || '',
       errors: {},
+      districts: {},
       qrcode: null
     }
     this.submit = this.submit.bind(this)
     this.onChangeText = this.onChangeText.bind(this)
+    this.onChangeValue = this.onChangeValue.bind(this)
     this.deleteUserPayment = this.deleteUserPayment.bind(this)
   }
 
@@ -52,30 +60,72 @@ export default class UserInformation extends Component {
     getUserInformation(token, user.id)
   }
 
+  componentDidMount(){
+    const { selectedCity } = this.state
+    if (selectedCity){
+      this.getDistrictInCity(selectedCity)
+    }
+  }
+
   submit () {
-    const { token, update, user } = this.props
-    const { displayName, birthdate, gender, nationality, addressId, address } = this.state
+    const { token, update, user, navigation } = this.props
+    const { displayName, birthdate, gender, nationality, addressId, address, selectedCity, selectedDistrict } = this.state
     const errors = {}
+    // return Alert.alert(
+    //   'CANT LOG IN',
+    //   JSON.stringify(gender),
+    //   [
+    //     {text: 'OK', onPress: () => console.log('OK Pressed')}
+    //   ],
+    //   { cancelable: false }
+    // )
     if (!displayName) {
-      errors.displayName = '* Display name required'
+      errors.displayName = '* Thiếu tên hiển thị'
     }
     if (!address) {
-      errors.address = '* Address required'
+      errors.address = '* Thiếu địa chỉ'
+    }
+    if (!selectedCity) {
+      errors.selectedCity = '* Thiếu thành phố'
+    }
+    if (!selectedDistrict) {
+      errors.selectedDistrict = '* Thiếu quận'
     }
     if (!isEmpty(errors)) {
       this.setState({ errors })
     } else {
       try {
-        update(token, {
-          id: user.id,
+        const request = update(token,
+          {id: user.id,
           displayName,
           birthdate,
-          gender,
-          nationality,
-          address
-        }, addressId)
+          gender},
+          {selectedCity,
+          selectedDistrict,
+          address}
+        )
+        if(request){
+          return navigation.goBack()
+        }
+        else{
+          return Alert.alert(
+            'KHÔNG THỂ CẬP NHẬT',
+            'Lỗi từ server',
+            [
+              {text: 'OK', onPress: () => console.log('OK Pressed')}
+            ],
+            { cancelable: false }
+          )
+        }
       } catch (error) {
-
+        return Alert.alert(
+          'KHÔNG THỂ CẬP NHẬT',
+          'Lỗi từ server',
+          [
+            {text: 'OK', onPress: () => console.log('OK Pressed')}
+          ],
+          { cancelable: false }
+        )
       }
     }
   }
@@ -83,18 +133,81 @@ export default class UserInformation extends Component {
   componentWillReceiveProps (nextProp) {
     const { user } = this.props
     if (nextProp.user && JSON.stringify(user) !== JSON.stringify(nextProp.user)) {
-      const addresses = nextProp.user.addresses &&
-        nextProp.user.addresses.find(item => item.isDefault)
+      const addresses = nextProp.user.address &&
+        nextProp.user.address
       this.setState({
         displayName: nextProp.user.displayName || '',
         birthdate: moment(nextProp.user.birthdate).format('YYYY-MM-DD') || '',
-        gender: nextProp.user.gender || 'male',
+        gender: (nextProp.user && `${nextProp.user.isMale}`) || true,
         nationality: (addresses && `${addresses.countryId}`) || '',
-        addressId: (addresses && `${addresses.id}`) || undefined,
+        selectedCity: (addresses && `${addresses.cityId}`) || '',
+        selectedDistrict: (addresses && `${addresses.districtId}`) || '',
         address: (addresses && `${addresses.fullAddress}`) || '',
         errors: {}
       })
     }
+  }
+
+  getDistrictInCity(id){
+    // const url = `${TEST_URL}/api/cities/${id}/districts`
+    const url = `${TEST_URL}/api/districts`
+    this.setState({ loading: true }, () => {
+      axios({
+        url,
+        timeout: 5000
+      })
+        .then(response => {
+          this.setState({
+            districts: response.data,
+            loading: false
+          })
+        })
+        .catch(e => {
+          this.setState({ districts: {}, loading: false })
+        })
+    })
+  }
+
+  // getDistrict(id){
+  //   const url = `${ADDRESS_URL}/api/district/${id}`
+  //   this.setState({ loading: true }, () => {
+  //     axios({
+  //       url,
+  //       timeout: 5000
+  //     })
+  //     .then(response => {
+  //       this.setState({
+  //         loading: false
+  //       })
+  //       return response.data
+  //     })
+  //     .catch(e => {
+  //       this.setState({loading: false })
+  //       return null
+  //     })
+  //   })
+  // }
+
+  onChangeValue(selectedItem, value){
+    const { errors } = this.state
+    this.setState({ 
+      [selectedItem]: value,
+      errors: {
+        ...errors,
+        [selectedItem]: undefined
+      }
+    })
+    if(selectedItem == 'selectedCity'){
+      this.getDistrictInCity(value)
+    }
+    // return Alert.alert(
+    //   'CANT LOG IN',
+    //   JSON.stringify(value),
+    //   [
+    //     {text: 'OK', onPress: () => console.log('OK Pressed')}
+    //   ],
+    //   { cancelable: false }
+    // )
   }
 
   onChangeText (text, field) {
@@ -106,6 +219,14 @@ export default class UserInformation extends Component {
         [field]: undefined
       }
     })
+    // return Alert.alert(
+    //   'CANT LOG IN',
+    //   JSON.stringify(text),
+    //   [
+    //     {text: 'OK', onPress: () => console.log('OK Pressed')}
+    //   ],
+    //   { cancelable: false }
+    // )
   }
 
   renderPaymentInfo (payment, paymentType) {
@@ -152,9 +273,16 @@ export default class UserInformation extends Component {
   }
 
   render () {
-    const { qrcode, nationality, errors, displayName, birthdate, gender, address } = this.state
-    const { navigation, countries } = this.props
-    const country = countries.find(item => `${item.id}` === `${nationality}`)
+    const { qrcode, nationality, errors, displayName, birthdate, 
+      gender, address, districts, selectedCity, selectedDistrict } = this.state
+    const { navigation, countries, cities } = this.props
+    // const country = countries.find(item => `${item.id}` === `${nationality}`)
+    const city = cities.find(item => `${item.id}` === `${selectedCity}`)
+    const tempGender = sex.find(item => `${item.value}` === `${gender}`)
+    
+    const district = districts.length > 0  
+    ? districts.find(item => `${item.id}` === `${selectedDistrict}`)
+    : ''
     return (
       <KeyboardAvoidingView
         style={{ flexDirection: 'column', width: '100%', height: '100%' }}>
@@ -166,17 +294,18 @@ export default class UserInformation extends Component {
               height: undefined
             }}>
             <FormLabel>
-              Display name
+              Tên hiển thị
             </FormLabel>
             <FormInput
-              placeholder='Enter your address'
+              placeholder='Nhập tên'
               value={displayName || ''}
               onChangeText={(text) => this.onChangeText(text, 'displayName')}
+              underlineColorAndroid='#CCC'
             />
             {errors.displayName &&
               (<FormValidationMessage>{errors.displayName}</FormValidationMessage>)}
             <FormLabel>
-              Birthday
+              Ngày sinh
             </FormLabel>
             <DatePicker
               style={{
@@ -185,12 +314,12 @@ export default class UserInformation extends Component {
               }}
               date={birthdate}
               mode='date'
-              placeholder='Select date'
+              placeholder='Chọn ngày sinh'
               format='YYYY-MM-DD'
               maxDate={moment().format('YYYY-MM-DD')}
               confirmBtnText='Confirm'
               cancelBtnText='Cancel'
-              onChangeText={(text) => this.onChangeText(text, 'gender')}
+              // onChangeText={(text) => this.onChangeText(text, 'gender')}
               customStyles={{
                 dateIcon: {
                   width: 0,
@@ -202,7 +331,7 @@ export default class UserInformation extends Component {
                   borderTopWidth: 0,
                   borderLeftWidth: 0,
                   borderRightWidth: 0,
-                  borderColor: '#9C9C9C',
+                  borderColor: '#CCC',
                   width: '100%'
                 },
                 placeholderText: {
@@ -213,18 +342,51 @@ export default class UserInformation extends Component {
               onDateChange={(text) => this.onChangeText(text, 'birthdate')}
             />
             <FormLabel>
-              Gender
+              Giới tính
             </FormLabel>
-            <Dropdown
+            {/* <Dropdown
               value={gender}
               data={[
-                { value: 'male', label: 'Male' },
-                { value: 'female', label: 'Female' }
+                { value: true, label: 'Nam' },
+                { value: false, label: 'Nữ' }
               ]}
               onChangeText={(text) => this.onChangeText(text, 'gender')}
               containerStyle={{ marginHorizontal: 20 }}
-            />
-            <FormLabel>
+            /> */}
+            <View
+              style={{
+                marginTop: 20,
+                marginHorizontal: 20
+              }}
+            >
+              <MultiSelect
+                hideTags
+                single
+                items={sex}
+                uniqueKey='value'
+                ref={(component) => { this.multiSelect = component }}
+                onSelectedItemsChange={(text) => this.onChangeText(text[0], 'gender')}
+                selectedItems={sex}
+                selectText={!tempGender ? 'Chọn giới tính' : tempGender.title}
+                searchInputPlaceholderText='Tìm kiếm...'
+                tagRemoveIconColor='transparent'
+                tagBorderColor='#CCC'
+                tagTextColor='#CCC'
+                selectedItemTextColor='#CCC'
+                selectedItemIconColor='#CCC'
+                itemTextColor='#000'
+                displayKey='title'
+                submitButtonColor='#CCC'
+                submitButtonText='Submit'
+                // fixedHeight
+                hideSubmitButton
+                searchInputStyle={{
+                  color: '#CCC',
+                  height: 40
+                }}
+              />
+            </View>
+            {/* <FormLabel>
               Nationality
             </FormLabel>
             <View
@@ -259,7 +421,84 @@ export default class UserInformation extends Component {
                   height: 30
                 }}
               />
+
+            </View> */}
+            <FormLabel>
+              Thành phố
+            </FormLabel>
+            <View
+              style={{
+                marginTop: 20,
+                marginHorizontal: 20
+              }}
+            >
+              <MultiSelect
+                hideTags
+                single
+                items={cities}
+                uniqueKey='id'
+                ref={(component) => { this.multiSelect = component }}
+                onSelectedItemsChange={(value) => this.onChangeValue('selectedCity', value[0])}
+                selectedItems={cities}
+                selectText={!city ? 'Chọn thành phố' : city.name}
+                searchInputPlaceholderText='Tìm kiếm...'
+                tagRemoveIconColor='transparent'
+                tagBorderColor='#CCC'
+                tagTextColor='#CCC'
+                selectedItemTextColor='#CCC'
+                selectedItemIconColor='#CCC'
+                itemTextColor='#000'
+                displayKey='name'
+                submitButtonColor='#CCC'
+                submitButtonText='Submit'
+                fixedHeight
+                hideSubmitButton
+                searchInputStyle={{
+                  color: '#CCC',
+                  height: 40
+                }}
+              />
             </View>
+            {errors.selectedCity &&
+              (<FormValidationMessage>{errors.selectedCity}</FormValidationMessage>)}
+            <FormLabel>
+              Quận
+            </FormLabel>
+            <View
+              style={{
+                marginTop: 20,
+                marginHorizontal: 20
+              }}
+            >
+              <MultiSelect
+                hideTags
+                single
+                items={districts || []}
+                uniqueKey='id'
+                ref={(component) => { this.multiSelect = component }}
+                onSelectedItemsChange={(value) => this.onChangeValue('selectedDistrict', value[0])}
+                selectedItems={districts}
+                selectText={!district ? 'Chọn quận' : district.name}
+                searchInputPlaceholderText='Tìm kiếm...'
+                tagRemoveIconColor='transparent'
+                tagBorderColor='#CCC'
+                tagTextColor='#CCC'
+                selectedItemTextColor='#CCC'
+                selectedItemIconColor='#CCC'
+                itemTextColor='#000'
+                displayKey='name'
+                submitButtonColor='#CCC'
+                submitButtonText='Submit'
+                fixedHeight
+                hideSubmitButton
+                searchInputStyle={{
+                  color: '#CCC',
+                  height: 40
+                }}
+              />
+            </View>
+            {errors.selectedDistrict &&
+              (<FormValidationMessage>{errors.selectedDistrict}</FormValidationMessage>)}
             {/* <Dropdown
               value={`${nationality}`}
               data={countries.map(item => {
@@ -272,13 +511,14 @@ export default class UserInformation extends Component {
               containerStyle={{ marginHorizontal: 20 }}
             /> */}
             <FormLabel>
-              Address
+              Địa chỉ
             </FormLabel>
             <FormInput
               multiline
-              placeholder='Enter your address'
+              placeholder='Nhập địa chỉ đầy đủ'
               value={address || ''}
               onChangeText={(text) => this.onChangeText(text, 'address')}
+              underlineColorAndroid='#CCC'
             />
             {errors.address &&
               (<FormValidationMessage>{errors.address}</FormValidationMessage>)}
@@ -298,11 +538,11 @@ export default class UserInformation extends Component {
                 alignItems: 'center'
               }}>
               <View style={{ flex: 1 }}>
-                <Button title='Cancel' onPress={() => navigation.goBack()} />
+                <Button title='Hủy' onPress={() => navigation.goBack()} />
               </View>
               <View style={{ flex: 1 }}>
                 <Button
-                  title='Update'
+                  title='Cập nhật'
                   onPress={this.submit}
                   backgroundColor='#E44C4C'
                 />

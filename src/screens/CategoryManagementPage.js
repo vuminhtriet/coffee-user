@@ -41,7 +41,7 @@ export default class CategoryManagementPage extends Component {
       >
         <View style={{ width: '100%' }}>
           <HeaderTitle
-            title='Shop categories'
+            title='Danh mục quán'
             onBack={this.goBack}
             rightIcon={
               // <BorderButton
@@ -66,7 +66,7 @@ export default class CategoryManagementPage extends Component {
                 }}
                 onPress={this.openAddCategory}
               >
-                <Text style={{ color: '#FFFFFF', fontSize: 18 }}>+ Add</Text>
+                <Text style={{ color: '#FFFFFF', fontSize: 18 }}>+ Thêm</Text>
               </TouchableOpacity>
             }
           />

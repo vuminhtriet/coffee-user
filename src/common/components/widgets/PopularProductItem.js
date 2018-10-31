@@ -26,25 +26,25 @@ class PopularProductItem extends Component {
   }
 
   componentDidMount() {
-    const { navigation, item } = this.props
-    const url = `${TEST_URL}/api/shops/${item.shopId}?filter=%7B"fields":"shopName"%7D`
+    // const { navigation, item } = this.props
+    // const url = `${TEST_URL}/api/shops/${item.shopId}?filter=%7B"fields":"shopName"%7D`
 
-    this.setState({ loading: true }, () => {
-      axios({
-        url,
-        timeout: 5000
-      })
-        .then(response => {
-          const shop = response.data
-          this.setState({
-            shopName: shop.shopName,
-            loading: false
-          })
-        })
-        .catch(e => {
-          this.setState({ shopName: null })
-        })
-    })
+    // this.setState({ loading: true }, () => {
+    //   axios({
+    //     url,
+    //     timeout: 5000
+    //   })
+    //     .then(response => {
+    //       const shop = response.data
+    //       this.setState({
+    //         shopName: shop.shopName,
+    //         loading: false
+    //       })
+    //     })
+    //     .catch(e => {
+    //       this.setState({ shopName: null })
+    //     })
+    // })
     
   }
 
@@ -82,18 +82,18 @@ class PopularProductItem extends Component {
               source={require('../../../assets/drinkplaceholder.png')}
             />
           }
-          <Text numberOfLines={2} style={{ marginTop: 5, marginBottom: 0, textAlign: 'center', 
+          <Text numberOfLines={1} style={{ marginTop: 5, marginBottom: 0, textAlign: 'center', 
           paddingLeft: 5, paddingRight: 5, fontSize: 17, fontWeight: 'bold' }}>
             {`${item.productName}`}
           </Text>
-          {shopName
-            ? <Text numberOfLines={2} style={{ marginTop: 5, marginBottom: 0, textAlign: 'center', 
+          {item.shop && item.shop.shopName
+            ? <Text numberOfLines={1} style={{ marginTop: 5, marginBottom: 0, textAlign: 'center', 
             paddingLeft: 5, paddingRight: 5 }}>
-              {`${shopName}`}
+              {`${item.shop.shopName}`}
             </Text>
-            : <Text numberOfLines={2} style={{ marginTop: 5, marginBottom: 0, textAlign: 'center', 
+            : <Text numberOfLines={1} style={{ marginTop: 5, marginBottom: 0, textAlign: 'center', 
             paddingLeft: 5, paddingRight: 5 }}>
-              {`unknown`}
+              {`không xác định`}
             </Text>
           }
           <View style={{

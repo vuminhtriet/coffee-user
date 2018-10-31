@@ -10,6 +10,7 @@ import { getPopularProducts, loadMorePopularProducts } from '../actions'
 const mapDispatchToProps = (dispatch, props) => ({
   getPopularProducts: async (page = 0, sort = 'productTotalRating DESC', options = {}) => {
     try {
+      const filter = {"include":{"relation":"shop","scope":{"fields":"shopName"}},"where":{"productIsPopular":true},"order":sort}
       // const filter = {
       //   'include': [
       //     'images',
@@ -38,7 +39,8 @@ const mapDispatchToProps = (dispatch, props) => ({
       //   'include': ['shop']
       // }
       // const url = `${BASE_URL}/api/products/search?searchStr=&page=${page}&pageSize=${PAGE_SIZE}&sort=${sort}&options=${JSON.stringify(options)}`
-      const url = `${TEST_URL}/api/products?filter%5Bwhere%5D%5BproductIsPopular%5D=true&filter[order]=${sort}`
+      // const url = `${TEST_URL}/api/products?filter%5Bwhere%5D%5BproductIsPopular%5D=true&filter[order]=${sort}`
+      const url = `${TEST_URL}/api/products?filter=${JSON.stringify(filter)}`
       const response = await axios({ url })
       if (response && response.data) {
         // if (response.data.length === 0) {

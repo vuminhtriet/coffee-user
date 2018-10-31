@@ -24,7 +24,7 @@ export default class StoreShipping extends Component {
         backgroundColor: '#fff'
       }}>
         <Text style={{ fontSize: 16, paddingBottom: 3, color: '#000', fontWeight: 'bold' }}>
-          Shipping information
+          Thông tin giao hàng
         </Text>
         <View>
           {shop.shopShippingTypes && shop.shopShippingTypes.map((item, index) => {

@@ -137,6 +137,11 @@ export default class SignUpDetailForm extends Component {
                 {errors.confirmPassword}
               </FormValidationMessage>
             )}
+            {errors.signup && (
+              <FormValidationMessage>
+                {errors.signup}
+              </FormValidationMessage>
+            )}
             <Button
               title='Continue'
               onPress={this.onNext}
@@ -333,17 +338,38 @@ export default class SignUpDetailForm extends Component {
           })
         }
         try {
-          // Test
-          this.tempToken = await verifyPassword(value, password)
-          result = await createPassword(user.password, this.tempToken)
-          if (!result) {
-            throw new Error('SERVER_ERROR')
-          }
-        } catch (error) {
+          result = await signup(value, password)
+          // if (result.success) {
+          // return this.setState({
+          //   signup: true
+          //   // password: result.password
+          // })
+          // } else if (result.message) {
+          //   return this.setState({
+          //     error: result.message
+          //   })
+          // }
+          errors.signup = "sfasf"
           return this.setState({
-            errorStep2: 'Unknow error from server.'
+              errors
+            })
+        } catch (error) {
+          this.setState({
+            error: "Can't signup now."
           })
         }
+        // try {
+        //   // Test
+        //   this.tempToken = await verifyPassword(value, password)
+        //   result = await createPassword(user.password, this.tempToken)
+        //   if (!result) {
+        //     throw new Error('SERVER_ERROR')
+        //   }
+        // } catch (error) {
+        //   return this.setState({
+        //     errorStep2: 'Unknow error from server.'
+        //   })
+        // }
         break
       case 3:
         if (!user.displayName || !user.displayName.trim()) {

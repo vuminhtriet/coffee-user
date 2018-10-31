@@ -18,7 +18,7 @@ export default class StoreImages extends Component {
         overflow: 'visible' // for custom animations
       }}>
         <Image
-          source={item.fullUrl ? { uri: item.fullUrl } : require('../../../assets/shopplaceholder.jpg')}
+          source={item ? { uri: item } : require('../../../assets/shopplaceholder.jpg')}
           style={{ position: 'absolute', width: '100%', height: '100%' }} />
       </View>
     )
@@ -26,7 +26,7 @@ export default class StoreImages extends Component {
 
   render () {
     const { images } = this.props
-    const slideImages = images.filter(item => item.type === 3)
+    const slideImages = images.slice(1)
     if (slideImages.length === 0) {
       return null
     }

@@ -15,7 +15,7 @@ export default class ShopPage extends Component {
         styles={{ flexDirection: 'column' }}
       >
         <View style={{ width: '100%', zIndex: 999 }}>
-          <HeaderTitle canBack={false} title={`My shop`} />
+          <HeaderTitle canBack={false} title={`Quán của tôi`} />
         </View>
         <View style={{ width: '100%', flex: 1, zIndex: 1 }}>
           <ShopSetting navigation={navigation} />

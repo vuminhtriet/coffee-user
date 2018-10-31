@@ -9,3 +9,8 @@ export function validateMinLength (text, min = 6) {
   }
   return true
 }
+
+export function validatePhoneNumber (phone) {
+  const re = /^[0-9]/
+  return re.test(String(phone).toLowerCase())
+}

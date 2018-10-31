@@ -261,7 +261,7 @@ export default ({ token = undefined, store = {} }) => {
       [SCREENS.HomeStack]: {
         screen: HomeStack,
         navigationOptions: {
-          tabBarLabel: 'Home',
+          tabBarLabel: 'Trang chủ',
           tabBarIcon: ({ tintColor, focused }) => (
             <Icon
               name='home'
@@ -289,7 +289,7 @@ export default ({ token = undefined, store = {} }) => {
       [SCREENS.CartStack]: {
         screen: CartStack,
         navigationOptions: {
-          tabBarLabel: 'Cart',
+          tabBarLabel: 'Giỏ hàng',
           tabBarIcon: ({ tintColor, focused }) => (
             <TabbarIcon
               tintColor={tintColor}
@@ -300,7 +300,7 @@ export default ({ token = undefined, store = {} }) => {
       [SCREENS.ShopStack]: {
         screen: ShopStack,
         navigationOptions: {
-          tabBarLabel: 'My shop',
+          tabBarLabel: 'Quán của tôi',
           tabBarIcon: ({ tintColor, focused }) => (
             <Icon
               name='store'
@@ -314,7 +314,7 @@ export default ({ token = undefined, store = {} }) => {
       [SCREENS.AccountStack]: {
         screen: AccountStack,
         navigationOptions: {
-          tabBarLabel: 'Account',
+          tabBarLabel: 'Tài khoản',
           tabBarIcon: ({ tintColor, focused }) => (
             <Icon
               name='user'

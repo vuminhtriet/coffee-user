@@ -68,8 +68,8 @@ class CategoryList extends Component {
         id={item.id}
         shopId={item.shopId}
         image={item.image}
-        name={item.categoryName}
-        // totalProduct={item.id}
+        name={item.name}
+        totalProduct={item.products.length}
         itemWidth={ITEM_WITDH}
         itemHeight={ITEM_HEIGHT}
       />

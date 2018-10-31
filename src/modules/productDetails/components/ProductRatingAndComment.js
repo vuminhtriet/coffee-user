@@ -45,7 +45,7 @@ export default class ProductRatingAndComment extends PureComponent {
         backgroundColor: '#fff'
       }}>
         <View style={{ display: 'flex', flexDirection: 'row', height: 32 }}>
-          <Text style={{ fontSize: 18, color: '#6F4E37' }}>Rating and comments</Text>
+          <Text style={{ fontSize: 18, color: '#6F4E37' }}>Đánh giá và bình luận</Text>
           <TouchableOpacity
             onPress={this.openModal}
             style={{
@@ -63,7 +63,7 @@ export default class ProductRatingAndComment extends PureComponent {
               alignContent: 'center'
             }}
           >
-            <Text style={{ color: 'red', textAlign: 'center' }}>View All</Text>
+            <Text style={{ color: 'red', textAlign: 'center' }}>Xem Tất Cả</Text>
           </TouchableOpacity>
         </View>
 

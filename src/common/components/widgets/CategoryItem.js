@@ -27,26 +27,26 @@ class CategoryItem extends PureComponent {
   }
 
   componentDidMount() {
-    const { navigation, id, shopId } = this.props
-    // const url = `${TEST_URL}/api/categories/${id}/products/count`
-    const url = `${TEST_URL}/api/products?filter[where][categoryId]=${id}&filter[where][shopId]=${shopId}`
+    // const { navigation, id, shopId } = this.props
+    // // const url = `${TEST_URL}/api/categories/${id}/products/count`
+    // const url = `${TEST_URL}/api/products?filter[where][categoryId]=${id}&filter[where][shopId]=${shopId}`
 
-    this.setState({ loading: true }, () => {
-      axios({
-        url,
-        timeout: 5000
-      })
-        .then(response => {
-          const item = response.data
-          this.setState({
-            count: item.length,
-            loading: false
-          })
-        })
-        .catch(e => {
-          this.setState({ count: null })
-        })
-    })
+    // this.setState({ loading: true }, () => {
+    //   axios({
+    //     url,
+    //     timeout: 5000
+    //   })
+    //     .then(response => {
+    //       const item = response.data
+    //       this.setState({
+    //         count: item.length,
+    //         loading: false
+    //       })
+    //     })
+    //     .catch(e => {
+    //       this.setState({ count: null })
+    //     })
+    // })
     
   }
 
@@ -79,7 +79,7 @@ class CategoryItem extends PureComponent {
             {`${name}`}
           </Text>
           <Text style={{ marginBottom: 0, textAlign: 'center', color: '#aaa5a5' }}>
-            {`${count} products`}
+            {`${totalProduct} đồ uống`}
           </Text>
         </View>
       </TouchableOpacity>

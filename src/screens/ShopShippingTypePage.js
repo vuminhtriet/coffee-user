@@ -40,7 +40,7 @@ export default class ShopShippingTypePage extends Component {
       >
         <View style={{ width: '100%' }}>
           <HeaderTitle
-            title='Shop delivery methods'
+            title='Phương thức giao hàng'
             onBack={this.goBack}
             rightIcon={
               <TouchableOpacity
@@ -54,7 +54,7 @@ export default class ShopShippingTypePage extends Component {
                 }}
                 onPress={this.toggleShipping}
               >
-                <Text style={{ color: '#FFFFFF', fontSize: 18 }}>+ Add</Text>
+                <Text style={{ color: '#FFFFFF', fontSize: 18 }}>+ Thêm</Text>
               </TouchableOpacity>
             }
           />

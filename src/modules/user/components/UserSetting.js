@@ -208,7 +208,7 @@ export default class UserSetting extends Component {
             <ListItem
               onPress={() => token && navigation.navigate(SCREENS.UserInformation)}
               leftIcon={{ name: 'user-o', type: 'font-awesome' }}
-              title='General information'
+              title='Thông Tin Chung'
               hideChevron
               containerStyle={{ borderBottomWidth: 0, borderTopWidth: 0 }}
             />
@@ -254,7 +254,7 @@ export default class UserSetting extends Component {
             /> */}
           </Card>
           <Button
-            title={token ? 'LOG OUT' : 'SIGN IN / SIGN UP'}
+            title={token ? 'ĐĂNG XUẤT' : 'ĐĂNG NHẬP / ĐĂNG KÝ'}
             backgroundColor='#E44C4C'
             containerViewStyle={{ marginVertical: 20 }}
             onPress={this.onNext}
@@ -313,12 +313,12 @@ export default class UserSetting extends Component {
                   marginTop: 10
                 }}>
                   <Button
-                    title='Cancel'
+                    title='Hủy'
                     onPress={this.cancelUpload}
                     containerViewStyle={{ flex: 1, paddingRight: 5 }}
                   />
                   <Button
-                    title='Upload'
+                    title='Đăng'
                     backgroundColor='#992320'
                     onPress={this.submitImages}
                     containerViewStyle={{ flex: 1, paddingLeft: 5 }}

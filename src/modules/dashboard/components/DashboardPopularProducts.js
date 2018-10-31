@@ -80,11 +80,11 @@ class DashboardPopularProducts extends Component {
           style={{ width: '100%', flexDirection: 'row', height: 40, alignItems: 'center', backgroundColor: '#FFFFFF' }}
         >
           <View style={{ flex: 1, paddingLeft: 10 }}>
-            <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#E64B47' }}>Popular drinks</Text>
+            <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#E64B47' }}>Đồ uống phổ biến</Text>
           </View>
           <View style={{ flex: 1, paddingRight: 10 }}>
             <TouchableOpacity onPress={this._onNavigateToPopularProductsPage}>
-              <Text style={{ textAlign: 'right', color: '#67B6F4' }}>VIEW ALL</Text>
+              <Text style={{ textAlign: 'right', color: '#67B6F4' }}>XEM TẤT CẢ</Text>
             </TouchableOpacity>
           </View>
         </View>

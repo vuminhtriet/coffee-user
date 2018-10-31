@@ -26,7 +26,7 @@ export default class AddProductPage extends Component {
         styles={{ flexDirection: 'column', height: '100%' }}
       >
         <View style={{ width: '100%' }}>
-          <HeaderTitle title='Add product' onBack={this.goBack} />
+          <HeaderTitle title='Thêm đồ uống' onBack={this.goBack} />
         </View>
         <View style={{ width: '100%', flex: 1 }}>
           <Product navigation={navigation} />

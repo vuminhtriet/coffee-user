@@ -13,33 +13,6 @@ export default class ShopInformationPage extends Component {
       shop: {},
       address: {}
     }
-    this.changeText = this.changeText.bind(this)
-    this.ready = this.ready.bind(this)
-  }
-
-  ready (shop, address) {
-    this.setState({
-      shop, address
-    })
-  }
-
-  changeText (text, object, key) {
-    const old = this.state[object]
-    if (key === 'countryId') {
-      return this.setState({
-        [object]: {
-          ...old,
-          countryId: text,
-          cityId: ''
-        }
-      })
-    }
-    this.setState({
-      [object]: {
-        ...old,
-        [key]: text
-      }
-    })
   }
 
   render () {
@@ -52,16 +25,12 @@ export default class ShopInformationPage extends Component {
       >
         <View style={{ width: '100%' }}>
           <HeaderTitle
-            title='Shop information'
+            title='Thông tin quán'
             onBack={() => navigation.goBack()} />
         </View>
         <View style={{ width: '100%', flex: 1 }}>
           <ShopInformation
-            currentShop={shop}
             navigation={navigation}
-            currentAddress={address}
-            ready={this.ready}
-            changeText={this.changeText}
           />
         </View>
       </DefaultPage>

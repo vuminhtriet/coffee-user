@@ -25,7 +25,7 @@ export default class ShopProduct extends Component {
   }
 
   render () {
-    const { shopProduct, currencyUnits } = this.props
+    const { shopProduct, currencyUnits, shopName } = this.props
 
     return (
       <View style={{
@@ -38,7 +38,7 @@ export default class ShopProduct extends Component {
         backgroundColor: '#fff'
       }}>
         <View style={{ display: 'flex', flexDirection: 'row', height: 32 }}>
-          <Text style={{ fontSize: 18, color: '#6F4E37' }}>From the same shop</Text>
+          <Text style={{ fontSize: 18, color: '#6F4E37' }}>Các đồ uống cùng quán</Text>
           {/* <TouchableOpacity
             onPress={() => {}}
             style={{
@@ -82,6 +82,7 @@ export default class ShopProduct extends Component {
             item={item.item}
             itemWith={ITEM_WITDH}
             itemHeight={ITEM_HEIGHT}
+            shopName={shopName}
           />}
           // onRefresh={this.onRefresh}
           // onEndReached={this.onLoadMore}

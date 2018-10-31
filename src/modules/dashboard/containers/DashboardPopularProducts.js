@@ -7,35 +7,38 @@ import { TEST_URL } from '../../../common/models'
 import { PAGE_SIZE } from '../../../common/configs'
 import { getDashboardPopularProducts } from '../actions'
 
-const filter = {
-  'include': [
-    'images',
-    'shop',
-    {
-      'relation': 'productPrices',
-      'scope': {
-        'where': {
-          'status': 1
-        },
-        'include': [
-          'cashUnit',
-          'electricUnit',
-          'promotionPrice'
-        ]
-      }
-    }
-  ],
-  'where': {
-    'status': 1
-  },
-  'limit': PAGE_SIZE
-}
+// const filter = {
+//   'include': [
+//     'images',
+//     'shop',
+//     {
+//       'relation': 'productPrices',
+//       'scope': {
+//         'where': {
+//           'status': 1
+//         },
+//         'include': [
+//           'cashUnit',
+//           'electricUnit',
+//           'promotionPrice'
+//         ]
+//       }
+//     }
+//   ],
+//   'where': {
+//     'status': 1
+//   },
+//   'limit': PAGE_SIZE
+// }
+
+const filter = {"include":{"relation":"shop","scope":{"fields":"shopName"}},"where":{"productIsPopular":true},"order":"productTotalRating%20DESC"}
 
 const mapDispatchToProps = (dispatch, props) => ({
   getPopularProducts: async (token) => {
     try {
       // const url = `${BASE_URL}/api/products?filter=${JSON.stringify(filter)}`
-      const url = `${TEST_URL}/api/products?filter%5Bwhere%5D%5BproductIsPopular%5D=true&filter[order]=productTotalRating%20DESC`
+      // const url = `${TEST_URL}/api/products?filter%5Bwhere%5D%5BproductIsPopular%5D=true&filter[order]=productTotalRating%20DESC`
+      const url = `${TEST_URL}/api/products?filter=${JSON.stringify(filter)}`
       const response = await axios({ url })
       if (response && response.data) {
         dispatch(getDashboardPopularProducts([...response.data]))

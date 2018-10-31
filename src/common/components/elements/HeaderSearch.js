@@ -42,7 +42,7 @@ class HeaderSearch extends PureComponent {
           onChangeText={this._onChangeText}
           onClear={this._onClear}
           onSubmitEditing={this._onSearch}
-          placeholder='Search in Drinkaway...'
+          placeholder='Tìm kiếm quán cafe, đồ uống,...'
           containerStyle={{ backgroundColor: '#6F4E37', flex: 1, borderTopWidth: 0, borderBottomWidth: 0 }}
           inputStyle={{ backgroundColor: 'white' }}
         />

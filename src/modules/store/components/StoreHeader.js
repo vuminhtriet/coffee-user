@@ -23,6 +23,20 @@ const initialLayout = {
   width: Dimensions.get('window').width
 }
 
+const filter = {
+	"include":{
+		"relation":"categories",
+		"scope":{
+			"include":{
+				"relation":"products",
+				"scope":{
+					"fields":"productName"
+				}
+			}
+		}
+	}
+}
+
 export default class StoreHeader extends Component {
   constructor(props) {
     super(props)
@@ -31,9 +45,9 @@ export default class StoreHeader extends Component {
       index: 0,
       categories: null,
       routes: [
-        { key: 'information', title: 'Information' },
-        { key: 'categories', title: 'Categories' },
-        { key: 'products', title: 'All drinks' }
+        { key: 'information', title: 'Thông tin' },
+        { key: 'categories', title: 'Danh mục' },
+        { key: 'products', title: 'Đồ uống' }
       ]
     }
     this.renderScene = this.renderScene.bind(this)
@@ -45,7 +59,8 @@ export default class StoreHeader extends Component {
     const { getStoreInformation, id } = this.props
     id && getStoreInformation(id)
 
-    const url = `${TEST_URL}/api/categories?filter[where][shopId]=${id}`
+    // const url = `${TEST_URL}/api/categories?filter[where][shopId]=${id}`
+    const url = `${TEST_URL}/api/shops/${id}?filter=${JSON.stringify(filter)}`
 
     this.setState({ loading: true }, () => {
       axios({
@@ -53,7 +68,7 @@ export default class StoreHeader extends Component {
         timeout: 5000
       })
         .then(response => {
-          const privateCategories = response.data
+          const privateCategories = response.data.categories
           this.setState({
             categories: privateCategories,
             loading: false
@@ -104,7 +119,7 @@ export default class StoreHeader extends Component {
       case 'categories':
         return <CategoryList categories={categories} />
       case 'products':
-        return <ProductList products={detail.products} />
+        return <ProductList detail={detail} />
       default:
         return null
     }
@@ -116,10 +131,10 @@ export default class StoreHeader extends Component {
 
   render() {
     const { detail, navigation } = this.props
-    // const cover = detail && detail.images ? detail.images.find(item => item.type === 2) : null
-    // const logo = detail && detail.images ? detail.images.find(item => item.type === 1) : null
-    const cover = detail.shopFeaturedImages ? detail.shopFeaturedImages[0] : null
-    const logo = detail.shopLogo ? detail.shopLogo : null
+    const cover = detail && detail.shopFeaturedImages ? detail.shopFeaturedImages[0] : null
+    const logo = detail && detail.shopLogo ? detail.shopLogo : null
+    // const cover = ''
+    // const logo = ''
     return (
       <View style={{ flex: 1 }}>
         {

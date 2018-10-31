@@ -17,19 +17,32 @@ export default class AuthenticatePage extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      email: '',
+      pass: '',
       index: 0,
       routes: [
-        { key: 'signin', title: 'SIGN IN' },
-        { key: 'signup', title: 'SIGN UP' }
+        { key: 'signin', title: 'ĐĂNG NHẬP' },
+        { key: 'signup', title: 'ĐĂNG KÝ' }
       ]
     }
     this.renderScene = this.renderScene.bind(this)
     this.renderHeader = this.renderHeader.bind(this)
     this.handleIndexChange = this.handleIndexChange.bind(this)
+    this.setEmail = this.setEmail.bind(this)
+    this.setPassword = this.setPassword.bind(this)
   }
   handleIndexChange (index) {
     this.setState({ index })
   }
+
+  setEmail (value) {
+    this.setState({ email: value })
+  }
+
+  setPassword (value) {
+    this.setState({ pass: value })
+  }
+
   renderHeader (props) {
     return <TabBar
       {...props}
@@ -40,11 +53,13 @@ export default class AuthenticatePage extends Component {
   }
   renderScene ({ route }) {
     const { navigation } = this.props
+    const {email,pass} = this.state
     switch (route.key) {
       case 'signin':
-        return <LoginForm />
+        return <LoginForm email={email} pass={pass}/>
       case 'signup':
-        return <SignUpForm navigation={navigation} />
+        return <SignUpForm navigation={navigation} setEmail={this.setEmail} 
+        setPassword={this.setPassword} handleIndexChange={this.handleIndexChange}/>
       default:
         return null
     }
@@ -58,7 +73,7 @@ export default class AuthenticatePage extends Component {
       >
         <View style={{ width: '100%' }}>
           <HeaderTitle
-            title='SIGN IN / SIGN UP'
+            title='ĐĂNG NHẬP / ĐĂNG KÝ'
             canBack={false} onBack={() => navigation.goBack()}
           />
         </View>

@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { fetch, loading } from '../../../common/effects'
 import { uploadShopImage, deleteShopImage } from '../../../common/firebase'
 import ShopSetting from '../components/ShopSetting'
-import { BASE_URL } from '../../../common/models'
+import { BASE_URL, TEST_URL } from '../../../common/models'
 import { PAGE_SIZE } from '../../../common/configs'
 import {
   setShopInformation,
@@ -23,71 +23,19 @@ export const mapDispatchToProps = (dispatch, props) => ({
   getShopInformation: async (user, token, page = 0) => {
     try {
       const filter = {
-        include: [
-          {
-            'relation': 'products',
-            'scope': {
-              'include': [
-                {
-                  'relation': 'productPrices',
-                  'scope': {
-                    'where': {
-                      'status': 1
-                    },
-                    'include': [
-                      'cashUnit',
-                      'electricUnit',
-                      'promotionPrice'
-                    ]
-                  }
-                },
-                'countries',
-                {
-                  'relation': 'productVariations',
-                  'scope': {
-                    'where': {
-                      'status': 1
-                    }
-                  }
-                },
-                'images',
-                {
-                  'relation': 'productShippingCountries',
-                  'scope': {
-                    'where': {
-                      'status': 1
-                    }
-                  }
-                }
-              ],
-              'limit': PAGE_SIZE,
-              'offset': page * PAGE_SIZE,
-              'order': 'totalView DESC'
-            }
-          },
-          'images',
-          {
-            'relation': 'shopPaymentMethods',
-            'scope': {
-              'where': {
-                'status': 'active'
-              },
-              'include': 'paymentType'
-            }
-          },
-          'shopShippingTypes',
-          'addresses',
-          {
-            'relation': 'privateCategories',
-            'scope': {
-              'where': {
-                'status': 1
+        "include":{
+          "relation":"categories",
+          "scope":{
+            "include":{
+              "relation":"products",
+              "scope":{
+                "fields":"productName"
               }
             }
           }
-        ]
+        }
       }
-      const url = `${BASE_URL}/api/shops/${user.shop.id}?filter=${JSON.stringify(filter)}`
+      const url = `${TEST_URL}/api/shops/${user.shopId}?filter%5Binclude%5D%5Bproducts%5D`
       return loading(dispatch, async () => {
         const response = await fetch({
           url,
@@ -98,10 +46,10 @@ export const mapDispatchToProps = (dispatch, props) => ({
         if (response && response.data) {
           const shopId = response.data.id
           const response_ = await fetch({
-            url: `${BASE_URL}/api/privateCategories/${shopId}/images`,
-            headers: {
-              Authorization: token
-            }
+            url : `${TEST_URL}/api/shops/${shopId}?filter=${JSON.stringify(filter)}`
+            // headers: {
+            //   Authorization: token
+            // }
           }, dispatch)
           if (response_ && response_.data) {
             dispatch(setShopInformation({
@@ -114,10 +62,10 @@ export const mapDispatchToProps = (dispatch, props) => ({
             }))
             dispatch(getShopProducts(response.data.products))
             dispatch(setShopImage(response.data.images))
-            dispatch(setShopAddress(response.data.addresses.find(item => item.isDefault)))
+            dispatch(setShopAddress(response.data.address))
             dispatch(setShopPayment(response.data.shopPaymentMethods))
             dispatch(setShopDeliveryMethods(response.data.shopShippingTypes))
-            dispatch(setShopCategories(response_.data))
+            dispatch(setShopCategories(response_.data.categories))
             return true
           } else {
             return false
@@ -129,47 +77,48 @@ export const mapDispatchToProps = (dispatch, props) => ({
       return false
     }
   },
-  getShopProducts: async (shop, page = 0, sort = 'totalView DESC') => {
+  getShopProducts: async (shop, page = 0, sort = 'productTotalRating DESC') => {
     try {
-      const filter = {
-        include: [
-          {
-            'relation': 'productPrices',
-            'scope': {
-              'where': {
-                'status': 1
-              },
-              'include': [
-                'cashUnit',
-                'electricUnit',
-                'promotionPrice'
-              ]
-            }
-          },
-          'countries',
-          {
-            'relation': 'productVariations',
-            'scope': {
-              'where': {
-                'status': 1
-              }
-            }
-          },
-          'images',
-          {
-            'relation': 'productShippingCountries',
-            'scope': {
-              'where': {
-                'status': 1
-              }
-            }
-          }
-        ],
-        'limit': PAGE_SIZE,
-        'offset': page * PAGE_SIZE,
-        'order': sort
-      }
-      const url = `${BASE_URL}/api/shops/${shop.id}/products?filter=${JSON.stringify(filter)}`
+      // const filter = {
+      //   include: [
+      //     {
+      //       'relation': 'productPrices',
+      //       'scope': {
+      //         'where': {
+      //           'status': 1
+      //         },
+      //         'include': [
+      //           'cashUnit',
+      //           'electricUnit',
+      //           'promotionPrice'
+      //         ]
+      //       }
+      //     },
+      //     'countries',
+      //     {
+      //       'relation': 'productVariations',
+      //       'scope': {
+      //         'where': {
+      //           'status': 1
+      //         }
+      //       }
+      //     },
+      //     'images',
+      //     {
+      //       'relation': 'productShippingCountries',
+      //       'scope': {
+      //         'where': {
+      //           'status': 1
+      //         }
+      //       }
+      //     }
+      //   ],
+      //   'limit': PAGE_SIZE,
+      //   'offset': page * PAGE_SIZE,
+      //   'order': sort
+      // }
+      // const url = `${BASE_URL}/api/shops/${shop.id}/products?filter=${JSON.stringify(filter)}`
+      const url = `${TEST_URL}/api/shops/${shop.id}/products?filter[order]=${sort}`
       const response = await axios({
         url
       })

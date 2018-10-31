@@ -20,6 +20,8 @@ export const BASE_URL = 'http://188.166.183.113:5001'
 
 export const TEST_URL = 'https://drinkaway.herokuapp.com'
 
+export const ADDRESS_URL = 'https://thongtindoanhnghiep.co'
+
 export const CART_STATUS = {
   SHOPPING: 0,
   TO_BE_CONFIRMED: 1,
@@ -112,25 +114,25 @@ export const ROOT_STORAGE_PATH = 'gs://toptrade-5cbbe.appspot.com'
 export const PRODUCT_SORT_LIST = [
   {
     id: 1,
-    title: 'Popularity',
+    title: 'Độ phổ biến',
     value: 'productTotalRating DESC',
     type: 1
   },
   {
     id: 2,
-    title: 'Letter Order',
+    title: 'Thứ tự chữ cái',
     value: 'productName ASC',
     type: 0
   },
   {
     id: 3,
-    title: 'Oldest',
+    title: 'Cũ nhất',
     value: 'productCreatedAt ASC',
     type: 0
   },
   {
     id: 4,
-    title: 'Newest',
+    title: 'Mới nhất',
     value: 'productCreatedAt DESC',
     type: 0
   },
@@ -139,25 +141,25 @@ export const PRODUCT_SORT_LIST = [
 export const SHOP_SORT_LIST = [
   {
     id: 1,
-    title: 'Popularity',
+    title: 'Độ phổ biến',
     value: 'shopRating DESC',
     type: 1
   },
   {
     id: 2,
-    title: 'Letter Order',
+    title: 'Thứ tự chữ cái',
     value: 'shopName ASC',
     type: 0
   },
   {
     id: 3,
-    title: 'Oldest',
+    title: 'Cũ nhất',
     value: 'dateCreatedAt ASC',
     type: 0
   },
   {
     id: 4,
-    title: 'Newest',
+    title: 'Mới nhất',
     value: 'dateCreatedAt DESC',
     type: 0
   },

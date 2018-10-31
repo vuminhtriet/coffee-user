@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { connect } from 'react-redux'
-import { BASE_URL } from '../../../common/models'
+import { BASE_URL, TEST_URL } from '../../../common/models'
 import CategoryDetail from '../components/CategoryDetail'
 import { MODULE_NAME } from '../models'
 import { MODULE_NAME as MODULE_USER } from '../../user/models'
@@ -9,9 +9,12 @@ import { mapDispatchToProps as categoryHandler } from './CategoryList'
 import { fetch, loading } from '../../../common/effects'
 
 const mapDispatchToProps = (dispatch, props) => ({
-  getProductsInCategories: async (id) => {
+  getProductsInCategories: async (id, shop) => {
     try {
-      const url = `${BASE_URL}/api/privateCategories/${id}/product`
+      // const url = `${BASE_URL}/api/privateCategories/${id}/product`
+      // const url = `${TEST_URL}/api/products?filter[where][categoryId]=${id}&filter[where][shopId]=${shop.id}&filter[order]=${sort}`
+      const filter = {"include":{"relation":"shop","scope":{"fields":"shopName"}},"where":{"categoryId":id,"shopId":shop.id}}
+      const url = `${TEST_URL}/api/products?filter=${JSON.stringify(filter)}`
       return loading(dispatch, async () => {
         const response = await fetch({
           url
@@ -30,13 +33,12 @@ const mapDispatchToProps = (dispatch, props) => ({
       const result = await loading(dispatch, async () => {
         if (categoryName !== category.name) {
           await fetch({
-            url: `${BASE_URL}/api/shops/${shop.id}/privateCategories/${category.id}`,
-            method: 'PUT',
-            headers: {
-              Authorization: token
-            },
+            url: `${TEST_URL}/api/categories/${category.id}`,
+            method: 'PATCH',
+            // headers: {
+            //   Authorization: token
+            // },
             data: {
-              ...category,
               name: categoryName
             }
           }, dispatch)
@@ -44,31 +46,31 @@ const mapDispatchToProps = (dispatch, props) => ({
         }
         await Promise.all(deletes.map(product => {
           return axios({
-            url: `${BASE_URL}/api/products/${product.id}`,
+            url: `${TEST_URL}/api/products/${product.id}`,
             method: 'PATCH',
-            headers: {
-              Authorization: token
-            },
+            // headers: {
+            //   Authorization: token
+            // },
             data: {
-              privateCategoryId: null
+              categoryId: null
             }
           }).catch(error => console.log('DELETE product', error.response))
         }))
         await Promise.all(add.map(product => {
           return axios({
-            url: `${BASE_URL}/api/products/${product.id}`,
+            url: `${TEST_URL}/api/products/${product.id}`,
             method: 'PATCH',
-            headers: {
-              Authorization: token
-            },
+            // headers: {
+            //   Authorization: token
+            // },
             data: {
-              privateCategoryId: category.id
+              categoryId: category.id
             }
           }).catch(error => console.log('ADD product', error.response))
         }))
         return true
       })
-      return result
+      return false
     } catch (error) {
       return false
     }

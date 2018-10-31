@@ -37,7 +37,7 @@ export default class ProductManagementPage extends Component {
       >
         <View style={{ width: '100%' }}>
           <HeaderTitle
-            title='Shop products'
+            title='Đồ uống của quán'
             onBack={this.goBack}
             rightIcon={
               // <BorderButton
@@ -62,7 +62,7 @@ export default class ProductManagementPage extends Component {
                 }}
                 onPress={this._navigateAddProductPage}
               >
-                <Text style={{ color: '#FFFFFF', fontSize: 18 }}>+ Add</Text>
+                <Text style={{ color: '#FFFFFF', fontSize: 18 }}>+ Thêm</Text>
               </TouchableOpacity>
             }
           />

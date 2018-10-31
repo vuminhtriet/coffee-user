@@ -27,7 +27,7 @@ export default class EditProductPage extends Component {
         styles={{ flexDirection: 'column', height: '100%' }}
       >
         <View style={{ width: '100%' }}>
-          <HeaderTitle title='Edit product' onBack={this.goBack} />
+          <HeaderTitle title='Chỉnh sửa đồ uống' onBack={this.goBack} />
         </View>
         <View style={{ width: '100%', flex: 1 }}>
           <ProductEdit navigation={navigation} product={params.product} />

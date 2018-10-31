@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { connect } from 'react-redux'
-import { BASE_URL } from '../../../common/models'
+import { BASE_URL, TEST_URL } from '../../../common/models'
 import { setShopCategories } from '../actions'
 import CategoryList from '../components/CategoryList'
 import { MODULE_NAME } from '../models'
@@ -10,12 +10,21 @@ import { MODULE_NAME as MODULE_USER } from '../../user/models'
 export const mapDispatchToProps = (dispatch, props) => ({
   getPrivateCategories: async (shop) => {
     try {
-      // const filter = {
-      //   where: {
-      //     status: 1
-      //   }
-      // }
-      const url = `${BASE_URL}/api/privateCategories/${shop.id}/images`
+      const filter = {
+        "include":{
+          "relation":"categories",
+          "scope":{
+            "include":{
+              "relation":"products",
+              "scope":{
+                "fields":"productName"
+              }
+            }
+          }
+        }
+      }
+      // const url = `${BASE_URL}/api/privateCategories/${shop.id}/images`
+      const url = `${TEST_URL}/api/shops/${shop.id}?filter=${JSON.stringify(filter)}`
       const response = await fetch({
         url
         // params: {
@@ -23,7 +32,7 @@ export const mapDispatchToProps = (dispatch, props) => ({
         // }
       }, dispatch)
       if (response && response.data) {
-        return dispatch(setShopCategories(response.data))
+        return dispatch(setShopCategories(response.data.categories))
       }
       return false
     } catch (error) {
@@ -32,18 +41,18 @@ export const mapDispatchToProps = (dispatch, props) => ({
   },
   deleteCategory: async (token, shop, item) => {
     try {
-      const url = `${BASE_URL}/api/shops/${shop.id}/privateCategories/${item.id}`
+      const url = `${TEST_URL}/api/categories/${item.id}`
       return loading(dispatch, async () => {
         const response = await fetch({
           url,
-          method: 'PUT',
-          headers: {
-            Authorization: token
-          },
-          data: {
-            ...item,
-            status: -1
-          }
+          method: 'DELETE',
+          // headers: {
+          //   Authorization: token
+          // },
+          // data: {
+          //   ...item,
+          //   status: -1
+          // }
         }, dispatch)
         if (response && response.data) {
           return true
@@ -54,21 +63,19 @@ export const mapDispatchToProps = (dispatch, props) => ({
       return false
     }
   },
-  addCategory: async (token, shop, shopName) => {
+  addCategory: async (token, shop, categoryName) => {
     try {
-      const url = `${BASE_URL}/api/privateCategories`
+      const url = `${TEST_URL}/api/categories`
       return loading(dispatch, async () => {
         const response = await fetch({
           url,
           method: 'POST',
-          headers: {
-            Authorization: token
-          },
+          // headers: {
+          //   Authorization: token
+          // },
           data: {
-            name: shopName,
-            shopId: shop.id,
-            totalProduct: 0,
-            status: 1
+            name: categoryName,
+            shopId: shop.id
           }
         }, dispatch)
         if (response && response.data) {

@@ -15,7 +15,7 @@ export default class UserPage extends Component {
         styles={{ flexDirection: 'column' }}
       >
         <View style={{ width: '100%' }}>
-          <HeaderTitle title='My account' />
+          <HeaderTitle title='Tài khoản của tôi' />
         </View>
         <View style={{ width: '100%', flex: 1 }}>
           <UserSetting navigation={navigation} />

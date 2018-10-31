@@ -58,8 +58,8 @@ class ShopItem extends Component {
             />
           }
           <Text
-            numberOfLines={2}
-            style={{ fontSize: 16, marginBottom: 0, textAlign: 'left', marginTop: 10 }}
+            numberOfLines={1}
+            style={{ fontWeight: 'bold',fontSize: 17, marginBottom: 0, textAlign: 'left', marginTop: 10 }}
           >
             {`${item.shopName}`}
           </Text>
@@ -80,7 +80,10 @@ class ShopItem extends Component {
               flexDirection: 'column',
               justifyContent: 'flex-start'
             }}>
-              <Text>{`${item.shopAddress}`}</Text>
+              {item.address && item.address.fullAddress
+              ? <Text numberOfLines = {3} style={{ }}>{`${item.address.fullAddress}`}</Text>
+              : <Text numberOfLines = {3} style={{ }}>{`không xác định`}</Text>
+              }
             </View>
             <View
               style={{

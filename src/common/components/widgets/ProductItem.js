@@ -20,7 +20,6 @@ class ProductItem extends Component {
     super(props)
 
     this.state = {
-      shopName: null,
     }
   }
 
@@ -35,31 +34,30 @@ class ProductItem extends Component {
   }
 
   componentDidMount() {
-    const { navigation, item } = this.props
-    const url = `${TEST_URL}/api/shops/${item.shopId}?filter=%7B"fields":"shopName"%7D`
+    // const { navigation, item } = this.props
+    // const url = `${TEST_URL}/api/shops/${item.shopId}?filter=%7B"fields":"shopName"%7D`
 
-    this.setState({ loading: true }, () => {
-      axios({
-        url,
-        timeout: 5000
-      })
-        .then(response => {
-          const shop = response.data
-          this.setState({
-            shopName: shop.shopName,
-            loading: false
-          })
-        })
-        .catch(e => {
-          this.setState({ shopName: null })
-        })
-    })
+    // this.setState({ loading: true }, () => {
+    //   axios({
+    //     url,
+    //     timeout: 5000
+    //   })
+    //     .then(response => {
+    //       const shop = response.data
+    //       this.setState({
+    //         shopName: shop.shopName,
+    //         loading: false
+    //       })
+    //     })
+    //     .catch(e => {
+    //       this.setState({ shopName: null })
+    //     })
+    // })
     
   }
 
   render() {
-    const { item, itemWith, itemHeight, currencyUnits } = this.props
-    const { shopName } = this.state
+    const { item, itemWith, itemHeight, currencyUnits, shopName } = this.props
     const { productCoverImage } = item
     // const fullUrl = getFirstImgUrl(images)
     return (
@@ -82,23 +80,23 @@ class ProductItem extends Component {
           }}
         >
           <Text
-            numberOfLines={2}
+            numberOfLines={1}
             style={{ fontWeight: 'bold',fontSize: 17, marginBottom: 0, textAlign: 'left' }}
           >
             {`${item.productName}`}
           </Text>
-          {shopName
+          {item.shop && item.shop.shopName
             ? <Text
-              numberOfLines={2}
+              numberOfLines={1}
               style={{ fontSize: 15, marginBottom: 0, textAlign: 'left' }}
             >
-              {`${shopName}`}
+              {`${item.shop.shopName}`}
             </Text>
             : <Text
-              numberOfLines={2}
+              numberOfLines={1}
               style={{ fontSize: 15, marginBottom: 0, textAlign: 'left' }}
             >
-              {`unknown`}
+              {`${shopName || 'không xác định'}`}
             </Text>
           }
           {productCoverImage

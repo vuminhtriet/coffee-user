@@ -46,7 +46,7 @@ class PopularShopItem extends Component {
               source={require('../../../assets/shopplaceholder.jpg')}
             />
           }
-          <Text numberOfLines = {2} style={{ fontWeight: 'bold', 
+          <Text numberOfLines = {1} style={{ fontWeight: 'bold', 
           fontSize: 17, paddingLeft: 3}}>
               {`${item.shopName}`}
           </Text>
@@ -64,7 +64,10 @@ class PopularShopItem extends Component {
               style={{ paddingVertical: 10 }} />
           </View>
           <View style = {{ paddingLeft: 3}}>
-              <Text numberOfLines = {1} style={{ }}>{`${item.shopAddress}`}</Text>
+          {item.address && item.address.fullAddress
+              ? <Text numberOfLines = {1} style={{ }}>{`${item.address.fullAddress}`}</Text>
+              : <Text numberOfLines = {1} style={{ }}>{`không xác định`}</Text>
+          }
           </View>
           </View>
           <View style={{width: 20}}/>

@@ -213,7 +213,7 @@ export default class PageSearchShops extends Component {
               <TouchableOpacity
                 onPress={this.toggleSort}
               >
-                <Text style={{ fontSize: 16 }}>Sort by {sortType.title.toLowerCase()}</Text>
+                <Text style={{ fontSize: 16 }}>Tìm theo {sortType.title.toLowerCase()}</Text>
               </TouchableOpacity>
             </View>
           }
@@ -228,7 +228,7 @@ export default class PageSearchShops extends Component {
                 color='black'
                 containerStyle={{}}
               />
-              <Text style={{ fontSize: 16, lineHeight: 26 }}>Filter</Text>
+              <Text style={{ fontSize: 16, lineHeight: 26 }}>Bộ lọc</Text>
             </TouchableOpacity>
           }
         />

@@ -30,6 +30,9 @@ import ProductPrice from '../containers/ProductPrice'
 import CategoryList from '../containers/CategoryList'
 const ImagePicker = require('react-native-image-picker')
 const { height } = Dimensions.get('window')
+import { TextInputMask } from 'react-native-masked-text'
+import { validatePhoneNumber } from '../../../common/utils/validate'
+import { isEmpty } from 'lodash'
 
 const options = {
   title: 'Upload your product image',
@@ -46,141 +49,53 @@ export default class ProductEdit extends Component {
     super(props)
     // const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
     const { publicCategories, privateCategories, product, units } = this.props
-    const salePrices = {}
     this.state = {
       disabled: false,
-      addPrice: false,
-      product: JSON.parse(JSON.stringify(product)),
-      images: product.images,
-      addVariant: false,
+      stateProduct: product,
+      images: product.productCoverImage,
       addCategories: false,
-      variant: {},
-      name: product.name,
-      description: product.description,
-      weight: product.weight,
-      isNew: product.isNew ? 1 : 0,
-      privateCategoryId: product.privateCategoryId && privateCategories && privateCategories
-        .find(item => item.id === product.privateCategoryId),
-      publicCategoryId: product.publicCategoryId && publicCategories && publicCategories
-        .find(item => item.id === product.publicCategoryId),
-      productVariants: product.productVariations.filter(item => item.status !== -1) || [],
-      productCountries: product.productShippingCountries ? product.productShippingCountries.map(item => item.countryId) : [],
+      name: product.productName,
+      description: product.productDescription,
+      privateCategoryId: product.categoryId && privateCategories && privateCategories
+        .find(item => item.id === product.categoryId),
+      quantity: product.productQuantity,
       // dataSource: ds.cloneWithRows(props.countries),
       editPrice: false,
       price: {},
       errors: {},
       enableScrollViewScroll: true,
-      productPrices: product.productPrices ? product.productPrices
-        .filter(item => {
-          if (item.status === -1) {
-            return false
-          }
-          if (item.fromDate && item.toDate && item.productPriceId) {
-            salePrices[item.productPriceId] = {
-              ...item
-            }
-            return false
-          }
-          return true
-        }).map(item => {
-          const cashUnit = units.find(cash => cash.id === item.cashUnitId)
-          const cryptoUnit = units.find(crypto => crypto.id === item.electricUnitId)
-          const cashOriginUnit = salePrices[item.id] && units.find(cash => cash.id === salePrices[item.id].cashUnitId)
-          const cryptoOriginUnit = salePrices[item.id] && units.find(crypto => crypto.id === salePrices[item.id].electricUnitId)
-          const flashSale = salePrices[item.id] &&
-            moment(salePrices[item.id].toDate).isAfter(moment())
-          return {
-            id: item.id,
-            offPercent: (salePrices[item.id] && salePrices[item.id].offPercent) || undefined,
-            saleId: (salePrices[item.id] && salePrices[item.id].id) || undefined,
-            flashSale: flashSale,
-            flashSaleDate: flashSale && moment(salePrices[item.id].toDate).format('LLL'),
-            origin: {
-              cash: item.cashValue ? {
-                value: item.cashValue,
-                unit: cashUnit
-              } : null,
-              crypto: item.electricValue ? {
-                value: item.electricValue,
-                unit: cryptoUnit
-              } : null
-            },
-            sales: flashSale && salePrices[item.id] ? {
-              cash: salePrices[item.id].cashValue ? {
-                value: salePrices[item.id].cashValue,
-                unit: cashOriginUnit
-              } : null,
-              crypto: salePrices[item.id].electricValue && salePrices[item.id] ? {
-                value: salePrices[item.id].electricValue,
-                unit: cryptoOriginUnit
-              } : null
-            } : null
-          }
-        }) : []
+      productPrices: product.productPrice
     }
     this.submit = this.submit.bind(this)
     this.onChoose = this.onChoose.bind(this)
-    this.addVariant = this.addVariant.bind(this)
-    this.onAddPrice = this.onAddPrice.bind(this)
-    this.addCountry = this.addCountry.bind(this)
     this.removeImage = this.removeImage.bind(this)
-    this.onEditPrice = this.onEditPrice.bind(this)
-    this.editVariant = this.editVariant.bind(this)
     this.onChooseCover = this.onChooseCover.bind(this)
-    this.addPriceModal = this.addPriceModal.bind(this)
-    this.addNewVariant = this.addNewVariant.bind(this)
-    this.renderCountry = this.renderCountry.bind(this)
-    this.removeCountry = this.removeCountry.bind(this)
     this.toggleProduct = this.toggleProduct.bind(this)
-    this.editPriceModal = this.editPriceModal.bind(this)
     this.selectCategories = this.selectCategories.bind(this)
     this.addCategoryModal = this.addCategoryModal.bind(this)
-    this.renderCountryKey = this.renderCountryKey.bind(this)
-    this.onChangeProductName = this.onChangeProductName.bind(this)
-    this.onChangeProductDescription = this.onChangeProductDescription.bind(this)
+    this.onChangeText = this.onChangeText.bind(this)
   }
-  renderCountry (item) {
-    return (
-      <Badge
-        onPress={() => this.addCountry(item.id)}
-        key={item.id}
-        containerStyle={{
-          width: undefined,
-          height: 40,
-          backgroundColor: '#E0E0E0',
-          paddingVertical: 10,
-          marginRight: 10,
-          marginVertical: 5
-        }}
-      >
-        <Text>{item.name}</Text>
-      </Badge>
-    )
-  }
+
   async toggleProduct () {
-    const { shop, token, toggleProduct, getShopProducts, navigation } = this.props
-    const { product } = this.state
+    const { shop, token, toggleProduct, getShopProducts, navigation, product } = this.props
+    const { stateProduct } = this.state
     await toggleProduct(token, product)
     getShopProducts(shop)
     navigation.goBack()
   }
-  renderCountryKey (item) {
-    return item.id
-  }
+
   async submit () {
     this.setState({ disabled: true })
     const {
-      product,
+      stateProduct,
       images,
       name,
       weight,
       isNew,
       privateCategoryId,
-      publicCategoryId,
       description,
-      productCountries,
       productPrices,
-      productVariants
+      quantity
     } = this.state
     const {
       getShopProducts,
@@ -188,183 +103,72 @@ export default class ProductEdit extends Component {
       user,
       shop,
       token,
-      editProduct,
-      countries = [] } = this.props
-    const errors = []
-    if (!productPrices || !productPrices.length) {
-      errors.push('* Product price required.')
+      editProduct, product } = this.props
+
+    const errors = {}
+      // if (!shopDeliveryMethods || !shopDeliveryMethods.length) {
+      //   errors.push('* Shop delivery method required for create product.')
+      // }
+    if (!name) {
+      errors.name = '* Thiếu tên đồ uống.'
     }
-    if (!publicCategoryId && !privateCategoryId) {
-      errors.push('* Product category required.')
+    if (!description) {
+      errors.description = '* Thiếu mô tả.'
     }
-    if (!productVariants || !productVariants.length) {
-      errors.push('* Product variants required.')
+    if (!productPrices) {
+      errors.productPrices = '* Thiếu giá tiền.'
+    }else if (!validatePhoneNumber(productPrices)) {
+      errors.productPrices = '* Giá tiền không hợp lệ.'
     }
-    if (weight && !parseFloat(weight)) {
-      errors.push('* Weight invalid format.')
+    if (!quantity) {
+      errors.quantity = '* Thiếu số lượng.'
+    }else if (!validatePhoneNumber(quantity)) {
+      errors.quantity = '* Số lượng không hợp lệ.'
     }
-    const total = productVariants
-      ? productVariants.reduce((all, item) => {
-        return all + item.quantity
-      }, 0)
-      : 0
-    if (total < 0) {
-      errors.push('* Product quantity much large than 0.')
+
+    if (!isEmpty(errors)) {
+      return this.setState({ errors })
     }
-    if (errors.length) {
-      return this.setState({
-        errors,
-        disabled: false
-      })
-    }
+
     // TODO: Handle images
-    const editImages = []
-    let deleteImages = product.images.filter(item => {
-      const image = images.find(image => image.id === item.id)
-      if (image) {
-        editImages.push({
-          ...item,
-          type: image.type
-        })
-        return false
-      }
-      return true
-    })
-    const newImages = images.filter(item => !item.id)
-    // TODO: Handle variants
-    const editVariants = []
-    const deleteVariants = product.productVariations.filter(item => {
-      const exist = productVariants.find(variant => variant.id === item.id)
-      if (exist) {
-        editVariants.push({
-          ...item,
-          quantity: item.quantity,
-          originalQuantity: exist.originalQuantity
-        })
-        return false
-      }
-      return true
-    }).map(item => ({ ...item, status: -1 }))
-    const newVariants = productVariants.filter(item => !item.id)
-    // TODO: Handle edit delete and new price
-    // let deletedPrices = []
-    let editPrices = product.productPrices.map(item => {
-      if (item.status === -1) {
-        return undefined
-      }
-      const exist = item.id && productPrices.find(price =>
-        price.id === item.id || price.saleId === item.id)
-      if (!exist) {
-        return { ...item, status: -1 }
-      }
-      return exist
-    }).filter(item => item)
-    // editPrices = productPrices
-    const newPrices = productPrices.filter(item => !item.id)
-    // console.log('editPrices', editPrices)
-    // console.log('deletedPrices', deletedPrices)
-    // console.log('newPrices', newPrices)
-    await editProduct(token,
+    // const editImages = []
+    // let deleteImages = product.images.filter(item => {
+    //   const image = images.find(image => image.id === item.id)
+    //   if (image) {
+    //     editImages.push({
+    //       ...item,
+    //       type: image.type
+    //     })
+    //     return false
+    //   }
+    //   return true
+    // })
+    // const newImages = images.filter(item => !item.id)
+
+    const result = await editProduct(token,
       product, {
         name,
         description,
-        publicCategoryId,
         privateCategoryId,
-        // productPrices,
-        newPrices,
-        editPrices,
-        // deletedPrices,
-        // productVariants,
-        deleteVariants,
-        editVariants,
-        newVariants,
-        weight,
-        isNew,
-        productCountries: product.productShippingCountries.map(item => {
-          const country = productCountries.some(id => id === item.countryId)
-          if (!country) {
-            return {
-              id: item.id,
-              status: -1
-            }
-          }
-          return {
-            id: item.id || undefined,
-            name: item.name,
-            code: item.code,
-            countryId: item.id,
-            productId: product.id,
-            status: item.status
-          }
-        }),
-        newCountries: productCountries.map(item => {
-          const exist = product.productShippingCountries.some(country => {
-            return country.countryId === item
-          })
-          if (!exist) {
-            return {
-              code: item,
-              countryId: item,
-              productId: product.id,
-              status: 1
-            }
-          }
-          return undefined
-        }).filter(item => item)
-      }, newImages, deleteImages, editImages, user, shop)
-    getShopProducts(shop)
-    // this.setState({ disabled: false })
-    navigation.goBack()
-  }
-  addPriceModal () {
-    const { addPrice } = this.state
-    this.setState({
-      addPrice: !addPrice
-    })
-  }
-  removeCountry (id) {
-    let { productCountries } = this.state
-    const index = productCountries.findIndex(item => item === id)
-    productCountries.splice(index, 1)
-    this.setState({
-      productCountries: [
-        ...productCountries
-      ],
-      errors: []
-    })
-  }
-  addCountry (ids) {
-    const { countries } = this.props
-    const newId = ids[ids.length - 1]
-    if (countries.find(item => item.id === newId)) {
-      this.setState({
-        productCountries: [
-          ...ids
-        ],
-        errors: []
-      })
-    } else {
-      return false
+        productPrices,
+        quantity
+      }, 
+      // newImages, deleteImages, editImages,
+      '','','',
+      user, shop)
+    if (result) {
+      await getShopProducts(shop)
+      this.setState({ disabled: false })
+      navigation.goBack()
     }
+    this.setState({ disabled: false })
   }
-  editPriceModal () {
-    const { editPrice } = this.state
-    this.setState({
-      editPrice: !editPrice
-    })
-  }
-  addVariant (variant = undefined) {
-    const { addVariant } = this.state
-    this.setState({
-      variant: addVariant === false
-        ? variant : {},
-      addVariant: !addVariant
-    })
-  }
+
   addCategoryModal () {
     const { addCategories } = this.state
     this.setState({
-      addCategories: !addCategories
+      addCategories: !addCategories,
+      errors: {}
     })
   }
 
@@ -374,67 +178,6 @@ export default class ProductEdit extends Component {
     this.setState({ images })
   }
 
-  editVariant () {
-    let { variant, productVariants } = this.state
-    if (!variant.id ||
-      !variant.name ||
-      !variant.originalQuantity ||
-      !parseInt(variant.originalQuantity) ||
-      parseInt(variant.originalQuantity) < 0
-    ) {
-      return false
-    }
-    if (parseInt(variant.originalQuantity) - parseInt(variant.onhandQuantity) < 0) {
-      Alert.alert(
-        'Error',
-        'You cannot update the quantity if it is lower than the quantity onhand. Please delete your incomplete orders to release the quantity onhand if any.'
-      )
-      return false
-    } else {
-      const variants = productVariants.map(item => {
-        if (item.id === variant.id) {
-          return {
-            ...item,
-            originalQuantity: parseInt(variant.originalQuantity)
-          }
-        }
-        return item
-      })
-      this.setState({
-        productVariants: [
-          ...variants
-        ],
-        errors: [],
-        variant: {},
-        addVariant: false
-      })
-    }
-  }
-
-  addNewVariant () {
-    let { variant, productVariants } = this.state
-    if (!variant.name ||
-      !variant.quantity ||
-      !parseInt(variant.quantity) ||
-      parseInt(variant.quantity) < 0
-    ) {
-      return false
-    }
-    productVariants.push({
-      name: variant.name,
-      quantity: parseInt(variant.quantity),
-      originalQuantity: parseInt(variant.quantity),
-      onhandQuantity: 0
-    })
-    this.setState({
-      productVariants: [
-        ...productVariants
-      ],
-      errors: [],
-      variant: {},
-      addVariant: false
-    })
-  }
   selectCategories (item) {
     if (!item || !item.id) {
       return this.setState({
@@ -442,9 +185,9 @@ export default class ProductEdit extends Component {
       })
     }
     this.setState({
-      [item.shopId ? 'privateCategoryId' : 'publicCategoryId']: item,
+      ['privateCategoryId']: item,
       addCategories: false,
-      errors: []
+      errors: {}
     })
   }
   onChooseCover (index) {
@@ -516,115 +259,34 @@ export default class ProductEdit extends Component {
         })
     })
   }
-  onAddPrice (newPrice) {
-    let { productPrices } = this.state
-    // if (productPrices.length > 2) {
-    //   return false
-    // }
-    productPrices.push(newPrice)
-    this.setState({
-      addPrice: false,
-      productPrices: [
-        ...productPrices
-      ],
-      errors: []
-    })
-  }
 
-  onEditPrice (newPrice) {
-    let { productPrices } = this.state
-    // if (productPrices.length > 2) {
-    //   return false
-    // }
+  onChangeText (text, field) {
+    const { errors } = this.state
     this.setState({
-      editPrice: false,
-      productPrices: [
-        ...productPrices.map(item => {
-          if (item.id === newPrice.id) {
-            return {
-              ...newPrice
-            }
-          }
-          return {
-            ...item
-          }
-        })
-      ],
-      errors: []
-    })
-  }
-
-  onChangeProductName (text) {
-    this.setState({
-      name: text
-    })
-  }
-  onChangeProductDescription (text) {
-    this.setState({
-      description: text
-    })
-  }
-
-  removeVariant (item, index) {
-    let { productVariants } = this.state
-    const variant = productVariants[index]
-    if (variant) {
-      if (variant.onhandQuantity > 0) {
-        Alert.alert(
-          'Error',
-          'You cannot delete variant if the quantity onhand is larger than 0. Please delete your incomplete orders to release the quantity onhand if any.'
-        )
-        return false
-      } else {
-        productVariants.splice(index, 1)
-        this.setState({
-          productVariants: [
-            ...productVariants
-          ],
-          variant: {},
-          addVariant: false
-        })
+      [field]: text,
+      errors: {
+        ...errors,
+        [field]: undefined
       }
-    } else {
-      return false
-    }
-  }
-
-  removePrice (item, index) {
-    let { productPrices } = this.state
-    productPrices.splice(index, 1)
-    this.setState({
-      addPrice: false,
-      productPrices: [
-        ...productPrices
-      ]
     })
   }
 
   render () {
     const {
-      product,
+      stateProduct,
       errors,
-      editPrice,
-      price,
       name,
-      weight,
-      isNew,
       description,
-      addVariant,
-      addPrice,
-      productCountries,
+      disabled,
+      quantity,
       images,
-      variant,
       // dataSource,
       productPrices,
-      productVariants,
       privateCategoryId,
-      publicCategoryId,
       // enableScrollViewScroll,
       addCategories
     } = this.state
-    const { countries = [] } = this.props
+    const { product } = this.props
     return (
       <ScrollView>
         <View
@@ -753,23 +415,67 @@ export default class ProductEdit extends Component {
               value={name}
               containerStyle={{ margin: 0, padding: 0 }}
               style={{ margin: 0, padding: 0 }}
-              inputStyle={{ margin: 0, padding: 0 }}
-              placeholder='Product name'
-              onChangeText={this.onChangeProductName}
+              inputStyle={{ margin: 0, padding: 0, textDecorationColor: 'black', color: 'black' }}
+              placeholder='Nhập tên đồ uống'
+              onChangeText={(text) => {
+                this.onChangeText(text, 'name') }}
             />
+
+            {errors.name &&
+              (<FormValidationMessage>{errors.name}</FormValidationMessage>)}
+
             <View style={{ width: undefined }}>
               <FormInput
                 value={description}
                 multiline
-                numberOfLines={5}
                 style={{
                   height: undefined
                 }}
-                inputStyle={{ width: '100%' }}
-                containerStyle={{ minHeight: 60, marginVertical: 0, padding: 0 }}
-                placeholder='Product description'
-                onChangeText={this.onChangeProductDescription}
+                inputStyle={{ width: '100%', textDecorationColor: 'black', color: 'black' }}
+                containerStyle={{ minHeight: 20, marginVertical: 0, padding: 0 }}
+                placeholder='Nhập mô tả'
+                onChangeText={(text) => {
+                  this.onChangeText(text, 'description') }}
               />
+
+              {errors.description &&
+              (<FormValidationMessage>{errors.description}</FormValidationMessage>)}
+
+              <FormInput
+                style={{
+                  height: undefined
+                }}
+                keyboardType='phone-pad'
+                inputStyle={{ width: '100%', textDecorationColor: 'black', color: 'black' }}
+                containerStyle={{ minHeight: 20, marginVertical: 0, padding: 0 }}
+                placeholder='Nhập số lượng tương đối'
+                value={quantity.toString()}
+                onChangeText={(text) => {
+                  this.onChangeText(text, 'quantity') }}
+              />
+              {errors.quantity &&
+              (<FormValidationMessage>{errors.quantity}</FormValidationMessage>)}
+
+              <TextInputMask
+                ref={ref => (this.inputRef = ref)}
+                type={'money'}
+                options={{
+                  suffixUnit: '',
+                  unit: 'VND ',
+                  separator: ' ',
+                  precision: 0
+                }}
+                style={{ 
+                  width: '80%', fontSize: 15, marginLeft: 15
+                }}
+                placeholder='Nhập giá tiền'
+                value={ productPrices}
+                onChangeText={(text) => {
+                  this.onChangeText(this.inputRef.getRawValue(), 'productPrices') }}
+              />
+              {errors.productPrices &&
+              (<FormValidationMessage>{errors.productPrices}</FormValidationMessage>)}
+
             </View>
           </Card>
           <ListItem
@@ -789,16 +495,8 @@ export default class ProductEdit extends Component {
               })
             }}
           />)}
-          {publicCategoryId && (<ListItem
-            containerStyle={{ backgroundColor: '#FFFFFF' }}
-            key={`publicCategoryId_${publicCategoryId.id}`}
-            title={`${publicCategoryId.name}`}
-            rightIcon={{ name: 'delete', color: '#E44C4C' }}
-            onPressRightIcon={() => this.setState({
-              publicCategoryId: null
-            })}
-          />)}
-          <Card containerStyle={{
+
+          {/* <Card containerStyle={{
             margin: 0,
             marginTop: 20,
             paddingVertical: 10,
@@ -858,8 +556,8 @@ export default class ProductEdit extends Component {
                 )
               })}
             </View>
-          </Card>
-          <Card containerStyle={{
+          </Card> */}
+          {/* <Card containerStyle={{
             margin: 0,
             paddingVertical: 10,
             paddingHorizontal: 20,
@@ -889,8 +587,8 @@ export default class ProductEdit extends Component {
                 />)
               })}
             </View>
-          </Card>
-          <View
+          </Card> */}
+          {/* <View
             style={{
               width: '100%',
               backgroundColor: '#FFFFFF',
@@ -912,8 +610,8 @@ export default class ProductEdit extends Component {
                 }, 0)
                 : 0}
             </Text>
-          </View>
-          <Card containerStyle={{
+          </View> */}
+          {/* <Card containerStyle={{
             margin: 0,
             marginTop: 20,
             paddingVertical: 10,
@@ -987,8 +685,8 @@ export default class ProductEdit extends Component {
                 </View>
               </View>
             </View>
-          </Card>
-          <Card containerStyle={{
+          </Card> */}
+          {/* <Card containerStyle={{
             margin: 0,
             paddingVertical: 10,
             paddingHorizontal: 20,
@@ -1045,7 +743,7 @@ export default class ProductEdit extends Component {
                   renderRow={this.renderCountry}
                 />
               </View> */}
-              <View
+              {/* <View
                 style={{
                   width: '100%',
                   flex: 1,
@@ -1082,32 +780,34 @@ export default class ProductEdit extends Component {
                 />
               </View>
             </View>
-          </Card>
-          <FormValidationMessage>
+          </Card> */}
+          {/* <FormValidationMessage>
             {errors.length > 0 && errors.map(item => {
               return `${item}\n`
             })}
-          </FormValidationMessage>
+          </FormValidationMessage> */}
           <View
             style={{
               width: '100%',
               height: undefined,
               flexDirection: 'row',
-              paddingBottom: 10
+              paddingBottom: 10,
+              paddingTop: 20
             }}
           >
             <Button
-              title={product.status === -1 ? 'Enable' : 'Delete'}
+              title={'Xóa'}
               onPress={this.toggleProduct}
               containerViewStyle={{ paddingLeft: 10, paddingRight: 0, flex: 1 }} />
             <Button
-              title='Submit'
+              disabled={disabled}
+              title='Cập nhật'
               backgroundColor='#E44C4C'
               onPress={this.submit}
               containerViewStyle={{ paddingLeft: 0, paddingRight: 10, flex: 1 }} />
           </View>
         </View>
-        <Modal
+        {/* <Modal
           animationType='slide'
           transparent={false}
           visible={editPrice}
@@ -1119,8 +819,8 @@ export default class ProductEdit extends Component {
               onBack={this.editPriceModal}
             />
           </View>
-        </Modal>
-        <Modal
+        </Modal> */}
+        {/* <Modal
           animationType='slide'
           transparent={false}
           visible={addPrice}
@@ -1132,7 +832,7 @@ export default class ProductEdit extends Component {
               productPrices={productPrices}
             />
           </View>
-        </Modal>
+        </Modal> */}
         <Modal
           animationType='slide'
           transparent={false}
@@ -1145,7 +845,7 @@ export default class ProductEdit extends Component {
             />
           </View>
         </Modal>
-        <Modal
+        {/* <Modal
           transparent
           animationType='slide'
           visible={addVariant}
@@ -1208,7 +908,7 @@ export default class ProductEdit extends Component {
               </Card>
             </View>
           </View>
-        </Modal>
+        </Modal> */}
       </ScrollView>
     )
   }
