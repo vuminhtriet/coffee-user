@@ -33,7 +33,7 @@ const ImagePicker = require('react-native-image-picker')
 const { height } = Dimensions.get('window')
 
 const options = {
-  title: 'Upload your product image',
+  title: 'Đăng hình ảnh đồ uống',
   storageOptions: {
     skipBackup: true,
     noData: true,
@@ -60,7 +60,7 @@ export default class Product extends Component {
       isNew: 1,
       errors: {},
       publicCategoryId: null,
-      quantity: 0,
+      // quantity: 0,
       productPrices: 0,
       productVariants: [],
       productCountries: [],
@@ -89,7 +89,7 @@ export default class Product extends Component {
       productCountries,
       productPrices,
       productVariants,
-      quantity
+      // quantity
     } = this.state
     const {
       getShopProducts,
@@ -115,11 +115,11 @@ export default class Product extends Component {
     }else if (!validatePhoneNumber(productPrices)) {
       errors.productPrices = '* Giá tiền không hợp lệ.'
     }
-    if (!quantity) {
-      errors.quantity = '* Thiếu số lượng.'
-    }else if (!validatePhoneNumber(quantity)) {
-      errors.quantity = '* Số lượng không hợp lệ.'
-    }
+    // if (!quantity) {
+    //   errors.quantity = '* Thiếu số lượng.'
+    // }else if (!validatePhoneNumber(quantity)) {
+    //   errors.quantity = '* Số lượng không hợp lệ.'
+    // }
     // return Alert.alert(
     //   'KHÔNG THỂ CẬP NHẬT',
     //   JSON.stringify(errors),
@@ -140,7 +140,7 @@ export default class Product extends Component {
         publicCategoryId,
         productPrices,
         productVariants,
-        quantity
+        // quantity
       },
       images,
       shop
@@ -184,14 +184,8 @@ export default class Product extends Component {
   }
   onChooseCover (index) {
     let { images } = this.state
-    images = images.map((item) => {
-      item.type = 3
-      return item
-    })
-    images[index] = {
-      ...images[index],
-      type: 2
-    }
+    var element = images.splice(index,1)
+    images.unshift(element[0])
     this.setState({
       images: [
         ...images
@@ -200,6 +194,9 @@ export default class Product extends Component {
   }
   onChoose () {
     const { images } = this.state
+    if (images && images.length > 5) {
+      return false
+    }
     ImagePicker.showImagePicker(options, (response) => {
       let fileName = null
       let fileUri = null
@@ -289,7 +286,7 @@ export default class Product extends Component {
       enableScrollViewScroll,
       addCategories,
       disabled,
-      quantity
+      // quantity
     } = this.state
     const { countries } = this.props
     return (
@@ -347,7 +344,7 @@ export default class Product extends Component {
                       style={{ width: 80, height: 80 }}
                       source={{ uri: image.fileUri }}
                     />
-                    {image.type === 2 && (
+                    {index === 0 && (
                       <View
                         style={{
                           bottom: 0,
@@ -381,7 +378,7 @@ export default class Product extends Component {
                 onPress={this.onChoose}
               >
                 <Text style={{ color: '#EE9468' }}>
-                  Upload images/videos
+                  Đăng hình ảnh
                 </Text>
               </TouchableOpacity>
             </View> : (
@@ -410,7 +407,7 @@ export default class Product extends Component {
               )}
           </ScrollView>
           <FormValidationMessage containerStyle={{ paddingBottom: 10, backgroundColor: '#FFFFFF' }}>
-            * Touch an image you want to choose it as a cover picture
+            * Chọn vào hình bạn muốn làm ảnh đại diện
           </FormValidationMessage>
           <Card
             containerStyle={{
@@ -449,7 +446,7 @@ export default class Product extends Component {
               {errors.description &&
               (<FormValidationMessage>{errors.description}</FormValidationMessage>)}
 
-              <FormInput
+              {/* <FormInput
                 value={quantity}
                 style={{
                   height: undefined
@@ -462,7 +459,7 @@ export default class Product extends Component {
                   this.onChangeText(text, 'quantity') }}
               />
               {errors.quantity &&
-              (<FormValidationMessage>{errors.quantity}</FormValidationMessage>)}
+              (<FormValidationMessage>{errors.quantity}</FormValidationMessage>)} */}
 
               <TextInputMask
                 ref={ref => (this.inputRef = ref)}

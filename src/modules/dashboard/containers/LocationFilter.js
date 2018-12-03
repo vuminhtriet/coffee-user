@@ -6,7 +6,7 @@ const mapDispatchToProps = (dispatch, props) => ({
 })
 
 const mapStateToProps = state => ({
-  countries: state.common.countries
+  cities: state.common.cities
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(LocationFilter)

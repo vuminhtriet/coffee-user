@@ -2,7 +2,7 @@ import axios from 'axios'
 import moment from 'moment'
 import { connect } from 'react-redux'
 import { fetch, loading } from '../../../common/effects'
-import { BASE_URL, ADDRESS_URL, TEST_URL } from '../../../common/models'
+import { BASE_URL, TEST_URL } from '../../../common/models'
 import { setUserInfomation, setCities } from '../actions'
 import { MODULE_NAME } from '../models'
 import UserInformation from '../components/UserInformation'
@@ -108,22 +108,6 @@ export const mapDispatchToProps = (dispatch, props) => ({
           dispatch(setUserInfomation({
             ...response.data
           }))
-          return response.data
-        }
-        return false
-      })
-    } catch (error) {
-      return false
-    }
-  },
-  getDistrict: (id) => {
-    try {
-      const url = `${ADDRESS_URL}/api/city/${id}/district`
-      return loading(dispatch, async () => {
-        const response = await axios({
-          url
-        })
-        if (response && response.data) {
           return response.data
         }
         return false

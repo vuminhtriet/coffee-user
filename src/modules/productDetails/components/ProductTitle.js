@@ -38,7 +38,7 @@ export default class ProductTitle extends Component {
               <Rating
                 type='custom'
                 fractions={1}
-                startingValue={productItem.productTotalRating || 0}
+                startingValue={productItem.avgRating || 0}
                 readonly
                 imageSize={14}
                 showRating={false}
@@ -49,7 +49,7 @@ export default class ProductTitle extends Component {
             </View>
             <View>
               <Text style={{ marginBottom: 0, paddingTop: 7, textAlign: 'left' }}>
-                {` ${productItem.productTotalRating.toFixed(1) || 0}/5`}
+                {` ${productItem.avgRating.toFixed(1) || 0}/5`}
               </Text>
             </View>
           </View>

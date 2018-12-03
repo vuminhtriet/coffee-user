@@ -8,40 +8,109 @@ import { PAGE_SIZE } from '../../../common/configs'
 import { getPopularShops, loadMorePopularShops } from '../actions'
 
 const mapDispatchToProps = (dispatch, props) => ({
-  getPopularShops: async (page = 0, sort = 'shopRating DESC', options = {}) => {
+  getPopularShops: async (page = 0, sort = 'avgRating DESC', options = {}) => {
     try {
-      // const filter = {
-      //   'include': [
-      //     'images',
-      //     {
-      //       'relation': 'productPrices',
-      //       'scope': {
-      //         'where': {
-      //           'status': 1
-      //         },
-      //         'include': [
-      //           'cashUnit',
-      //           'electricUnit',
-      //           'promotionPrice'
-      //         ]
-      //       }
-      //     }
-      //   ],
-      //   'where': {
-      //     'status': 1
-      //   },
-      //   'limit': PAGE_SIZE,
-      //   'offset': page * PAGE_SIZE,
-      //   'order': sort
-      // }
-      // const url = `${BASE_URL}/api/products?filter=${JSON.stringify(filter)}`
-      // if (keyword == ''){
-        // const url = `${BASE_URL}/api/shops?page=${page}&pageSize=${PAGE_SIZE}&sort=${sort}&options=${JSON.stringify(options)}`
-      // }
-      // else{
-        // const url = `${BASE_URL}/api/shops/search?searchStr=&page=${page}&pageSize=${PAGE_SIZE}&sort=${sort}&options=${JSON.stringify(options)}`
-      // }
-      const url = `${TEST_URL}/api/shops?filter%5Bwhere%5D%5BisPopular%5D=true&filter[order]=${sort}`
+      var filter = {
+        "where":{
+          "isPopular": true
+        },
+        "order": sort
+      }
+
+      {options.cityId && !options.max &&
+        (filter = {
+          "where":{
+            "isPopular": true,
+              "address.cityId":options.cityId,
+              "address.districtId":options.districtId
+          },
+          "order": sort
+        })
+      }
+
+      {!options.cityId && options.max > 0 && !options.min &&
+        (filter = {
+          "where":{
+            "isPopular": true
+          },
+          "include":{
+            "relation":"products", 
+            "scope":{
+              "where":{
+                "productPrice":{"lte":options.max}
+              }
+            }
+          },
+          "order": sort
+        })
+      }
+
+      {!options.cityId && options.max > 0 && options.min &&
+        (filter = {
+          "where":{
+            "isPopular": true
+          },
+          "include":{
+            "relation":"products", 
+            "scope":{
+              "where":{
+                "and":[
+                  {"productPrice":{"gte":options.min}},
+                  {"productPrice":{"lte":options.max}}
+              ]
+              }
+            }
+          },
+          "order": sort
+        })
+      }
+
+      {options.cityId && options.max > 0 && !options.min &&
+        (filter = {
+          "where":{
+            "isPopular": true,
+              "address.cityId":options.cityId,
+              "address.districtId":options.districtId
+          },
+          "include":{
+            "relation":"products", 
+            "scope":{
+              "where":{
+                "productPrice":{"lte":options.max}
+              }
+            }
+          },
+          "order": sort
+        })
+      }
+
+      {options.cityId && options.max > 0 && options.min &&
+        (filter = {
+          "where":{
+            "isPopular": true,
+              "address.cityId":options.cityId,
+              "address.districtId":options.districtId
+          },
+          "include":{
+            "relation":"products", 
+            "scope":{
+              "where":{
+                  "and":[
+                      {"productPrice":{"gte":options.min}},
+                      {"productPrice":{"lte":options.max}}
+                  ]
+              }
+            }
+          },
+          "order": sort
+        })
+      }
+
+      if (options.styleId && options.styleId !== 14){
+        filter.where["style.styId"] = options.styleId
+      }
+
+      const url = `${TEST_URL}/api/shops?filter=${JSON.stringify(filter)}`
       const response = await axios({ url })
       if (response && response.data) {
         // if (response.data.length === 0) {
@@ -62,7 +131,8 @@ const mapDispatchToProps = (dispatch, props) => ({
 })
 
 const mapStateToProps = state => ({
-  shops: state[MODULE_NAME].popularShops
+  shops: state[MODULE_NAME].popularShops.filter(item => !item.products || item.products.length),
+  latlng: state.common.latlng
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(PagePopularShops)

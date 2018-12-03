@@ -8,11 +8,126 @@ import { TEST_URL } from '../../../common/models'
 import { PAGE_SIZE } from '../../../common/configs'
 
 const mapDispatchToProps = (dispatch, props) => ({
-  searchShops: async (keyword, page = 0, sort = 'shopRating DESC', options = {}) => {
+  searchShops: async (keyword, page = 0, sort = 'avgRating DESC', options = {}) => {
     try {
-      const filter = {"where":{"shopName":{"like":keyword,"options":"i"}},"order":sort}
-      // const url = `${BASE_URL}/api/shops/search?searchStr=${keyword}&page=${page}&pageSize=${PAGE_SIZE}&sort=${sort}&options=${JSON.stringify(options)}`
-      // const url = `${TEST_URL}/api/shops/?filter%5Bwhere%5D%5BshopName%5D%5Blike%5D=${keyword}&filter[order]=${sort}`
+      var filter = {
+        "where":{
+            "shopName":{
+              "like":keyword,
+              "options":"i"
+            }
+        },
+        "order": sort
+      }
+
+      {options.cityId && !options.max &&
+        (filter = {
+          "where":{
+              "shopName":{
+                "like":keyword,
+                "options":"i"
+              },
+              "address.cityId":options.cityId,
+              "address.districtId":options.districtId
+          },
+          "order": sort
+        })
+      }
+
+      {!options.cityId && options.max > 0 && !options.min &&
+        (filter = {
+          "where":{
+              "shopName":{
+                "like":keyword,
+                "options":"i"
+              }
+          },
+          "include":{
+            "relation":"products", 
+            "scope":{
+              "where":{
+                "productPrice":{"lte":options.max}
+              }
+            }
+          },
+          "order": sort
+        })
+      }
+
+      {!options.cityId && options.max > 0 && options.min &&
+        (filter = {
+          "where":{
+              "shopName":{
+                "like":keyword,
+                "options":"i"
+              }
+          },
+          "include":{
+            "relation":"products", 
+            "scope":{
+              "where":{
+                "and":[
+                  {"productPrice":{"gte":options.min}},
+                  {"productPrice":{"lte":options.max}}
+              ]
+              }
+            }
+          },
+          "order": sort
+        })
+      }
+
+      {options.cityId && options.max > 0 && !options.min &&
+        (filter = {
+          "where":{
+              "shopName":{
+                "like":keyword,
+                "options":"i"
+              },
+              "address.cityId":options.cityId,
+              "address.districtId":options.districtId
+          },
+          "include":{
+            "relation":"products", 
+            "scope":{
+              "where":{
+                "productPrice":{"lte":options.max}
+              }
+            }
+          },
+          "order": sort
+        })
+      }
+
+      {options.cityId && options.max > 0 && options.min &&
+        (filter = {
+          "where":{
+              "shopName":{
+                "like":keyword,
+                "options":"i"
+              },
+              "address.cityId":options.cityId,
+              "address.districtId":options.districtId
+          },
+          "include":{
+            "relation":"products", 
+            "scope":{
+              "where":{
+                  "and":[
+                      {"productPrice":{"gte":options.min}},
+                      {"productPrice":{"lte":options.max}}
+                  ]
+              }
+            }
+          },
+          "order": sort
+        })
+      }
+
+      if (options.styleId && options.styleId !== 14){
+        filter.where["style.styId"] = options.styleId
+      }
+      
       const url = `${TEST_URL}/api/shops?filter=${JSON.stringify(filter)}`
       const response = await axios({
         url
@@ -36,7 +151,8 @@ const mapDispatchToProps = (dispatch, props) => ({
 })
 
 const mapStateToProps = state => ({
-  shops: state[MODULE_NAME].searchShops
+  shops: state[MODULE_NAME].searchShops.filter(item => !item.products || item.products.length),
+  latlng: state.common.latlng
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(PageSearchShops)

@@ -4,6 +4,7 @@ import {
   Text
 } from 'react-native'
 import moment from 'moment'
+import { TextInputMask } from 'react-native-masked-text'
 import { isFlashSaleProduct, formatCurrency, getActivePrices, showProductPrice } from '../../../common/utils/productUtils'
 
 const flashSalePrice = ({ newPrice, oldPrice, currencyUnits }) => {
@@ -81,8 +82,25 @@ export default class ProductPrice extends Component {
           alignItems: 'center'
         }}
       >
-        <Text style={{ color: '#6F4E37', textAlign: 'center', width: '100%', 
-        fontSize: 20, fontWeight: 'bold' }}>{productItem.productPrice}đ</Text>
+        {/* <Text style={{ color: '#6F4E37', textAlign: 'center', width: '100%', 
+        fontSize: 20, fontWeight: 'bold' }}>{productItem.productPrice}đ</Text> */}
+        <TextInputMask
+          ref={ref => (this.inputRef = ref)}
+          numberOfLines = {1}
+          type={'money'}
+          options={{
+            suffixUnit: 'đ',
+            unit: '',
+            separator: ' ',
+            precision: 0
+          }}
+          style={{ 
+            width: '100%', textAlign: 'center' ,fontSize: 20, color: '#6F4E37', fontWeight: 'bold', 
+            marginBottom: 0, padding: 0
+          }}
+          editable={false}
+          value={productItem.productPrice}
+        />
       </View>
     )
   }

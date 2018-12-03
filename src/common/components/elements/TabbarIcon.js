@@ -10,7 +10,7 @@ const TabBarIcon = ({ focused, tintColor, totalItem }) => {
   return ([
     <Icon
       key='icon'
-      name='shopping-cart'
+      name='shopping-bag'
       type='font-awesome'
       size={focused ? 28 : 24}
       color={focused ? tintColor : '#cccc'}

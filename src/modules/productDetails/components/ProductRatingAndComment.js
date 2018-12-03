@@ -9,6 +9,8 @@ import { Rating, Divider } from 'react-native-elements'
 import RatingList from './RatingList';
 import AllRatingList from '../containers/AllRatingList';
 
+const reviews = [{"date":"2018-11-26T18:24:25.370Z","rating":4,"content":"good",
+"id":"5bfc3abdd432cc36787d8f28","memberId":"5bc861f63a6e01334822b625","shopId":"5bd2a96cfb6fc074abaffdd8"}]
 export default class ProductRatingAndComment extends PureComponent {
   state = {
     modalVisible: false
@@ -30,7 +32,8 @@ export default class ProductRatingAndComment extends PureComponent {
       newestRatings,
       productId,
       images,
-      productName
+      productName,
+      navigation
     } = this.props
     const { modalVisible } = this.state
 
@@ -72,7 +75,7 @@ export default class ProductRatingAndComment extends PureComponent {
             <Rating
               type='custom'
               fractions={1}
-              startingValue={totalUserRating || 0}
+              startingValue={totalRatingValue || 0}
               readonly
               imageSize={14}
               showRating={false}
@@ -83,7 +86,7 @@ export default class ProductRatingAndComment extends PureComponent {
           </View>
           <View>
             <Text style={{ marginBottom: 0, paddingTop: 7, textAlign: 'left' }}>
-              {` ${totalUserRating.toFixed(1) || 0}/5`}
+              {` ${totalRatingValue.toFixed(1) || 0}/5`}
             </Text>
           </View>
         </View>
@@ -96,13 +99,14 @@ export default class ProductRatingAndComment extends PureComponent {
           visible={modalVisible}
         >
           <AllRatingList
-            ratings={ratings}
+            productRatings={ratings}
             onBack={this.closeModal}
             productId={productId}
             images={images}
             productName={productName}
             totalRatingValue={totalRatingValue}
             totalUserRating={totalUserRating}
+            navigation={navigation}
           />
         </Modal>
       </View>

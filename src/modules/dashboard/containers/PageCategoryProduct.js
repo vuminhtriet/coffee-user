@@ -8,36 +8,112 @@ import { TEST_URL } from '../../../common/models'
 import { PAGE_SIZE } from '../../../common/configs'
 
 const mapDispatchToProps = (dispatch, props) => ({
-  getCategoryProducts: async (categoryId, shopId, page = 0, sort = 'productTotalRating DESC', options = {}) => {
+  getCategoryProducts: async (categoryId, shopId, page = 0, sort = 'avgRating DESC', options = {}) => {
     try {
-      // const filter = {
-      //   'include': [
-      //     'images',
-      //     {
-      //       'relation': 'productPrices',
-      //       'scope': {
-      //         'where': {
-      //           'status': 1
-      //         },
-      //         'include': [
-      //           'cashUnit',
-      //           'electricUnit',
-      //           'promotionPrice'
-      //         ]
-      //       }
-      //     }
-      //   ],
-      //   'where': {
-      //     'status': 1
-      //   },
-      //   'limit': PAGE_SIZE,
-      //   'offset': page * PAGE_SIZE,
-      //   'order': sort
-      // }
-      // const url = `${BASE_URL}/api/publicCategories/${categoryId}/product?filter=${JSON.stringify(filter)}` // ?filter=${JSON.stringify(filter)}
+      var filter = {
+        "include":{
+           "relation":"shop",
+           "scope":{
+              "fields":"shopName"
+           }
+        },
+        "where":{
+           "categoryId":categoryId,
+           "shopId":shopId
+        },
+        "order":sort
+     }
 
-      // const url = `${BASE_URL}/api/products/category-product?categoryId=${categoryId}&page=${page}&pageSize=${PAGE_SIZE}&sort=${sort}&options=${JSON.stringify(options)}`
-      const filter = {"include":{"relation":"shop","scope":{"fields":"shopName"}},"where":{"categoryId":categoryId,"shopId":shopId},"order":sort}
+     {options.cityId && !options.max &&
+      (filter = {
+        "where":{
+          "categoryId":categoryId,
+          "shopId":shopId,
+         "address.cityId":options.cityId,
+         "address.districtId":options.districtId
+        },
+        "include":{
+         "relation":"shop",
+         "scope":{
+            "fields":"shopName"
+         }
+         },
+        "order": sort
+      })
+    }
+
+     {!options.cityId && options.max > 0 && !options.min &&
+      (filter = {
+        "where":{
+         "categoryId":categoryId,
+           "shopId":shopId,
+         "productPrice":{"lte":options.max}
+        },
+        "include":{
+         "relation":"shop",
+         "scope":{
+            "fields":"shopName"
+         }
+         },
+        "order": sort
+      })
+    }
+
+    {!options.cityId && options.max > 0 && options.min &&
+      (filter = {
+        "where":{
+          "categoryId":categoryId,
+          "shopId":shopId,
+         "and":[{"productPrice":{"gte":options.min}},{"productPrice":{"lte":options.max}}]
+        },
+        "include":{
+         "relation":"shop",
+         "scope":{
+            "fields":"shopName"
+         }
+         },
+        "order": sort
+      })
+    }
+
+    {options.cityId && options.max > 0 && !options.min &&
+      (filter = {
+        "where":{
+          "categoryId":categoryId,
+          "shopId":shopId,
+            "address.cityId":options.cityId,
+            "address.districtId":options.districtId,
+            "productPrice":{"lte":options.max}
+        },
+        "include":{
+         "relation":"shop",
+         "scope":{
+            "fields":"shopName"
+         }
+         },
+        "order": sort
+      })
+    }
+
+    {options.cityId && options.max > 0 && options.min &&
+      (filter = {
+        "where":{
+          "categoryId":categoryId,
+           "shopId":shopId,
+            "address.cityId":options.cityId,
+            "address.districtId":options.districtId,
+            "and":[{"productPrice":{"gte":options.min}},{"productPrice":{"lte":options.max}}]
+        },
+        "include":{
+         "relation":"shop",
+         "scope":{
+            "fields":"shopName"
+         }
+         },
+        "order": sort
+      })
+    }
+
       const url = `${TEST_URL}/api/products?filter=${JSON.stringify(filter)}`
       const response = await axios({ url })
       if (response && response.data) {

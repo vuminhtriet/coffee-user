@@ -18,7 +18,7 @@ import { PRODUCT_SORT_LIST } from '../../../common/models';
 const { width } = Dimensions.get('window')
 const NUMBER_OF_ITEM = 2
 const ITEM_WITDH = (width - 10) / NUMBER_OF_ITEM
-const ITEM_HEIGHT = 300
+const ITEM_HEIGHT = 285
 const DEFAULT_SORT_TYPE = PRODUCT_SORT_LIST.find(item => item.type === 1)
 
 export default class PageCategoryProduct extends Component {
@@ -37,13 +37,12 @@ export default class PageCategoryProduct extends Component {
       filterType: '',
       chosenCategories: [],
       chosenLocation: {
-        countryId: '',
+        districtId: '',
         cityId: ''
       },
       chosenPrice: {
-        unitId: '',
-        min: '',
-        max: ''
+        min: 0,
+        max: 0
       }
     }
   }
@@ -98,7 +97,7 @@ export default class PageCategoryProduct extends Component {
   }
 
   onSort = (id) => {
-    const { categoryId, getCategoryProducts } = this.props
+    const { categoryId, getCategoryProducts, shopId } = this.props
     const { sortType, showSort } = this.state
     if (sortType.id === id) {
       return false
@@ -107,17 +106,18 @@ export default class PageCategoryProduct extends Component {
       const options = this.submitFilter()
       const newSortType = PRODUCT_SORT_LIST.find(item => item.id === id)
       this.setState({ refreshing: true, showSort: !showSort }, async () => {
-        await getCategoryProducts(categoryId, 0, newSortType.value, options)
+        await getCategoryProducts(categoryId, shopId, 0, newSortType.value, options)
         this.setState({ refreshing: false, page: 1, isLastedPage: false, sortType: newSortType })
       })
     }
   }
 
   onFilter = () => {
+    const { categoryId, getCategoryProducts, shopId } = this.props
     const { chosenCategories, chosenLocation, chosenPrice, showFilter, sortType } = this.state
     const options = this.submitFilter()
     this.setState({ refreshing: true, showFilter: !showFilter }, async () => {
-      await getPopularProducts(0, sortType.value, options)
+      await getCategoryProducts(categoryId, shopId, 0, sortType.value, options)
       this.setState({ refreshing: false, page: 1, isLastedPage: false })
     })
   }
@@ -128,11 +128,17 @@ export default class PageCategoryProduct extends Component {
     if (chosenCategories.length > 0) {
       options.publicCategoryId = chosenCategories
     }
-    if (chosenLocation.countryId) {
-      options.countryId = chosenLocation.countryId
+    if (chosenLocation.districtId) {
+      options.districtId = chosenLocation.districtId
     }
-    if (chosenPrice.unitId) {
-      options.price = chosenPrice
+    if (chosenLocation.cityId) {
+      options.cityId = chosenLocation.cityId
+    }
+    if (chosenPrice.min) {
+      options.min = chosenPrice.min
+    }
+    if (chosenPrice.max) {
+      options.max = chosenPrice.max
     }
     return options
   }
@@ -162,13 +168,13 @@ export default class PageCategoryProduct extends Component {
     this.setState({
       chosenCategories: [],
       chosenLocation: {
-        countryId: '',
+        districtId: '',
         cityId: ''
       },
       chosenPrice: {
         id: '',
-        min: '',
-        max: ''
+        min: 0,
+        max: 0
       }
     })
   }

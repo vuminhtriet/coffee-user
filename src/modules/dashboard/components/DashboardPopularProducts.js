@@ -11,8 +11,8 @@ import PopularProductItem from '../../../common/components/widgets/PopularProduc
 import { SCREENS } from '../../../common/screens'
 
 const { width } = Dimensions.get('window')
-const ITEM_WITDH = (width - 10) / 2.5
-const ITEM_HEIGHT = 220
+const ITEM_WITDH = (width) / 2.5
+const ITEM_HEIGHT = 210
 
 class DashboardPopularProducts extends Component {
   constructor(props) {

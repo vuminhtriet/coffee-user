@@ -13,15 +13,19 @@ export default class Loading extends Component {
       getPaymentTypes,
       getCurrencyUnits,
       getShippingTypes,
-      getCities
+      getCities,
+      getDefaultLocation,
+      getStyle
     } = this.props
     await Promise.all([
-      getCountries().catch(() => { }),
+      // getCountries().catch(() => { }),
       // getPaymentTypes().catch(() => { }),
       // getCurrencyUnits().catch(() => { }),
       // getCategories().catch(() => { }),
       // getShippingTypes().catch(() => { })
-      getCities().catch(() => { })
+      getCities().catch(() => { }),
+      getDefaultLocation().catch(() => { }),
+      getStyle().catch(() => { })
     ])
     navigation.navigate(SCREENS.TabStack)
   }

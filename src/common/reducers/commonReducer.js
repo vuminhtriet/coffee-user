@@ -10,13 +10,28 @@ const defaultState = {
   paymentTypes: [],
   categories: [],
   shippingTypes: [],
-  cities: []
+  cities: [],
+  location: '',
+  latlng: {},
+  style: []
 }
 
 const handlers = {
   [actions.setUserLanguage]: (state, action) => ({
     ...state,
     ...{ userLanguage: action.payload }
+  }),
+  [actions.setUserLocation]: (state, action) => ({
+    ...state,
+    ...{ location: action.payload }
+  }),
+  [actions.setUserLatLng]: (state, action) => ({
+    ...state,
+    ...{ latlng: action.payload }
+  }),
+  [actions.setStyle]: (state, action) => ({
+    ...state,
+    ...{ style: action.payload }
   }),
   [actions.setCountries]: (state, action) => ({
     ...state,

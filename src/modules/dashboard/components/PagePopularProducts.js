@@ -18,7 +18,7 @@ import { PRODUCT_SORT_LIST } from '../../../common/models';
 const { width } = Dimensions.get('window')
 const NUMBER_OF_ITEM = 2
 const ITEM_WITDH = (width) / NUMBER_OF_ITEM
-const ITEM_HEIGHT = 300
+const ITEM_HEIGHT = 285
 const DEFAULT_SORT_TYPE = PRODUCT_SORT_LIST.find(item => item.type === 1)
 
 export default class PagePopularProducts extends Component {
@@ -41,13 +41,12 @@ export default class PagePopularProducts extends Component {
       },
       chosenCategories: [],
       chosenLocation: {
-        countryId: '',
+        districtId: '',
         cityId: ''
       },
       chosenPrice: {
-        unitId: '',
-        min: '',
-        max: ''
+        min: 0,
+        max: 0
       }
     }
   }
@@ -135,11 +134,17 @@ export default class PagePopularProducts extends Component {
     if (chosenCategories.length > 0) {
       options.publicCategoryId = chosenCategories
     }
-    if (chosenLocation.countryId) {
-      options.countryId = chosenLocation.countryId
+    if (chosenLocation.districtId) {
+      options.districtId = chosenLocation.districtId
     }
-    if (chosenPrice.unitId) {
-      options.price = chosenPrice
+    if (chosenLocation.cityId) {
+      options.cityId = chosenLocation.cityId
+    }
+    if (chosenPrice.min) {
+      options.min = chosenPrice.min
+    }
+    if (chosenPrice.max) {
+      options.max = chosenPrice.max
     }
     return options
   }
@@ -169,13 +174,13 @@ export default class PagePopularProducts extends Component {
     this.setState({
       chosenCategories: [],
       chosenLocation: {
-        countryId: '',
+        districtId: '',
         cityId: ''
       },
       chosenPrice: {
         id: '',
-        min: '',
-        max: ''
+        min: 0,
+        max: 0
       }
     })
   }

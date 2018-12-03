@@ -17,7 +17,7 @@ import SortList from '../../shop/components/SortList'
 const { width } = Dimensions.get('window')
 const NUMBER_OF_ITEM = 2
 const ITEM_WITDH = (width - 10) / NUMBER_OF_ITEM
-const ITEM_HEIGHT = 300
+const ITEM_HEIGHT = 285
 
 export default class CategoryProducts extends Component {
   constructor(props) {

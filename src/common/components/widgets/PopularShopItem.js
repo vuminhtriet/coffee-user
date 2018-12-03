@@ -8,7 +8,7 @@ import {
 import { withNavigation } from 'react-navigation'
 import { SCREENS } from '../../screens'
 import { Rating } from 'react-native-elements'
-import { getFirstImgUrl } from '../../utils/shopUtils'
+import { getDistanceFromLatLonInKm } from '../../utils/shopUtils'
 
 
 class PopularShopItem extends Component {
@@ -18,10 +18,10 @@ class PopularShopItem extends Component {
   }
 
   render () {
-    const { item, itemWith, itemHeight } = this.props
-    // const { images } = item
+    const { item, itemWith, itemHeight, latlng } = this.props
+    const image = item.shopFeaturedImages && item.shopFeaturedImages[0] || ''
     // const fullUrl = getFirstImgUrl(images)
-    const {shopFeaturedImages} = item
+    // const {shopFeaturedImages} = item
 
     return (
       <TouchableOpacity
@@ -37,10 +37,10 @@ class PopularShopItem extends Component {
 
         <View style={{ flexDirection: 'row'}}>
           <View style= {{flexDirection: 'column'}}>
-          {shopFeaturedImages
+          {image
             ? <Image
               style={{ height: 124, width: 180 }}
-              source={{ uri: shopFeaturedImages[0] }}
+              source={{ uri: image }}
             /> : <Image
               style={{ height: 124, width: 180 }}
               source={require('../../../assets/shopplaceholder.jpg')}
@@ -50,11 +50,11 @@ class PopularShopItem extends Component {
           fontSize: 17, paddingLeft: 3}}>
               {`${item.shopName}`}
           </Text>
-          <View style = {{flexDirection: 'row', paddingLeft: 3}}>
+          <View style = {{flexDirection: 'row', paddingLeft: 3, justifyContent: 'space-between'}}>
             <Rating
               type='custom'
               fractions={1}
-              startingValue={item.shopRating || 0}
+              startingValue={item.avgRating || 0}
               readonly
               imageSize={16}
               showRating={false}
@@ -63,10 +63,20 @@ class PopularShopItem extends Component {
               ratingBackgroundColor='transparent'
               style={{ paddingVertical: 10 }} />
           </View>
-          <View style = {{ paddingLeft: 3}}>
+          <View style = {{ paddingLeft: 3, flexDirection: 'row'}}>
           {item.address && item.address.fullAddress
-              ? <Text numberOfLines = {1} style={{ }}>{`${item.address.fullAddress}`}</Text>
-              : <Text numberOfLines = {1} style={{ }}>{`không xác định`}</Text>
+              ? <Text numberOfLines = {1} style={{ width: 140 }}>{`${item.address.fullAddress}`}</Text>
+              : <Text numberOfLines = {1} style={{ width: 140 }}>{`không xác định`}</Text>
+          }
+          {item.shopLocation && item.shopLocation.lat && item.shopLocation.lng
+            ? <Text numberOfLines = {1} style={{alignContent: 'flex-end', fontWeight: 'bold'
+            , alignItems: 'flex-end', justifyContent: 'flex-end', width: 60 }}>
+              {`${getDistanceFromLatLonInKm(latlng.lat, latlng.lng, item.shopLocation.lat, item.shopLocation.lng)} km`} 
+            </Text>
+            : <Text numberOfLines = {1} style={{alignContent: 'flex-end', fontWeight: 'bold'
+            , alignItems: 'flex-end', justifyContent: 'flex-end', width: 60 }}>
+              {``} 
+            </Text>
           }
           </View>
           </View>

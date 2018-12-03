@@ -12,7 +12,7 @@ import ProductItem from '../../../common/components/widgets/ProductItem'
 const { width } = Dimensions.get('window')
 const NUMBER_OF_ITEM = 2
 const ITEM_WITDH = (width - 20) / NUMBER_OF_ITEM
-const ITEM_HEIGHT = 300
+const ITEM_HEIGHT = 285
 
 export default class ShopProduct extends Component {
   componentDidMount () {

@@ -9,6 +9,8 @@ const defaultState = {
   dashboardPopularProducts: [],
   popularShops: [],
   dashboardPopularShops: [],
+  nearbyShops: [],
+  dashboardNearbyShops: [],
   todayProducts: [],
   categories: [],
   categoryProducts: [],
@@ -42,6 +44,14 @@ const handlers = {
     ...state,
     ...{ dashboardPopularShops: action.payload }
   }),
+  [actions.getNearbyShops]: (state, action) => ({
+    ...state,
+    ...{ nearbyShops: action.payload }
+  }),
+  [actions.getDashboardNearbyShops]: (state, action) => ({
+    ...state,
+    ...{ dashboardNearbyShops: action.payload }
+  }),
   [actions.loadMorePopularProducts]: (state, action) => ({
     ...state,
     ...{ popularProducts: [...state.popularProducts, ...action.payload] }
@@ -49,6 +59,10 @@ const handlers = {
   [actions.loadMorePopularShops]: (state, action) => ({
     ...state,
     ...{ popularShops: [...state.popularShops, ...action.payload] }
+  }),
+  [actions.loadMoreNearbyShops]: (state, action) => ({
+    ...state,
+    ...{ nearbyShops: [...state.nearbyShops, ...action.payload] }
   }),
   [actions.getTodayProducts]: (state, action) => ({
     ...state,

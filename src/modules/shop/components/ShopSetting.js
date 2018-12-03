@@ -12,10 +12,11 @@ import ImageResizer from 'react-native-image-resizer'
 import { FormValidationMessage, Button, Icon, Card, ListItem, FormLabel } from 'react-native-elements'
 import { SCREENS } from '../../../common/screens'
 import Modal from '../../../common/components/elements/Modal'
+import LoginForm from '../../user/containers/LoginForm';
 const ImagePicker = require('react-native-image-picker')
 
 const options = {
-  title: 'Upload your images',
+  title: 'Đăng hình của bạn',
   storageOptions: {
     skipBackup: true,
     noData: true,
@@ -28,31 +29,31 @@ const options = {
 const MENU_LIST = [
   {
     title: 'Thông Tin Quán',
-    iconName: 'store',
-    iconType: 'material-community',
+    iconName: 'shop',
+    iconType: 'entypo',
     screen: SCREENS.ShopInformation
   },
-  {
-    title: 'Phương Thức Thanh Toán',
-    iconName: 'credit-card',
-    iconType: 'material-community',
-    screen: SCREENS.ShopPaymentMethod
-  },
-  {
-    title: 'Phương Thức Giao Hàng',
-    iconName: 'truck-delivery',
-    iconType: 'material-community',
-    screen: SCREENS.ShopShippingType
-  },
+  // {
+  //   title: 'Phương Thức Thanh Toán',
+  //   iconName: 'credit-card',
+  //   iconType: 'material-community',
+  //   screen: SCREENS.ShopPaymentMethod
+  // },
+  // {
+  //   title: 'Phương Thức Giao Hàng',
+  //   iconName: 'truck-delivery',
+  //   iconType: 'material-community',
+  //   screen: SCREENS.ShopShippingType
+  // },
   {
     title: 'Quản Lý Danh Mục',
-    iconName: 'format-align-left',
-    iconType: 'material',
+    iconName: 'th-list',
+    iconType: 'font-awesome',
     screen: SCREENS.CategoryManagement
   },
   {
     title: 'Quản Lý Đồ Uống',
-    iconName: 'product-hunt',
+    iconName: 'coffee',
     iconType: 'font-awesome',
     screen: SCREENS.ProductManagement
   },
@@ -118,8 +119,8 @@ export default class ShopSetting extends Component {
   constructor(props) {
     super(props)
     const { shopImages } = props
-    const slideCover = shopImages.filter(item => item.type === 2 || item.type === 3)
-    const logo = shopImages.find(item => item.type === 1)
+    const slideCover = shopImages && shopImages.shopFeaturedImages ? shopImages.shopFeaturedImages : []
+    const logo = shopImages && shopImages.shopLogo ? shopImages.shopLogo : null
     this.state = {
       refreshing: false,
       addImage: false,
@@ -128,7 +129,7 @@ export default class ShopSetting extends Component {
         : [],
       logo,
       logoId: logo ? logo.id : undefined,
-      cover: slideCover.find(item => item.type === 2)
+      cover: slideCover
     }
     this.animate = new Animated.Value(0)
     this.onChoose = this.onChoose.bind(this)
@@ -138,34 +139,37 @@ export default class ShopSetting extends Component {
     this.onChooseCover = this.onChooseCover.bind(this)
     this.removeLogoImage = this.removeLogoImage.bind(this)
     this.requestUploadImage = this.requestUploadImage.bind(this)
+    this.cancelUploadImage = this.cancelUploadImage.bind(this)
   }
 
   componentWillReceiveProps(next) {
     if (next.shopImages && JSON.stringify(next.shopImages) !== JSON.stringify(this.props.shopImages)) {
       const { shopImages } = next
-      const slideCover = shopImages.filter(item => item.type === 2 || item.type === 3)
-      const logo = shopImages.find(item => item.type === 1)
+      const slideCover = shopImages && shopImages.shopFeaturedImages ? shopImages.shopFeaturedImages : []
+      const logo = shopImages && shopImages.shopLogo ? shopImages.shopLogo : null
       this.setState({
         images: slideCover
           ? JSON.parse(JSON.stringify(slideCover))
           : [],
         logo,
         logoId: logo ? logo.id : undefined,
-        cover: slideCover.find(item => item.type === 2)
+        cover: slideCover
       })
     }
   }
 
-  onChooseCover(index) {
+  onChooseCover(index, image) {
     let { images } = this.state
-    images = images.map((item) => {
-      item.type = 3
-      return item
-    })
-    images[index] = {
-      ...images[index],
-      type: 2
-    }
+    // images = images.map((item) => {
+    //   item.type = 3
+    //   return item
+    // })
+    // images[index] = {
+    //   ...images[index],
+    //   type: 2
+    // }
+    var element = images.splice(index,1)
+    images.unshift(element[0])
     this.setState({
       images: [
         ...images
@@ -179,6 +183,7 @@ export default class ShopSetting extends Component {
       let fileUri = null
       let fileData = null
       let fileOriginUri = null
+      let fileType = null
       if (response.didCancel) {
         return false
       } else if (response.error) {
@@ -190,6 +195,7 @@ export default class ShopSetting extends Component {
         fileUri = response.uri
         fileOriginUri = response.origURL
         fileData = response.data
+        fileType = response.type
       }
       if (!fileUri) {
         return false
@@ -207,6 +213,7 @@ export default class ShopSetting extends Component {
               fileUri,
               fileData,
               fileOriginUri,
+              fileType,
               resized: response
             }
           })
@@ -219,6 +226,7 @@ export default class ShopSetting extends Component {
               fileName,
               fileUri,
               fileData,
+              fileType,
               fileOriginUri,
               resized: undefined
             }
@@ -230,38 +238,45 @@ export default class ShopSetting extends Component {
   async uploadImages() {
     const { shopImages, token, shop, uploadImages, getShopImages } = this.props
     const { logoId, logo, images } = this.state
-    let editImages = []
-    let originLogo = null
-    let deleteImages = shopImages.filter(item => {
-      const image = images.find(image => image.id === item.id)
-      if (item.type === 1) {
-        originLogo = item
-        return false
-      } else if (image) {
-        editImages.push({
-          ...item,
-          type: image.type
-        })
+    let deleteImages = {
+      "shopFeaturedImages": [],
+      "shopLogo": null
+    }
+    let newImages = {
+      "shopFeaturedImages": [],
+      "shopLogo": null
+    }
+    console.log(images)
+    console.log(shopImages)
+    let cover = images[0]
+    let originLogo = shopImages && shopImages.shopLogo && shopImages.shopLogo
+    deleteImages.shopFeaturedImages = shopImages && shopImages.shopFeaturedImages &&
+    shopImages.shopFeaturedImages.filter((item, index) => {
+      const image = images.find(image => image === item)
+      if (image) {
         return false
       }
       return true
     })
-    const newImages = images.filter(item => !item.id)
-    if (logoId && logo && !logo.id) {
-      newImages.push(logo)
-      deleteImages.push({
-        id: logoId,
-        ...originLogo
-      })
-    } else if (!logoId && logo) {
-      newImages.push(logo)
-    } else if (logoId && !logo) {
-      deleteImages.push({
-        id: logoId,
-        ...originLogo
-      })
+    
+    console.log(deleteImages)
+    newImages.shopFeaturedImages = images.filter((item, index) => {
+      const image = shopImages && shopImages.shopFeaturedImages && 
+      shopImages.shopFeaturedImages.find(image => image === item)
+      if (image) {
+        return false
+      }
+      return true
+    })
+    if (typeof(logo) === "object" ) {
+      newImages.shopLogo = logo
+      deleteImages.shopLogo = originLogo
     }
-    await uploadImages(token, shop, newImages, deleteImages, editImages)
+    else if(!logo){
+      deleteImages.shopLogo = originLogo
+    }
+
+    await uploadImages(token, shop, newImages, deleteImages, cover)
     getShopImages(shop)
     this.requestUploadImage()
   }
@@ -276,6 +291,7 @@ export default class ShopSetting extends Component {
       let fileUri = null
       let fileData = null
       let fileOriginUri = null
+      let fileType = null
       if (response.didCancel) {
         return false
       } else if (response.error) {
@@ -287,6 +303,7 @@ export default class ShopSetting extends Component {
         fileUri = response.uri
         fileOriginUri = response.origURL
         fileData = response.data
+        fileType = response.type
       }
       if (!fileUri) {
         return false
@@ -306,6 +323,7 @@ export default class ShopSetting extends Component {
                 fileUri,
                 fileData,
                 fileOriginUri,
+                fileType,
                 resized: response
               }
             ]
@@ -321,6 +339,7 @@ export default class ShopSetting extends Component {
                 fileName,
                 fileUri,
                 fileData,
+                fileType,
                 fileOriginUri,
                 resized: undefined
               }
@@ -344,11 +363,13 @@ export default class ShopSetting extends Component {
         ...images
       ]
     })
+    console.log(images)
   }
 
   requestUploadImage() {
-    const { addImage } = this.state
-    const { token } = this.props
+    const { addImage, images } = this.state
+    const { token, shopImages } = this.props
+    console.log(images)
     if (!token) {
       return false
     }
@@ -357,11 +378,29 @@ export default class ShopSetting extends Component {
     })
   }
 
+  cancelUploadImage() {
+    const { addImage, images } = this.state
+    const { token, shopImages } = this.props
+    if (!token) {
+      return false
+    }
+    const slideCover = shopImages && shopImages.shopFeaturedImages ? shopImages.shopFeaturedImages : []
+    const logo = shopImages && shopImages.shopLogo ? shopImages.shopLogo : null
+    this.setState({
+      addImage: !addImage,
+      images : slideCover,
+      logo
+    })
+    console.log(images)
+  }
+
   async componentDidMount() {
     const {
       token,
       user,
-      getShopInformation
+      shop,
+      getShopInformation,
+      getShopImages
     } = this.props
 
     user && token && await getShopInformation(user, token)
@@ -390,15 +429,15 @@ export default class ShopSetting extends Component {
       <View style={{ flexDirection: 'column', width: '100%', height: '100%' }}>
         <Animated.Image
           source={
-            !shopFeaturedImages || !shopFeaturedImages[0]
-              ? require('../../../assets/banner/Banner4.jpg')
-              : { uri: shopFeaturedImages[0] }
+            shopFeaturedImages && shopFeaturedImages[0]
+              ? { uri: shopFeaturedImages[0] }
+              : require('../../../assets/banner/Banner4.jpg')
           }
           style={{ width: '100%', height: 150, transform: [{ scale: imageScale }] }}
           resizeMode='cover'
         />
         <Icon
-          name='add-a-photo'
+          name='insert-photo'
           size={30}
           color='#FFFFFF'
           onPress={this.requestUploadImage}
@@ -470,7 +509,7 @@ export default class ShopSetting extends Component {
               }}
             />
             <View style={{ width: '100%', height: undefined, maxHeight: '80%', zIndex: 2 }}>
-              <Card title='Upload shop images'>
+              <Card title='Tải lên hình ảnh quán'>
                 <FormLabel>
                   Logo
                 </FormLabel>
@@ -503,7 +542,7 @@ export default class ShopSetting extends Component {
                       <Image
                         resizeMode='contain'
                         style={{ width: 80, height: 80 }}
-                        source={{ uri: logo.fullUrl || logo.fileUri }}
+                        source={{ uri:  logo.fileUri ? logo.fileUri : (logo.length > 0 ? logo : '') }}
                       />
                     </TouchableOpacity>
                   </View>
@@ -524,7 +563,7 @@ export default class ShopSetting extends Component {
                       onPress={this.onChooseLogo}
                     >
                       <Text style={{ color: '#EE9468' }}>
-                        Upload images/videos
+                        Đăng hình
                       </Text>
                     </TouchableOpacity>
                   </View>) : (
@@ -538,7 +577,7 @@ export default class ShopSetting extends Component {
                           alignItems: 'center'
                         }}>
                         <Icon
-                          name='add-a-photo'
+                          name='insert-photo'
                           size={40}
                           onPress={this.onChooseLogo}
                           containerStyle={{
@@ -555,7 +594,7 @@ export default class ShopSetting extends Component {
                     )
                 }
                 <FormLabel>
-                  {`Cover & Slide`}
+                  {`Ảnh đại diện và không gian quán`}
                 </FormLabel>
                 <ScrollView
                   horizontal
@@ -590,14 +629,14 @@ export default class ShopSetting extends Component {
                           style={{
                             zIndex: 1
                           }}
-                          onPress={() => this.onChooseCover(index)}
+                          onPress={() => this.onChooseCover(index,image)}
                         >
                           <Image
                             resizeMode='contain'
                             style={{ width: 80, height: 80 }}
-                            source={{ uri: image.fullUrl || image.fileUri }}
+                            source={{ uri: image.fileUri ? image.fileUri : (image.length > 0 ? image : '') }}
                           />
-                          {image.type === 2 && (
+                          {index === 0 && (
                             <View
                               style={{
                                 bottom: 0,
@@ -631,7 +670,7 @@ export default class ShopSetting extends Component {
                       onPress={this.onChoose}
                     >
                       <Text style={{ color: '#EE9468' }}>
-                        Upload images/videos
+                        Đăng hình
                       </Text>
                     </TouchableOpacity>
                   </View> : (
@@ -643,7 +682,7 @@ export default class ShopSetting extends Component {
                           alignItems: 'center'
                         }}>
                         <Icon
-                          name='add-a-photo'
+                          name='insert-photo'
                           size={40}
                           onPress={this.onChoose}
                           containerStyle={{
@@ -660,7 +699,7 @@ export default class ShopSetting extends Component {
                     )}
                 </ScrollView>
                 <FormValidationMessage containerStyle={{ marginBottom: 15 }}>
-                  * Touch an image you want to choose it as a cover picture
+                  * Chọn vào hình bạn muốn làm ảnh đại diện
                 </FormValidationMessage>
                 <View style={{
                   width: '100%',
@@ -669,12 +708,12 @@ export default class ShopSetting extends Component {
                   marginTop: 10
                 }}>
                   <Button
-                    title='Cancel'
-                    onPress={this.requestUploadImage}
+                    title='Hủy'
+                    onPress={this.cancelUploadImage}
                     containerViewStyle={{ flex: 1, paddingRight: 5 }}
                   />
                   <Button
-                    title='Upload'
+                    title='Đăng'
                     backgroundColor='#992320'
                     onPress={this.uploadImages}
                     containerViewStyle={{ flex: 1, paddingLeft: 5 }}

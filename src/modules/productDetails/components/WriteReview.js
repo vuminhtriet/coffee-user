@@ -24,30 +24,36 @@ import StarRating from 'react-native-star-rating'
 export default class WriteReview extends Component {
   constructor(props) {
     super(props)
+    const { ratings, userId } = this.props
+    const productRating = ratings.find(item => item.memberId === userId)
     this.state = {
+      productRating,
       loading: false,
-      rating: 0,
-      title: '',
-      comment: '',
+      rating: productRating ? productRating.rating : 0,
+      title: productRating ? productRating.title : '',
+      comment: productRating ? productRating.content : '',
       errors: {}
     }
   }
 
   submit = async () => {
-    const { onBack, writeReview, token, productId, userId } = this.props
-    const { rating, title, comment } = this.state
+    const { onBack, writeReview, editReview, token, productId, userId, shop, onButtonBack } = this.props
+    const { rating, title, comment, productRating } = this.state
     const errors = {}
     if (rating === 0) {
-      errors.rating = '* Rating required'
+      errors.rating = '* Thiếu xếp hạng'
     }
     if (!comment) {
-      errors.comment = '* Comment required'
+      errors.comment = '* Thiếu bình luận'
     }
-    if (comment.length < 50) {
-      errors.comment = '* Comment has at least 50 characters'
+    if (!title) {
+      errors.title = '* Thiếu tựa đề'
+    }
+    if (comment.length < 20) {
+      errors.comment = '* Bình luận phải có ít nhất 20 từ'
     }
     if (comment.length > 4000) {
-      errors.comment = '* Comment has at most 4000 characters'
+      errors.comment = '* Bình luận chỉ có tối đa 4000 từ'
     }
 
     if (!isEmpty(errors)) {
@@ -57,19 +63,26 @@ export default class WriteReview extends Component {
     else {
       const data = {
         title,
-        value: rating,
-        comment,
-        status: 1,
-        isVerified: true,
-        createdAt: moment(),
-        productId,
-        userId
+        rating: rating,
+        content: comment,
+        date: moment(),
+        productId: productId,
+        memberId: userId
       }
-      this.setState({ loading: true }, async () => {
-        await writeReview(data, token)
-        this.setState({ loading: false })
-        onBack()
-      })
+      if (!productRating) {
+        this.setState({ loading: true }, async () => {
+          await writeReview(data, token)
+          this.setState({ loading: false })
+          onBack()
+        })
+      }
+      else{
+        this.setState({ loading: true }, async () => {
+          await editReview(data, token, productRating.id)
+          this.setState({ loading: false })
+          onBack()
+        })
+      }
     }
   }
 
@@ -107,14 +120,12 @@ export default class WriteReview extends Component {
   }
 
   render() {
-    const { onBack, images, productName } = this.props
+    const { onBack, images, productName, onButtonBack } = this.props
     const { errors, rating, title, comment, loading } = this.state
-    const isExistCover = images && images.length > 0 && images.find(item => item.type === 2)
+    const isExistCover = images && images.length > 0 && images[0]
     const coverImage = isExistCover
       ? isExistCover
-      : images.length > 0
-        ? images[0]
-        : null
+      : null
     return (
       <DefaultPage
         blocking={false}
@@ -122,8 +133,8 @@ export default class WriteReview extends Component {
       >
         <View style={{ width: '100%', height: 40 }}>
           <HeaderTitle
-            title='Write a review'
-            onBack={onBack} />
+            title='Viết đánh giá'
+            onBack={onButtonBack} />
         </View>
 
         {!loading && <KeyboardAvoidingView
@@ -139,8 +150,8 @@ export default class WriteReview extends Component {
               <View style={{ width: 100 }}>
                 <Image
                   style={{ height: 120, width: '100%' }}
-                  source={coverImage && coverImage.fullUrl
-                    ? { uri: coverImage.fullUrl }
+                  source={coverImage
+                    ? { uri: coverImage }
                     : require('../../../assets/placeholder.png')}
                 />
               </View>
@@ -150,7 +161,7 @@ export default class WriteReview extends Component {
             </View>
 
             <View style={{ flex: 1, paddingBottom: 15, paddingTop: 15, alignItems: 'center' }}>
-              <Text style={{ textAlign: 'center', fontSize: 16 }}>Your rating</Text>
+              <Text style={{ textAlign: 'center', fontSize: 16 }}>Xếp hạng của bạn</Text>
               {/* <Rating
                 // showRating
                 fractions={0}
@@ -185,7 +196,7 @@ export default class WriteReview extends Component {
             <View style={{ flex: 1, paddingBottom: 15 }}>
               <FormInput
                 containerStyle={{ borderWidth: 1, borderColor: '#b3b3b3' }}
-                placeholder='Enter your title'
+                placeholder='Nhập tựa đề'
                 value={title || ''}
                 onChangeText={(text) => this.onChangeText(text, 'title')}
               />
@@ -199,7 +210,7 @@ export default class WriteReview extends Component {
                 multiline
                 numberOfLines={5}
                 containerStyle={{ borderWidth: 1, borderColor: '#b3b3b3' }}
-                placeholder='Enter your comment'
+                placeholder='Nhập bình luận'
                 value={comment || ''}
                 onChangeText={(text) => this.onChangeText(text, 'comment')}
               />
@@ -208,7 +219,7 @@ export default class WriteReview extends Component {
               }
             </View>
 
-            <Button title='Submit' onPress={this.submit} />
+            <Button title='Đăng' onPress={this.submit} />
           </ScrollView>
         </KeyboardAvoidingView>}
 

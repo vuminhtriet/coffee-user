@@ -1,4 +1,5 @@
 import axios from 'axios'
+import moment from 'moment'
 import { connect } from 'react-redux'
 import {  Alert} from 'react-native'
 import SignUpForm from '../components/SignUpForm'
@@ -102,7 +103,26 @@ const mapDispatchToProps = (dispatch, props) => ({
           url: `${TEST_URL}/api/Shops`,
           method: 'POST',
           data: {
-            shopName: email.match(/^([^@]*)@/)[1]
+            shopName: email.match(/^([^@]*)@/)[1],
+            shopFeaturedImages: [],
+            shopLogo: "",
+            shopOpeningHours: "",
+            shopLocation: {
+              lat:0,
+              lng:0
+            },
+            shopAlias: "",
+            shopActive: true,
+            shopPhoneNumber: "",
+            avgRating: 0,
+            website: "",
+            dateCreatedAt: moment().format(),
+            isPopular: false,
+            address: {
+              cityId: null,
+              districtId: null,
+              fullAddress: ""
+            }
           }
         })
         if (response && response.data) {
@@ -112,7 +132,8 @@ const mapDispatchToProps = (dispatch, props) => ({
             data: {
               email: email,
               password: password,
-              shopId: response.data.id
+              shopId: response.data.id,
+              isMale: true
             }
           })
           if(response_.data){

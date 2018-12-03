@@ -6,6 +6,7 @@ import {
 } from 'react-native'
 import Ion from 'react-native-vector-icons/Ionicons'
 import { SCREENS } from '../../../common/screens'
+import call from 'react-native-phone-call'
 
 export default class ProductSubMenu extends Component {
 
@@ -23,8 +24,23 @@ export default class ProductSubMenu extends Component {
       navigation.navigate(SCREENS.ChatDetailPage, { userId: shopInfo.userId })
     }
   }
+
+  onPress = () => {
+    const { navigation, token, onToggleWriteReview } = this.props
+    token ? onToggleWriteReview : navigation.navigate(SCREENS.AuthenticatePage)
+  }
+
+  call = () => {
+    const { shopInfo } = this.props
+    const args = {
+      number: shopInfo.shopPhoneNumber, // String value with the number to call
+      prompt: false // Optional boolean property. Determines if the user should be prompt prior to the call 
+    }
+    call(args).catch(console.error)
+  }
+
   render() {
-    const { onToggleAddToCart } = this.props
+    const { shopInfo, token, onToggleWriteReview } = this.props
 
     return (
       <View
@@ -43,7 +59,7 @@ export default class ProductSubMenu extends Component {
         }}
       >
         <TouchableOpacity
-          onPress={onToggleAddToCart}
+          onPress={this.call}
           style={{
             display: 'flex',
             flexDirection: 'column',
@@ -54,12 +70,12 @@ export default class ProductSubMenu extends Component {
           }}
         >
           <Ion
-            name={'md-add-circle'}
+            name={'ios-call'}
             size={30}
-            color='red'
+            color='green'
             containerStyle={{}}
           />
-          <Text style={{ fontSize: 16 }}>Add to cart</Text>
+          <Text style={{ fontSize: 16 }}>Gọi quán</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={{
@@ -70,15 +86,15 @@ export default class ProductSubMenu extends Component {
             alignContent: 'center',
             alignItems: 'center'
           }}
-          onPress={this.onChatWithShop}
+          onPress={token ? onToggleWriteReview : this.onPress}
         >
           <Ion
             name={'ios-chatboxes'}
             size={30}
-            color='#9E9E9E'
+            color='#FFB233'
             containerStyle={{}}
           />
-          <Text style={{ fontSize: 16 }}>Chat now</Text>
+          <Text style={{ fontSize: 16 }}>Đánh giá</Text>
         </TouchableOpacity>
       </View>
     )

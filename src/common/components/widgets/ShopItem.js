@@ -10,7 +10,7 @@ import { Rating } from 'react-native-elements'
 import { SCREENS } from '../../screens'
 import Ion from 'react-native-vector-icons/Ionicons'
 import { withNavigation } from 'react-navigation'
-import { getFirstImgUrl } from '../../utils/shopUtils'
+import { getFirstImgUrl, getDistanceFromLatLonInKm } from '../../utils/shopUtils'
 
 class ShopItem extends Component {
   onPress = () => {
@@ -24,10 +24,10 @@ class ShopItem extends Component {
   }
 
   render() {
-    const { item, itemWith, itemHeight } = this.props
-    // const { images } = item
+    const { item, itemWith, itemHeight, latlng } = this.props
+    const image = item.shopFeaturedImages && item.shopFeaturedImages[0] || ''
     // const fullUrl = getFirstImgUrl(images)
-    const {shopFeaturedImages} = item
+    // const {shopFeaturedImages} = item
 
     return (
       <TouchableOpacity
@@ -43,15 +43,15 @@ class ShopItem extends Component {
         <View
           style={{
             padding: 5,
-            borderWidth: 1,
-            borderColor: '#D4D4D4',
+            // borderWidth: 1,
+            // borderColor: '#D4D4D4',
             flex: 1
           }}
         >
-          {shopFeaturedImages
+          {image
             ? <Image
               style={{ height: 155 }}
-              source={{ uri: shopFeaturedImages[0] }}
+              source={{ uri: image }}
             /> : <Image
               style={{ height: 155, width: '100%' }}
               source={require('../../../assets/shopplaceholder.jpg')}
@@ -81,8 +81,8 @@ class ShopItem extends Component {
               justifyContent: 'flex-start'
             }}>
               {item.address && item.address.fullAddress
-              ? <Text numberOfLines = {3} style={{ }}>{`${item.address.fullAddress}`}</Text>
-              : <Text numberOfLines = {3} style={{ }}>{`không xác định`}</Text>
+              ? <Text numberOfLines = {2} style={{ }}>{`${item.address.fullAddress}`}</Text>
+              : <Text numberOfLines = {2} style={{ }}>{`không xác định`}</Text>
               }
             </View>
             <View
@@ -92,12 +92,12 @@ class ShopItem extends Component {
                 justifyContent: 'space-between'
               }}
             >
-              <View style={{ display: 'flex', flexDirection: 'row' }}>
+              <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
                 <View>
                   <Rating
                     type='custom'
                     fractions={1}
-                    startingValue={item.shopRating || 0}
+                    startingValue={item.avgRating || 0}
                     readonly
                     imageSize={14}
                     showRating={false}
@@ -106,11 +106,21 @@ class ShopItem extends Component {
                     ratingBackgroundColor='transparent'
                     style={{ paddingVertical: 10 }} />
                 </View>
-                <View>
+                {/* <View style = {{marginBottom: 7 }}> */}
                   {/* <Text style={{ marginBottom: 0, paddingTop: 7, textAlign: 'left' }}>
                     {` (${item.totalUserRating || 0})`}
                   </Text> */}
-                </View>
+                  {item.shopLocation && item.shopLocation.lat && item.shopLocation.lng
+                    ? <Text style={{fontWeight: 'bold', marginLeft: 60,
+                    textAlign: 'left', marginBottom: 0, paddingTop: 7}}>
+                      {`${getDistanceFromLatLonInKm(latlng.lat, latlng.lng, item.shopLocation.lat, item.shopLocation.lng)} km`} 
+                    </Text>
+                    : <Text style={{fontWeight: 'bold', 
+                    textAlign: 'left', marginBottom: 0, paddingTop: 7}}>
+                      {``} 
+                    </Text>
+                  }
+                {/* </View> */}
               </View>
               {/* <View style={{ display: 'flex', flexDirection: 'row' }}>
                 <View style={{ marginTop: 1, marginRight: 2 }}>

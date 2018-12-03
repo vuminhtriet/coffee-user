@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { uploadProductImage, deleteProductImage } from '../../../common/firebase'
 import ProductEdit from '../components/ProductEdit'
 import { BASE_URL, TEST_URL } from '../../../common/models'
-import { loading } from '../../../common/effects'
+import { loading, fetch } from '../../../common/effects'
 import { MODULE_NAME as MODULE_SHOP } from '../../shop/models'
 import { MODULE_NAME as MODULE_USER } from '../../user/models'
 import { MODULE_NAME as MODULE_ORDER } from '../../order/models'
@@ -37,22 +37,95 @@ const mapDispatchToProps = (dispatch, props) => ({
       return false
     }
   },
-  editProduct: async (token, pureProduct, product, newImages, deleteImages, editImages, user, shop) => {
+  editProduct: async (token, pureProduct, product, newImages, deleteImages, cover, user, shop) => {
     try {
       const result = await loading(dispatch, async () => {
+        const date = moment().format()
+        let mainImages = pureProduct.productCoverImage || []
+        //edit image at index 0 if image is string
+        if(typeof(cover) === "string"){
+          let index = mainImages.indexOf(cover)
+          let element = mainImages.splice(index,1)
+          mainImages.unshift(element[0])
+        }
+
+        console.log("delete", deleteImages)
+        console.log("new", newImages)
+        console.log("main", mainImages)
+        
+        //Delete cover images
+        if (deleteImages.length > 0){
+          await Promise.all(deleteImages.map(item => {
+            let response = fetch({
+              url: item.replace("download", "files"),
+              method: 'DELETE'
+            })
+            console.log(response)
+            if (response){
+              let index = mainImages.indexOf(item)
+              mainImages.splice(index, 1)
+            }
+            })
+          )
+        }
+
+        // Instal new cover images
+        if (newImages.length > 0){
+          await Promise.all(
+            newImages.map(item => {
+            let image = new FormData()
+            image.append(date + item.fileName, {
+              uri: item.fileUri,
+              type: "image/jpeg",
+              name: date + item.fileName
+            })
+            let response = fetch({
+              url: `${TEST_URL}/api/containers/drink2pics/upload`,
+              method: 'POST',
+              data: image
+            })
+            console.log(response)
+            if (response){
+              if(item === cover){
+                mainImages.unshift(
+                  `${TEST_URL}/api/containers/drink2pics/download/${date + item.fileName}`)
+                  console.log(mainImages)
+              }
+              else {
+                mainImages.push(
+                  `${TEST_URL}/api/containers/drink2pics/download/${date + item.fileName}`)
+                  console.log(mainImages)
+              }
+            }
+            })
+          )
+        }
+
+        //final patch
         const url = `${TEST_URL}/api/products/${pureProduct.id}`
-        const data = {
+        let data = {
           productName: product.name,
           productDescription: product.description,
           categoryId: product.privateCategoryId && product.privateCategoryId.id,
           productUpdatedAt: moment().format(),
           productPrice: product.productPrices,
-          productStatus: product.quantity > 0 ? true : false,
-          productQuantity: product.quantity
-          // images: []
+          // productStatus: product.quantity > 0 ? true : false,
+          // productQuantity: product.quantity
+        }
+        if (mainImages) {
+          data = {
+            productName: product.name,
+            productDescription: product.description,
+            categoryId: product.privateCategoryId && product.privateCategoryId.id,
+            productUpdatedAt: moment().format(),
+            productPrice: product.productPrices,
+            // productStatus: product.quantity > 0 ? true : false,
+            // productQuantity: product.quantity
+            productCoverImage: mainImages
+          }
         }
         console.log('data', data)
-        const response = await axios({
+        const response_ = await axios({
           url,
           method: 'PATCH',
           // headers: {
@@ -60,63 +133,8 @@ const mapDispatchToProps = (dispatch, props) => ({
           // },
           data
         })
-        if (response && response.data) {
-          // Delete old images
-          // await Promise.all(deleteImages.map(item => {
-          //   return deleteProductImage(item.url)
-          //     .then(response => {
-          //       return axios({
-          //         url: `${BASE_URL}/api/images/${item.id}`,
-          //         method: 'DELETE',
-          //         headers: {
-          //           Authorization: token
-          //         }
-          //       })
-          //     }).catch(err => {
-          //       console.log('DELETE IMAGE ERROR', err.response)
-          //     })
-          // }))
-          // // Edited
-          // await Promise.all(editImages.map(item => {
-          //   return axios({
-          //     url: `${BASE_URL}/api/images/${item.id}`,
-          //     method: 'PUT',
-          //     headers: {
-          //       Authorization: token
-          //     },
-          //     data: {
-          //       ...item
-          //     }
-          //   }).catch(err => {
-          //     console.log('editImages IMAGE ERROR', err.response)
-          //   })
-          // }))
-          // // // Instal new images
-          // console.log('newImages', newImages)
-          // await Promise.all(newImages.map(item => {
-          //   return uploadProductImage(pureProduct.id, item.fileName, item.resized
-          //     ? item.resized.uri : item.fileUri)
-          //     .then(response => {
-          //       return axios({
-          //         url: `${BASE_URL}/api/images`,
-          //         method: 'POST',
-          //         headers: {
-          //           Authorization: token
-          //         },
-          //         data: {
-          //           url: response.ref,
-          //           type: item.type,
-          //           fullUrl: response.downloadURL,
-          //           size: response.totalBytes,
-          //           productId: pureProduct.id,
-          //           createdAt: moment().format()
-          //         }
-          //       })
-          //     })
-          //     .catch(err => {
-          //       console.log('UPLOAD IMAGE ERROR', err.response)
-          //     })
-          // }))
+        if(response_ && response_.data){
+          console.log(response_)
           return true
         }
         return false

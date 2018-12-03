@@ -8,68 +8,17 @@ import StoreHeader from '../components/StoreHeader'
 import { MODULE_NAME } from '../models'
 import { MODULE_NAME as MODULE_USER } from '../../user/models'
 
-const mapDispatchToProps = (dispatch, props) => ({
+export const mapDispatchToProps = (dispatch, props) => ({
   getStoreInformation: async (id) => {
     try {
-      // const filter = {
-      //   'include': [
-      //     {
-      //       'relation': 'shopShippingTypes',
-      //       'scope': {
-      //         'include': 'shippingType',
-      //         'where': {
-      //           'status': 1
-      //         }
-      //       }
-      //     },
-      //     {
-      //       'relation': 'shopPaymentMethods',
-      //       'scope': {
-      //         'include': 'paymentType',
-      //         'where': {
-      //           'status': 'active'
-      //         },
-      //         'sort': 'paymentTypeId DESC'
-      //       }
-      //     },
-      //     'addresses',
-      //     'images',
-      //     {
-      //       'relation': 'products',
-      //       'scope': {
-      //         'include': [
-      //           {
-      //             'relation': 'productPrices',
-      //             'scope': {
-      //               'where': {
-      //                 'status': 1
-      //               },
-      //               'include': [
-      //                 'cashUnit',
-      //                 'electricUnit',
-      //                 'promotionPrice'
-      //               ]
-      //             }
-      //           },
-      //           'images'
-      //         ],
-      //         'where': {
-      //           'status': 1
-      //         }
-      //       }
-      //     },
-      //     {
-      //       'relation': 'privateCategories',
-      //       'scope': {
-      //         'where': {
-      //           'status': 1
-      //         }
-      //       }
-      //     }
-      //   ]
-      // }
+      const filter = {
+        "include":
+          ["products",{"reviewShops":["member"]}]
+      }
+
       // const url = `${BASE_URL}/api/shops/${id}?filter=${JSON.stringify(filter)}`
-      const url = `${TEST_URL}/api/shops/${id}?filter%5Binclude%5D%5Bproducts%5D`
+      // const url = `${TEST_URL}/api/shops/${id}?filter%5Binclude%5D%5Bproducts%5D`
+      const url = `${TEST_URL}/api/shops/${id}?filter=${JSON.stringify(filter)}`
       // const response = await axios({
       //   url
       // })

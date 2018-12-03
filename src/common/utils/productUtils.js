@@ -102,8 +102,8 @@ export const countRatings = (ratings) => {
     1: 0
   }
   ratings.map(item => {
-    const value = item.value
-    result[value] += 1
+    const rating = item.rating
+    result[rating] += 1
   })
   return result
 }

@@ -7,12 +7,10 @@ import { MODULE_NAME as MODULE_PRODUCT_DETAIL } from '../models'
 const mapDispatchToProps = (dispatch, props) => ({
 })
 
-const mapStateToProps = state => {
-  return {
-    user: state[MODULE_USER].user,
-    token: state[MODULE_USER].token,
-    totalItem: state[MODULE_PRODUCT_DETAIL].cartSummary.totalItem
-  }
-}
+const mapStateToProps = state => ({
+  user: state[MODULE_USER].user,
+  token: state[MODULE_USER].token,
+  totalItem: state[MODULE_PRODUCT_DETAIL].cartSummary.totalItem
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductSubMenu)

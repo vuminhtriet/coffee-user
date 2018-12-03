@@ -205,67 +205,16 @@ export default class ProductDetailPage extends Component {
       loading: true,
       userPayments: [],
       showWriteReview: false,
+      productRatings: []
     }
   }
 
-  componentDidMount() {
+  getProduct() {
     const { navigation } = this.props
     const productItem = navigation.getParam('productItem', {})
-    // const filter = {
-    //   'include': [
-    //     {
-    //       'shop': [
-    //         'shopShippingTypes',
-    //         {
-    //           'relation': 'shopPaymentMethods',
-    //           'scope': {
-    //             'where': {
-    //               'status': 'active'
-    //             },
-    //             'include': 'paymentType'
-    //           }
-    //         },
-    //         'images'
-    //       ]
-    //     },
-    //     'publicCategory',
-    //     {
-    //       'relation': 'productVariations',
-    //       'scope': {
-    //         'where': {
-    //           'status': 1
-    //         }
-    //       }
-    //     },
-    //     {
-    //       'relation': 'productPrices',
-    //       'scope': {
-    //         'where': {
-    //           'status': 1
-    //         },
-    //         'include': [
-    //           'cashUnit',
-    //           'electricUnit',
-    //           'promotionPrice'
-    //         ]
-    //       }
-    //     },
-    //     'countries',
-    //     'images',
-    //     {
-    //       'relation': 'productRatings',
-    //       'scope': {
-    //         'where': {
-    //           'status': 1
-    //         },
-    //         'include': { 'user': 'images' },
-    //         'order': 'createdAt DESC'
-    //       }
-    //     }
-    //   ]
-    // }
-    // const url = `${BASE_URL}/api/products/${productItem.id}?filter=${JSON.stringify(filter)}`
-    const url = `${TEST_URL}/api/shops/${productItem.shopId}?filter%5Binclude%5D%5Bproducts%5D`
+    const filter =
+    {"include":{"products":[{"reviewProducts":["member"]}]}}
+    const url = `${TEST_URL}/api/shops/${productItem.shopId}?filter=${JSON.stringify(filter)}`
 
     this.setState({ loading: true }, () => {
       axios({
@@ -275,6 +224,8 @@ export default class ProductDetailPage extends Component {
         .then(response => {
           const shopDetail = response.data
           const thisProduct = productItem
+          const product = response.data.products.find(item => item.id === productItem.id)
+          const ratings = product.reviewProducts
           // const priceSelected = thisProduct.productPrices.length > 0
           //   ? getActivePrices(thisProduct.productPrices)[0].id
           //   : null
@@ -286,21 +237,40 @@ export default class ProductDetailPage extends Component {
           //     }
           //   })
           // }
-          // const response_ = axios({
-          //   url: `${TEST_URL}/api/shops/${thisProduct.shopId}`
-          // })
-          // const shopDetail = response_.data
           this.setState({
+            productRatings: ratings,
             thisProduct,
             shopInfo: shopDetail,
             loading: false
           })
         })
         .catch(e => {
-          this.setState({ thisProduct: null, shopInfo: null, loading: false })
+          this.setState({ productRatings: [], thisProduct: null, shopInfo: null, loading: false })
         })
     })
-    
+
+    // this.setState({ loading: true }, () => {
+    //   //get product rating
+    //   axios({
+    //     url1,
+    //     timeout: 5000
+    //   })
+    //     .then(response => {
+    //       const ratings = response.data
+    //       this.setState({
+    //         productRatings: ratings,
+    //         loading: false
+    //       })
+    //     })
+    //     .catch(e => {
+    //       this.setState({ productRatings: [], loading: false })
+    //     })
+    // })
+
+  }
+
+  componentDidMount() {
+    this.getProduct()
   }
 
   onChangeProductAdded = (totalProductAdded) => {
@@ -343,6 +313,12 @@ export default class ProductDetailPage extends Component {
     this.setState({ showWriteReview: !showWriteReview })
   }
 
+  onToggleBackWriteReview = () => {
+    const { showWriteReview } = this.state
+    this.getProduct()
+    this.setState({ showWriteReview: !showWriteReview })
+  }
+
   checkProductExist = () => {
     const { thisProduct } = this.state
     if (thisProduct && !thisProduct.productStatus) {
@@ -374,7 +350,8 @@ export default class ProductDetailPage extends Component {
       showWriteReview,
       thisProduct,
       shopInfo,
-      loading
+      loading,
+      productRatings
     } = this.state
 
     this.checkProductExist()
@@ -404,28 +381,32 @@ export default class ProductDetailPage extends Component {
                   />
                   <ProductDetail productItem={thisProduct} />
                   {shopInfo !== null && <ShopInfo shopInfo={shopInfo} navigation={navigation} />}
-                  <ProductReview
+                  {/* <ProductReview
                     onToggleWriteReview={this.onToggleWriteReview}
-                  />
+                    navigation={navigation}
+                  /> */}
                   <ProductRatingAndComment
-                    ratings={thisProduct.productTotalRating}
-                    totalRatingValue={thisProduct.productTotalRating}
-                    totalUserRating={thisProduct.productTotalRating}
-                    // newestRatings={thisProduct.productTotalRating && thisProduct.productTotalRating.slice(0, 2)}
+                    ratings={productRatings}
+                    totalRatingValue={thisProduct.avgRating}
+                    totalUserRating={thisProduct.numRating}
+                    newestRatings={productRatings && productRatings.sort(function(a,b){
+                      return new Date(b.date) - new Date(a.date);
+                    }).slice(0, 2)}
                     productId={thisProduct && thisProduct.id}
                     images={thisProduct.productCoverImage}
                     productName={thisProduct.productName}
+                    navigation={navigation}
                   />
                   {shopInfo && <ShopProduct shopProduct={shopInfo.products} shopName={shopInfo.shopName} />}
                 </ScrollView>
 
-                {/* <ProductSubMenu
-                  onToggleAddToCart={this.onToggleAddToCart}
+                <ProductSubMenu
+                  onToggleWriteReview={this.onToggleWriteReview}
                   navigation={navigation}
                   shopInfo={shopInfo}
-                /> */}
+                />
 
-                {/* <Modal
+                <Modal
                   animationType='slide'
                   transparent={true}
                   visible={showAddToCart}
@@ -441,7 +422,7 @@ export default class ProductDetailPage extends Component {
                     onSelectProductVariant={this.onSelectProductVariant}
                     onSelectProductPrice={this.onSelectProductPrice}
                   />
-                </Modal> */}
+                </Modal>
 
                 <Modal
                   animationType='slide'
@@ -450,9 +431,11 @@ export default class ProductDetailPage extends Component {
                 >
                   <WriteReview
                     productId={thisProduct && thisProduct.id}
-                    onBack={this.onToggleWriteReview}
+                    onBack={this.onToggleBackWriteReview}
+                    onButtonBack={this.onToggleWriteReview}
                     images={thisProduct.productCoverImage}
                     productName={thisProduct.productName}
+                    ratings={productRatings}
                   />
                 </Modal>
               </View>

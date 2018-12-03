@@ -10,6 +10,7 @@ import {
   Rating
 } from 'react-native-elements'
 import moment from 'moment'
+import { SCREENS } from '../../../common/screens'
 
 export default class UserCartDetail extends Component {
   constructor(props) {
@@ -22,6 +23,11 @@ export default class UserCartDetail extends Component {
   onImageUpload = (image) => {
     const images = [...this.state.images, image]
     this.setState({ images })
+  }
+
+  onPress = () => {
+    const { navigation, token, onToggleWriteReview } = this.props
+    token ? onToggleWriteReview : navigation.navigate(SCREENS.AuthenticatePage)
   }
 
   renderReview = ({ index, item }) => {
@@ -69,7 +75,7 @@ export default class UserCartDetail extends Component {
   }
 
   render() {
-    const { onToggleWriteReview } = this.props
+    const { onToggleWriteReview, token, navigation } = this.props
     return (
       <View style={{
         marginTop: 7,
@@ -81,17 +87,29 @@ export default class UserCartDetail extends Component {
         // backgroundColor: '#fff'
       }}>
         {this.renderUserReviews}
-        <TouchableOpacity
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            alignContent: 'center'
-          }}
-          onPress={onToggleWriteReview}
-        >
-          <Text style={{ fontSize: 16, color: '#67B6F4', fontWeight: 'bold' }}>Viết đánh giá</Text>
-        </TouchableOpacity>
+        {token
+        ? <TouchableOpacity
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              alignContent: 'center'
+            }}
+            onPress={onToggleWriteReview}
+          >
+            <Text style={{ fontSize: 16, color: '#67B6F4', fontWeight: 'bold' }}>Viết đánh giá</Text>
+          </TouchableOpacity>
+        : <TouchableOpacity
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              alignContent: 'center'
+            }}
+            onPress={this.onPress}
+          >
+            <Text style={{ fontSize: 16, color: '#67B6F4', fontWeight: 'bold' }}>Viết đánh giá</Text>
+          </TouchableOpacity>}
       </View>
     )
   }

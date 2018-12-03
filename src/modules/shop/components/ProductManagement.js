@@ -20,7 +20,7 @@ import { PRODUCT_SORT_LIST } from '../../../common/models';
 const { width } = Dimensions.get('window')
 const NUMBER_OF_ITEM = 2
 const ITEM_WITDH = (width) / NUMBER_OF_ITEM
-const ITEM_HEIGHT = 300
+const ITEM_HEIGHT = 285
 const DEFAULT_SORT_TYPE = PRODUCT_SORT_LIST.find(item => item.type === 1)
 
 class ProductManagement extends Component {
@@ -34,7 +34,16 @@ class ProductManagement extends Component {
       page: 1,
       isLastedPage: false,
       sortType: DEFAULT_SORT_TYPE || {},
-      filterType: ''
+      filterType: '',
+      chosenCategories: [],
+      chosenLocation: {
+        districtId: '',
+        cityId: ''
+      },
+      chosenPrice: {
+        min: 0,
+        max: 0
+      }
     }
   }
 
@@ -46,8 +55,9 @@ class ProductManagement extends Component {
   _onRefresh = () => {
     const { getShopProducts, shop } = this.props
     const { sortType } = this.state
+    const options = this.submitFilter()
     this.setState({ refreshing: true }, async () => {
-      await getShopProducts(shop, 0, sortType.value)
+      await getShopProducts(shop, 0, sortType.value, options)
       this.setState({ refreshing: false, page: 1, isLastedPage: false })
     })
   }
@@ -60,6 +70,7 @@ class ProductManagement extends Component {
       this.setState({ refreshing: false, page: 1, isLastedPage: false })
     })
   }
+  
 
   _onLoadMore = async () => {
     // const { getShopProducts, shop } = this.props
@@ -99,16 +110,80 @@ class ProductManagement extends Component {
       return false
     }
     else {
+      const options = this.submitFilter()
       const newSortType = PRODUCT_SORT_LIST.find(item => item.id === id)
       this.setState({ refreshing: true, showSort: !showSort }, async () => {
-        await getShopProducts(shop, 0, newSortType.value)
+        await getShopProducts(shop, 0, newSortType.value, options)
         this.setState({ refreshing: false, page: 1, isLastedPage: false, sortType: newSortType })
       })
     }
   }
 
   onFilter = () => {
+    const { chosenCategories, chosenLocation, chosenPrice, showFilter, sortType } = this.state
+    const { getShopProducts, shop } = this.props
+    const options = this.submitFilter()
+    this.setState({ refreshing: true, showFilter: !showFilter }, async () => {
+      await getShopProducts(shop, 0, sortType.value, options)
+      this.setState({ refreshing: false, page: 1, isLastedPage: false })
+    })
+  }
 
+  submitFilter = () => {
+    const { chosenCategories, chosenLocation, chosenPrice } = this.state
+    const options = {}
+    if (chosenCategories.length > 0) {
+      options.publicCategoryId = chosenCategories
+    }
+    if (chosenLocation.cityId) {
+      options.cityId = chosenLocation.cityId
+    }
+    if (chosenLocation.districtId) {
+      options.districtId = chosenLocation.districtId
+    }
+    if (chosenPrice.min) {
+      options.min = chosenPrice.min
+    }
+    if (chosenPrice.max) {
+      options.max = chosenPrice.max
+    }
+    return options
+  }
+
+  chooseCategory = (id) => {
+    const { chosenCategories } = this.state
+    const index = chosenCategories.indexOf(id)
+    if (index >= 0) {
+      this.setState({ chosenCategories: [...chosenCategories.slice(0, index), ...chosenCategories.slice(index + 1)] })
+    }
+    else {
+      this.setState({ chosenCategories: [...chosenCategories].concat([id]) })
+    }
+  }
+
+  choosePrice = (item) => {
+    const { chosenPrice } = this.state
+    this.setState({ chosenPrice: { ...chosenPrice, ...item } })
+  }
+
+  chooseLocation = (item) => {
+    const { chosenLocation } = this.state
+    this.setState({ chosenLocation: { ...chosenLocation, ...item } })
+  }
+
+  resetFilter = () => {
+    this.setState({
+      chosenCategories: [],
+      chosenLocation: {
+        districtId: '',
+        cityId: ''
+      },
+      chosenPrice: {
+        id: '',
+        min: 0,
+        max: 0
+      }
+    })
   }
 
   _renderItem = ({ item }) => {
@@ -153,7 +228,7 @@ class ProductManagement extends Component {
   }
 
   render() {
-    const { refreshing, showFilter, showSort, filterType, sortType } = this.state
+    const { refreshing, showFilter, showSort, filterType, sortType, chosenCategories, chosenLocation, chosenPrice } = this.state
     const { products } = this.props
 
     return (
@@ -221,7 +296,18 @@ class ProductManagement extends Component {
           transparent={false}
           visible={showFilter}
         >
-          <ProductFilterList toggleFilter={this.toggleFilter} filterType={filterType} onFilter={this.onFilter} />
+          <ProductFilterList
+            toggleFilter={this.toggleFilter}
+            filterType={filterType}
+            onFilter={this.onFilter}
+            chooseCategory={this.chooseCategory}
+            chosenCategories={chosenCategories}
+            choosePrice={this.choosePrice}
+            chosenPrice={chosenPrice}
+            chooseLocation={this.chooseLocation}
+            chosenLocation={chosenLocation}
+            resetFilter={this.resetFilter}
+          />
         </Modal>
 
         <Modal

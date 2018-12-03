@@ -27,6 +27,7 @@ import CategoryManagementPage from '../screens/CategoryManagementPage'
 import AddProductPage from '../screens/AddProductPage'
 import PopularProductPage from '../screens/PopularProductPage'
 import PopularShopPage from '../screens/PopularShopPage'
+import NearbyShopPage from '../screens/NearbyShopPage'
 import BoughtProductsPage from '../screens/BoughtProductsPage'
 import CartPage from '../screens/CartPage'
 import StoreDetailPage from '../screens/StoreDetailPage'
@@ -43,6 +44,7 @@ import TabbarIcon from './components/elements/TabbarIcon'
 import ShopPaymentMethodPage from '../screens/ShopPaymentMethodPage'
 import ShopShippingTypePage from '../screens/ShopShippingTypePage'
 import UserPaymentMethodPage from '../screens/UserPaymentMethodPage'
+import BookDetailPage from '../screens/BookDetailPage'
 const { width, height } = Dimensions.get('window')
 
 export const SCREENS = {
@@ -78,6 +80,7 @@ export const SCREENS = {
   AddProductPage: 'AddProductPage',
   PopularProduct: 'PopularProductPage',
   PopularShop: 'PopularShopPage',
+  NearbyShop: 'NearbyShopPage',
   EditProductPage: 'EditProductPage',
   UserCart: 'UserCartPage',
   SearchProductPage: 'SearchProductPage',
@@ -85,6 +88,9 @@ export const SCREENS = {
 
   // Cart:
   Cart: 'CartPage',
+
+  //Book:
+  BookDetailPage: 'BookDetailPage',
 
   // Store:
   StoreDetail: 'StoreDetailPage',
@@ -145,7 +151,7 @@ const defaultTabConfig = {
 const cartTabIcon = ({ focused = false, tintColor }) => (
   <View style={{ display: 'flex', flexDirection: 'row' }}>
     <Icon
-      name='shopping-cart'
+      name='shopping-basket'
       type='font-awesome'
       size={focused ? 28 : 24}
       color={focused ? tintColor : '#cccc'}
@@ -265,7 +271,7 @@ export default ({ token = undefined, store = {} }) => {
           tabBarIcon: ({ tintColor, focused }) => (
             <Icon
               name='home'
-              type='font-awesome'
+              type='ant-design'
               size={focused ? 28 : 24}
               color={focused ? tintColor : '#cccc'}
             />
@@ -286,25 +292,25 @@ export default ({ token = undefined, store = {} }) => {
       //     )
       //   }
       // },
-      [SCREENS.CartStack]: {
-        screen: CartStack,
-        navigationOptions: {
-          tabBarLabel: 'Giỏ hàng',
-          tabBarIcon: ({ tintColor, focused }) => (
-            <TabbarIcon
-              tintColor={tintColor}
-              focused={focused}
-            />
-        )}
-      },
+      // [SCREENS.CartStack]: {
+      //   screen: CartStack,
+      //   navigationOptions: {
+      //     tabBarLabel: 'Giỏ hàng',
+      //     tabBarIcon: ({ tintColor, focused }) => (
+      //       <TabbarIcon
+      //         tintColor={tintColor}
+      //         focused={focused}
+      //       />
+      //   )}
+      // },
       [SCREENS.ShopStack]: {
         screen: ShopStack,
         navigationOptions: {
           tabBarLabel: 'Quán của tôi',
           tabBarIcon: ({ tintColor, focused }) => (
             <Icon
-              name='store'
-              type='material-community'
+              name='shop'
+              type='entypo'
               size={focused ? 28 : 24}
               color={focused ? tintColor : '#cccc'}
             />
@@ -317,7 +323,7 @@ export default ({ token = undefined, store = {} }) => {
           tabBarLabel: 'Tài khoản',
           tabBarIcon: ({ tintColor, focused }) => (
             <Icon
-              name='user'
+              name='user-circle'
               type='font-awesome'
               size={focused ? 28 : 24}
               color={focused ? tintColor : '#cccc'}
@@ -366,6 +372,9 @@ export default ({ token = undefined, store = {} }) => {
     [SCREENS.PopularShop]: {
       screen: PopularShopPage
     },
+    [SCREENS.NearbyShop]: {
+      screen: NearbyShopPage
+    },
     [SCREENS.ChatHistoryPage]: {
       screen: ChatHistoryPage
     },
@@ -380,6 +389,9 @@ export default ({ token = undefined, store = {} }) => {
     },
     [SCREENS.SearchPage]: {
       screen: SearchPage
+    },
+    [SCREENS.BookDetailPage]: {
+      screen: BookDetailPage
     }
   }, defaultStackConfig)
 

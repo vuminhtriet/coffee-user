@@ -8,7 +8,7 @@ import {
 import { ListItem, List } from 'react-native-elements'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
 import HeaderTitle from '../../../common/components/elements/HeaderTitle'
-import CategoryFilter from '../containers/CategoryFilter'
+import StyleFilter from '../containers/StyleFilter'
 import PriceFilter from '../containers/PriceFilter'
 import LocationFilter from '../containers/LocationFilter'
 import SubMenuFilter from './SubMenuFilter'
@@ -16,15 +16,15 @@ import SubMenuFilter from './SubMenuFilter'
 const FILTER_LIST = [
   {
     id: 1,
-    title: 'Category'
+    title: 'Phong cách quán'
   },
   {
     id: 2,
-    title: 'Location'
+    title: 'Vị trí'
   },
   {
     id: 3,
-    title: 'Price'
+    title: 'Giá'
   },
 ]
 
@@ -52,17 +52,17 @@ export default class ProductFilterList extends Component {
     super(props)
     this.state = {
       refreshing: false,
-      showCategory: false,
+      showStyle: false,
       showLocation: false,
       showPrice: false
     }
   }
 
   openModal = (id) => {
-    const { showCategory, showLocation, showPrice } = this.state
+    const { showStyle, showLocation, showPrice } = this.state
     switch (id) {
       case 1:
-        this.setState({ showCategory: !showCategory })
+        this.setState({ showStyle: !showStyle })
         break;
       case 2:
         this.setState({ showLocation: !showLocation })
@@ -76,14 +76,14 @@ export default class ProductFilterList extends Component {
   }
 
   closeModal = () => {
-    this.setState({ showCategory: false, showLocation: false, showPrice: false })
+    this.setState({ showStyle: false, showLocation: false, showPrice: false })
   }
 
   render() {
     const { 
       toggleFilter, 
-      chosenCategories, 
-      chooseCategory, 
+      chosenStyle,
+      chooseStyle, 
       chosenPrice, 
       choosePrice,
       chooseLocation,
@@ -91,7 +91,7 @@ export default class ProductFilterList extends Component {
       resetFilter,
       onFilter
     } = this.props
-    const { showCategory, showLocation, showPrice } = this.state
+    const { showStyle, showLocation, showPrice } = this.state
     return (
       <View style={{
         width: '100%',
@@ -109,7 +109,7 @@ export default class ProductFilterList extends Component {
         })
       }}>
         <View style={{ width: '100%' }}>
-          <HeaderTitle onBack={toggleFilter} title={`Choose a filter`} />
+          <HeaderTitle onBack={toggleFilter} title={`Chọn bộ lọc`} />
         </View>
 
         <ScrollView>
@@ -130,11 +130,11 @@ export default class ProductFilterList extends Component {
         <Modal
           animationType='none'
           transparent
-          visible={showCategory}
+          visible={showStyle}
         >
-          <CategoryFilter
-            chosenCategories={chosenCategories}
-            chooseCategory={chooseCategory}
+          <StyleFilter
+            chosenStyle={chosenStyle}
+            chooseStyle={chooseStyle}
             closeModal={this.closeModal}
           />
         </Modal>

@@ -18,17 +18,17 @@ const allValue = [5, 4, 3, 2, 1]
 
 class RatingTable extends PureComponent {
   countRatings = () => {
-    const { ratings } = this.props
-    return countRatings(ratings)
+    const { productRatings } = this.props
+    return countRatings(productRatings)
   }
 
   numberOfRatings = () => {
-    const { ratings } = this.props
-    return ratings.length
+    const { productRatings } = this.props
+    return productRatings.length
   }
 
   render() {
-    const { totalRatingValue, totalUserRating, ratings } = this.props
+    const { totalRatingValue, totalUserRating, productRatings, navigation } = this.props
     const resultRatings = this.countRatings()
     const numberOfRatings = this.numberOfRatings()
     return (
@@ -53,12 +53,12 @@ class RatingTable extends PureComponent {
             borderRightWidth: 1,
             borderRightColor: '#e6e6e6'
           }}>
-          <Text style={{ fontSize: 18 }}>{totalUserRating > 0 ? (totalRatingValue / totalUserRating).toFixed(1) : 0}/5</Text>
+          <Text style={{ fontSize: 18 }}>{totalUserRating > 0 ? (totalRatingValue).toFixed(1) : 0}/5</Text>
           <View>
             <Rating
               type='custom'
               fractions={1}
-              startingValue={totalUserRating > 0 ? (totalRatingValue / totalUserRating) : 0}
+              startingValue={totalUserRating > 0 ? (totalRatingValue) : 0}
               readonly
               imageSize={16}
               showRating={false}
@@ -67,7 +67,7 @@ class RatingTable extends PureComponent {
               ratingBackgroundColor='transparent'
               style={{ paddingVertical: 15 }} />
           </View>
-          <Text>{totalUserRating} ratings</Text>
+          <Text>{totalUserRating} đánh giá</Text>
         </View>
 
         {/* Progress bar */}
@@ -138,14 +138,14 @@ export default class AllRatingList extends PureComponent {
   }
 
   render() {
-    const { ratings, onBack, productId, images, productName, totalRatingValue, totalUserRating } = this.props
+    const { productRatings, onBack, productId, images, productName, totalRatingValue, totalUserRating, navigation } = this.props
     const { modalVisible, refreshing } = this.state
     return (
       <DefaultPage style={{ flexDirection: 'row' }}>
         <View style={{ width: '100%', height: 40 }}>
           <HeaderTitle
             onBack={onBack}
-            title={'Product Rating'}
+            title={'Xếp hạng đồ uống'}
           />
         </View>
 
@@ -161,11 +161,12 @@ export default class AllRatingList extends PureComponent {
             <RatingTable
               totalRatingValue={totalRatingValue}
               totalUserRating={totalUserRating}
-              ratings={ratings}
+              productRatings={productRatings}
             />
-            <ProductReview
+            {/* <ProductReview
               onToggleWriteReview={this.openModal}
-            />
+              navigation={navigation}
+            /> */}
 
             <View style={{ height: 10, backgroundColor: '#e6e6e6' }}>
 
@@ -178,9 +179,9 @@ export default class AllRatingList extends PureComponent {
               width: '100%'
             }}>
               <View style={{ paddingHorizontal: 15, paddingBottom: 10 }}>
-                <Text style={{ fontSize: 16 }}>All ratings ({ratings.length})</Text>
+                <Text style={{ fontSize: 16 }}>Tất cả đánh giá ({productRatings.length})</Text>
               </View>
-              <RatingList ratings={ratings} mode={'all'} />
+              <RatingList ratings={productRatings} mode={'all'} />
             </View>
           </ScrollView>
 

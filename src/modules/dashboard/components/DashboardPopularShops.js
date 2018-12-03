@@ -4,7 +4,9 @@ import {
   Text,
   View,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  Alert,
+  PermissionsAndroid
 } from 'react-native'
 import { withNavigation } from 'react-navigation'
 import PopularShopItem from '../../../common/components/widgets/PopularShopItem'
@@ -19,17 +21,64 @@ class DashboardPopularShops extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      refreshing: false
+      refreshing: false,
+      latitude: null,
+      longitude: null,
+      error: null
     }
 
     this.onRefresh = this.onRefresh.bind(this)
     this.onLoadMore = this.onLoadMore.bind(this)
   }
 
-  componentDidMount() {
+  componentDidMount(){
     const { getDashboardPopularShops } = this.props
     getDashboardPopularShops()
   }
+
+  // componentWillUpdate(){
+  //   this.requestLocationPermission()
+  // }
+
+  // componentWillUnmount() {
+  //   navigator.geolocation.clearWatch(this.watchId)
+  // }
+
+  // async requestLocationPermission() {
+  //   const { getUserLocation } = this.props
+  //   try {
+  //     const granted = await PermissionsAndroid.request(
+  //       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+  //       {
+  //         'title': 'Cho phép định vị',
+  //         'message': 'Drinkaway cần truy cập vào vị trí của bạn để hỗ trợ tìm kiếm quán cafe.'
+  //       }
+  //     )
+  //     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+  //       this.watchId = navigator.geolocation.watchPosition(
+  //       // navigator.geolocation.getCurrentPosition(
+  //         (position) => {
+  //           this.setState({
+  //             latitude: position.coords.latitude,
+  //             longitude: position.coords.longitude,
+  //             error: null,
+  //           })
+  //           getUserLocation(this.state.latitude,this.state.longitude)
+  //           console.log(position)
+  //         },
+  //         (error) => {
+  //           this.setState({ error: error.message })
+  //           console.log(error)
+  //         },
+  //         { enableHighAccuracy: true, timeout: 20000, maximumAge: 300000, distanceFilter: 10 },
+  //       )
+  //     } else {
+  //       console.log("Permission denied")
+  //     }
+  //   } catch (err) {
+  //     console.warn(err)
+  //   }
+  // }
 
   async componentWillReceiveProps(nextProps) {
     const { refreshing, stopRefresh, getDashboardPopularShops } = this.props
@@ -37,6 +86,7 @@ class DashboardPopularShops extends Component {
       await getDashboardPopularShops().catch(() => { })
       stopRefresh()
     }
+    // this.requestLocationPermission()
   }
 
 
@@ -47,6 +97,8 @@ class DashboardPopularShops extends Component {
   }
 
   _onNavigateToPopularShopsPage = () => {
+    // const { latlng } = this.props
+    // console.log(latlng)
     const { navigation } = this.props
     navigation.navigate(SCREENS.PopularShop)
   }
@@ -54,11 +106,13 @@ class DashboardPopularShops extends Component {
   _keyExtractor = (item, index) => item.id
 
   _renderItem = ({ item }) => {
+    const { latlng } = this.props
     return (
       <PopularShopItem
         item={item}
         itemWith={ITEM_WITDH}
         itemHeight={ITEM_HEIGHT}
+        latlng={latlng}
       />
     )
   }
@@ -79,7 +133,7 @@ class DashboardPopularShops extends Component {
           style={{ width: '100%', flexDirection: 'row', height: 40, alignItems: 'center', backgroundColor: '#FFFFFF' }}
         >
           <View style={{ flex: 1, paddingLeft: 10 }}>
-            <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#E64B47' }}>Quán phổ biến</Text>
+            <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#E64B47' }}>Thương hiệu phổ biến</Text>
           </View>
           <View style={{ flex: 1, paddingRight: 10 }}>
             <TouchableOpacity onPress={this._onNavigateToPopularShopsPage}>

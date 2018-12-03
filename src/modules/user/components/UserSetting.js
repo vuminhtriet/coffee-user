@@ -5,7 +5,8 @@ import {
   View,
   Text,
   Platform,
-  TouchableOpacity
+  TouchableOpacity,
+  Alert
 } from 'react-native'
 import ImageResizer from 'react-native-image-resizer'
 import { Icon, Card, ListItem, Divider, Button, FormLabel } from 'react-native-elements'
@@ -18,7 +19,7 @@ const month = moment().get('month')
 const ImagePicker = require('react-native-image-picker')
 
 const options = {
-  title: 'Upload your images',
+  title: 'Đăng hình của bạn',
   storageOptions: {
     skipBackup: true,
     noData: true,
@@ -64,11 +65,16 @@ export default class UserSetting extends Component {
   }
 
   requestUploadImage () {
+    const { token } = this.props
+    if (!token) {
+      return false
+    }
     ImagePicker.showImagePicker(options, (response) => {
       let fileName = null
       let fileUri = null
       let fileData = null
       let fileOriginUri = null
+      let fileType = null
       if (response.didCancel) {
         return false
       } else if (response.error) {
@@ -80,6 +86,7 @@ export default class UserSetting extends Component {
         fileUri = response.uri
         fileOriginUri = response.origURL
         fileData = response.data
+        fileType = response.type
       }
       if (!fileUri) {
         return false
@@ -97,6 +104,7 @@ export default class UserSetting extends Component {
               fileUri,
               fileData,
               fileOriginUri,
+              fileType,
               resized: response
             },
             modalShow: true
@@ -111,6 +119,7 @@ export default class UserSetting extends Component {
               fileUri,
               fileData,
               fileOriginUri,
+              fileType,
               resized: undefined
             },
             modalShow: true
@@ -176,8 +185,8 @@ export default class UserSetting extends Component {
                 }}
                 source={{
                   uri: userImage
-                    ? userImage.fullUrl
-                    : 'https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png'
+                    ? userImage
+                    : 'https://qualiscare.com/wp-content/uploads/2017/08/default-user.png'
                 }}
               />
               <Icon
@@ -207,7 +216,7 @@ export default class UserSetting extends Component {
             <Divider style={{ backgroundColor: '#9C9C9C', height: 1, width: '120%', marginLeft: -20 }} />
             <ListItem
               onPress={() => token && navigation.navigate(SCREENS.UserInformation)}
-              leftIcon={{ name: 'user-o', type: 'font-awesome' }}
+              leftIcon={{ name: 'address-card-o', type: 'font-awesome' }}
               title='Thông Tin Chung'
               hideChevron
               containerStyle={{ borderBottomWidth: 0, borderTopWidth: 0 }}

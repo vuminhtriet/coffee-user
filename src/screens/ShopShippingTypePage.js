@@ -59,14 +59,14 @@ export default class ShopShippingTypePage extends Component {
             }
           />
         </View>
-        {/* <ShopShippingType navigation={navigation} />
+        <ShopShippingType navigation={navigation} />
         <ModalWrapper
           animationType='slide'
           transparent={false}
           visible={addShipping}
         >
           <DeliveryMethod toggleShipping={this.toggleShipping} />
-        </ModalWrapper> */}
+        </ModalWrapper>
       </DefaultPage>
     )
   }

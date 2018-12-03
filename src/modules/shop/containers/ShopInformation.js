@@ -4,7 +4,7 @@ import { MODULE_NAME } from '../models'
 import { fetch, loading } from '../../../common/effects'
 import { MODULE_NAME as MODULE_USER } from '../../user/models'
 import ShopInformation from '../components/ShopInformation'
-import { BASE_URL, TEST_URL } from '../../../common/models'
+import { BASE_URL, TEST_URL, GOOGLE_URL, API_KEY } from '../../../common/models'
 import {
   setShopAddress,
   setShopInformation,
@@ -42,7 +42,7 @@ const mapDispatchToProps = (dispatch, props) => ({
     }
   },
   updateShop: async (token, shop, shopName, shopPhoneNumber, website, 
-    selectedCity, selectedDistrict, fullAddress) => {
+    selectedCity, selectedDistrict, selectedStyle, styleName, fullAddress, lat, lng) => {
     try {
       const url = `${TEST_URL}/api/shops/${shop.id}`
       return loading(dispatch, async () => {
@@ -55,11 +55,19 @@ const mapDispatchToProps = (dispatch, props) => ({
           data: {
             shopName: shopName,
             shopPhoneNumber: shopPhoneNumber,
+            shopLocation: {
+              lat: lat,
+              lng: lng
+            },
             website: website || "",
             address: {
               cityId: selectedCity,
               districtId: selectedDistrict,
               fullAddress: fullAddress
+            },
+            style: {
+              styId: selectedStyle,
+              name: styleName
             }
           }
         }, dispatch)
@@ -79,45 +87,16 @@ const mapDispatchToProps = (dispatch, props) => ({
       return false
     }
   },
-  getShopPaymentMethod: async (token, shop) => {
+  getShopLatLong: async (address,city,district) => {
     try {
-      const filter = {
-        where: {
-          status: 'active'
-        },
-        include: 'paymentType'
-      }
-      const url = `${BASE_URL}/api/shops/${shop.id}/shopPaymentMethods`
+      const url = `${GOOGLE_URL}/maps/api/geocode/json?`+
+      `address=${address},+${district},+${city}&key=${API_KEY}`
       const response = await axios({
-        url,
-        headers: {
-          Authorization: token
-        },
-        params: {
-          filter: JSON.stringify(filter)
-        }
+        url
       })
+      // TODO: fetch register
       if (response && response.data) {
-        dispatch(setShopPayment(response.data))
-        return response.data
-      }
-      return false
-    } catch (error) {
-      return false
-    }
-  },
-  getShopDeliveryMethod: async (token, shop) => {
-    try {
-      const url = `${BASE_URL}/api/shops/${shop.id}/shopShippingTypes`
-      const response = await axios({
-        url,
-        headers: {
-          Authorization: token
-        }
-      })
-      if (response && response.data) {
-        dispatch(setShopDeliveryMethods(response.data))
-        return response.data
+        return response.data.results[0].geometry.location
       }
       return false
     } catch (error) {
@@ -127,12 +106,12 @@ const mapDispatchToProps = (dispatch, props) => ({
 })
 
 const mapStateToProps = state => ({
-  countries: state.common.countries,
   cities: state.common.cities,
   shop: state[MODULE_NAME].shop,
   token: state[MODULE_USER].token,
   user: state[MODULE_USER].user,
-  shopAddress: state[MODULE_NAME].shopAddress
+  shopAddress: state[MODULE_NAME].shopAddress,
+  styles: state.common.style
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShopInformation)

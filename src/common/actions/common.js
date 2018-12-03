@@ -19,3 +19,8 @@ export const setUnits = createAction('setUnits')
 export const setCategories = createAction('setCategories')
 export const setShippingTypes = createAction('setShippingTypes')
 export const setCities = createAction('setCities')
+
+export const setUserLatLng = createAction('setUserLatLng')
+export const setUserLocation = createAction('setUserLocation')
+
+export const setStyle = createAction('setStyle')

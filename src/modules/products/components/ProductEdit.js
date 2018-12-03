@@ -35,7 +35,7 @@ import { validatePhoneNumber } from '../../../common/utils/validate'
 import { isEmpty } from 'lodash'
 
 const options = {
-  title: 'Upload your product image',
+  title: 'Đăng hình ảnh đồ uống',
   storageOptions: {
     skipBackup: true,
     noData: true,
@@ -52,13 +52,13 @@ export default class ProductEdit extends Component {
     this.state = {
       disabled: false,
       stateProduct: product,
-      images: product.productCoverImage,
+      images: product.productCoverImage ? product.productCoverImage : [],
       addCategories: false,
       name: product.productName,
       description: product.productDescription,
       privateCategoryId: product.categoryId && privateCategories && privateCategories
         .find(item => item.id === product.categoryId),
-      quantity: product.productQuantity,
+      // quantity: product.productQuantity,
       // dataSource: ds.cloneWithRows(props.countries),
       editPrice: false,
       price: {},
@@ -95,7 +95,7 @@ export default class ProductEdit extends Component {
       privateCategoryId,
       description,
       productPrices,
-      quantity
+      // quantity
     } = this.state
     const {
       getShopProducts,
@@ -120,30 +120,36 @@ export default class ProductEdit extends Component {
     }else if (!validatePhoneNumber(productPrices)) {
       errors.productPrices = '* Giá tiền không hợp lệ.'
     }
-    if (!quantity) {
-      errors.quantity = '* Thiếu số lượng.'
-    }else if (!validatePhoneNumber(quantity)) {
-      errors.quantity = '* Số lượng không hợp lệ.'
-    }
+    // if (!quantity) {
+    //   errors.quantity = '* Thiếu số lượng.'
+    // }else if (!validatePhoneNumber(quantity)) {
+    //   errors.quantity = '* Số lượng không hợp lệ.'
+    // }
 
     if (!isEmpty(errors)) {
       return this.setState({ errors })
     }
 
     // TODO: Handle images
-    // const editImages = []
-    // let deleteImages = product.images.filter(item => {
-    //   const image = images.find(image => image.id === item.id)
-    //   if (image) {
-    //     editImages.push({
-    //       ...item,
-    //       type: image.type
-    //     })
-    //     return false
-    //   }
-    //   return true
-    // })
-    // const newImages = images.filter(item => !item.id)
+    let cover = images[0]
+    let deleteImages = []
+    let newImages = []
+
+    deleteImages = product.productCoverImage && product.productCoverImage.filter(item => {
+      const image = images.find(image => image === item)
+      if (image) {
+        return false
+      }
+      return true
+    })
+    newImages = images.filter((item, index) => {
+      const image = product.productCoverImage && 
+      product.productCoverImage.find(image => image === item)
+      if (image) {
+        return false
+      }
+      return true
+    })
 
     const result = await editProduct(token,
       product, {
@@ -151,10 +157,9 @@ export default class ProductEdit extends Component {
         description,
         privateCategoryId,
         productPrices,
-        quantity
+        // quantity
       }, 
-      // newImages, deleteImages, editImages,
-      '','','',
+      newImages, deleteImages, cover,
       user, shop)
     if (result) {
       await getShopProducts(shop)
@@ -173,9 +178,13 @@ export default class ProductEdit extends Component {
   }
 
   removeImage (index) {
-    const images = [...this.state.images]
+    let { images } = this.state
     images.splice(index, 1)
-    this.setState({ images })
+    this.setState({
+      images: [
+        ...images
+      ]
+    })
   }
 
   selectCategories (item) {
@@ -191,16 +200,20 @@ export default class ProductEdit extends Component {
     })
   }
   onChooseCover (index) {
-    const images = this.state.images.map((item, i) => {
-      if (i === parseInt(index)) {
-        return { ...item, type: 2 }
-      }
-      return { ...item, type: 3 }
+    let { images } = this.state
+    var element = images.splice(index,1)
+    images.unshift(element[0])
+    this.setState({
+      images: [
+        ...images
+      ]
     })
-    this.setState({ images })
   }
   onChoose () {
     const { images } = this.state
+    if (images && images.length > 5) {
+      return false
+    }
     ImagePicker.showImagePicker(options, (response) => {
       let fileName = null
       let fileUri = null
@@ -278,7 +291,7 @@ export default class ProductEdit extends Component {
       name,
       description,
       disabled,
-      quantity,
+      // quantity,
       images,
       // dataSource,
       productPrices,
@@ -336,9 +349,9 @@ export default class ProductEdit extends Component {
                     <Image
                       resizeMode='contain'
                       style={{ width: 80, height: 80 }}
-                      source={{ uri: image.id ? image.fullUrl : image.fileUri }}
+                      source={{ uri: image.fileUri ? image.fileUri : (image.length > 0 ? image : '') }}
                     />
-                    {image.type === 2 && (
+                    {index === 0 && (
                       <View
                         style={{
                           bottom: 0,
@@ -372,7 +385,7 @@ export default class ProductEdit extends Component {
                 onPress={this.onChoose}
               >
                 <Text style={{ color: '#EE9468' }}>
-                  Upload images/videos
+                  Đăng hình ảnh
                 </Text>
               </TouchableOpacity>
             </View> : (
@@ -401,7 +414,7 @@ export default class ProductEdit extends Component {
             )}
           </ScrollView>
           <FormValidationMessage containerStyle={{ paddingBottom: 10, backgroundColor: '#FFFFFF' }}>
-            * Touch an image you want to choose it as a cover picture
+            * Chọn vào hình bạn muốn làm ảnh đại diện
           </FormValidationMessage>
           <Card containerStyle={{
             margin: 0,
@@ -441,7 +454,7 @@ export default class ProductEdit extends Component {
               {errors.description &&
               (<FormValidationMessage>{errors.description}</FormValidationMessage>)}
 
-              <FormInput
+              {/* <FormInput
                 style={{
                   height: undefined
                 }}
@@ -454,7 +467,7 @@ export default class ProductEdit extends Component {
                   this.onChangeText(text, 'quantity') }}
               />
               {errors.quantity &&
-              (<FormValidationMessage>{errors.quantity}</FormValidationMessage>)}
+              (<FormValidationMessage>{errors.quantity}</FormValidationMessage>)} */}
 
               <TextInputMask
                 ref={ref => (this.inputRef = ref)}

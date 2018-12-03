@@ -14,17 +14,17 @@ import LocationFilter from '../containers/LocationFilter'
 import SubMenuFilter from './SubMenuFilter'
 
 const FILTER_LIST = [
-  {
-    id: 1,
-    title: 'Category'
-  },
+  // {
+  //   id: 1,
+  //   title: 'Category'
+  // },
   {
     id: 2,
-    title: 'Location'
+    title: 'Vị Trí'
   },
   {
     id: 3,
-    title: 'Price'
+    title: 'Giá'
   },
 ]
 
@@ -109,7 +109,7 @@ export default class ProductFilterList extends Component {
         })
       }}>
         <View style={{ width: '100%' }}>
-          <HeaderTitle onBack={toggleFilter} title={`Choose a filter`} />
+          <HeaderTitle onBack={toggleFilter} title={`Chọn bộ lọc`} />
         </View>
 
         <ScrollView>
@@ -127,7 +127,7 @@ export default class ProductFilterList extends Component {
 
         <SubMenuFilter resetFilter={resetFilter} applyFilter={onFilter} />
 
-        <Modal
+        {/* <Modal
           animationType='none'
           transparent
           visible={showCategory}
@@ -137,7 +137,7 @@ export default class ProductFilterList extends Component {
             chooseCategory={chooseCategory}
             closeModal={this.closeModal}
           />
-        </Modal>
+        </Modal> */}
 
         <Modal
           animationType='none'

@@ -59,14 +59,14 @@ export default class ShopPaymentMethodPage extends Component {
             }
           />
         </View>
-        {/* <ShopPaymentMethod navigation={navigation} />
+        <ShopPaymentMethod navigation={navigation} />
         <ModalWrapper
           animationType='slide'
           transparent={false}
           visible={addPayment}
         >
           <PaymentMethod togglePayment={this.togglePayment} />
-        </ModalWrapper> */}
+        </ModalWrapper>
       </DefaultPage>
     )
   }

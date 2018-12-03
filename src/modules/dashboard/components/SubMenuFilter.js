@@ -51,7 +51,7 @@ class SubMenuFilter extends Component {
             color={'red'}
             containerStyle={{}}
           />
-          <Text style={{ fontSize: 16 }}>Reset</Text>
+          <Text style={{ fontSize: 16 }}>Đặt lại</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={{
@@ -70,7 +70,7 @@ class SubMenuFilter extends Component {
             color={'green'}
             containerStyle={{}}
           />
-          <Text style={{ fontSize: 16, textAlign: 'center' }}>Apply</Text>
+          <Text style={{ fontSize: 16, textAlign: 'center' }}>Áp dụng</Text>
         </TouchableOpacity>
       </View>
     )

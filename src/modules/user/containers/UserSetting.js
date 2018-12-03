@@ -1,7 +1,7 @@
 import axios from 'axios'
 import moment from 'moment'
 import { connect } from 'react-redux'
-import { BASE_URL } from '../../../common/models'
+import { BASE_URL, TEST_URL } from '../../../common/models'
 import { loading, fetch } from '../../../common/effects'
 import { uploadUserImage, deleteUserImage } from '../../../common/firebase'
 import { mapDispatchToProps as ShopSettingHandler } from '../../shop/containers/ShopSetting'
@@ -27,66 +27,77 @@ export const mapDispatchToProps = (dispatch, props) => ({
   uploadUserImage: async (token, user, data) => {
     try {
       const result = await loading(dispatch, async () => {
+        const date = moment().format()
+        //delete
         if (data.delete) {
-          await deleteUserImage(data.delete.url)
-            .catch(() => null)
-            .then(response => {
-              return fetch({
-                url: `${BASE_URL}/api/images/${data.delete.id}`,
-                method: 'DELETE',
-                headers: {
-                  Authorization: token
-                }
-              }, dispatch)
-            }).catch(err => {
-              console.log('DELETE IMAGE ERROR', err.response)
-            })
+          const response = await fetch({
+            url: data.delete.replace("download", "files"),
+            method: 'DELETE'
+          })
+          if (response && response.data) {
+            console.log(response.data)
+          }
+          else{
+            console.log("error delete image")
+          }
         }
-        // Edited
-        const result = await uploadUserImage(user.id, data.add.fileName, data.add.resized
-          ? data.add.resized.uri : data.add.fileUri)
-          .then(response => {
-            return fetch({
-              url: `${BASE_URL}/api/images`,
-              method: 'POST',
-              headers: {
-                Authorization: token
-              },
+        
+        //add
+        if (data.add) {
+          let image = new FormData()
+          image.append(date + data.add.fileName, {
+            uri: data.add.fileUri,
+            type: "image/jpeg",
+            name: date + data.add.fileName
+          })
+          const response = await fetch({
+            url: `${TEST_URL}/api/containers/drink2pics/upload`,
+            method: 'POST',
+            // headers: {
+            //   'Accept': 'image/jpeg',
+            //   'Content_Type': 'image/jpeg'
+            // },
+            data: image
+          })
+          if (response && response.data) {
+            const response_ = await fetch({
+              url: `${TEST_URL}/api/members/${user.id}`,
+              method: 'PATCH',
+              // headers: {
+              //   Authorization: token
+              // },
               data: {
-                type: 1,
-                url: response.ref,
-                fullUrl: response.downloadURL,
-                size: response.totalBytes,
-                userId: user.id,
-                createdAt: moment().format()
+                userPhoto: `${TEST_URL}/api/containers/drink2pics/download/${date + data.add.fileName}`
               }
-            }, dispatch)
-          })
-          .catch(err => {
-            console.log('UPLOAD IMAGE ERROR', err.response)
-          })
+            })
+            if (response_ && response_.data) {
+              console.log(response_.data)
+            }
+            else{
+              console.log("error patch image")
+            }
+          }
+          else{
+            console.log("error upload image")
+          }
+        }
+
         return true
       })
       return result
     } catch (e) {
+      console.log("error" + e)
       return false
     }
   },
   getUserImage: async (user) => {
     try {
-      const filter = {
-        where: {
-          userId: user.id
-        }
-      }
       const images = await axios({
-        url: `${BASE_URL}/api/images`,
-        params: {
-          filter: JSON.stringify(filter)
-        }
+        url: `${TEST_URL}/api/members/${user.id}`
       })
-      if (images.data) {
-        dispatch(setUserImage(images.data.length > 0 ? images.data[0] : null))
+      if (images && images.data) {
+        dispatch(setUserImage(images.data.userPhoto && images.data.userPhoto.length > 0 
+          ? images.data.userPhoto : null))
         return images.data
       }
       return false

@@ -9,7 +9,7 @@ import {
   KeyboardAvoidingView
 } from 'react-native'
 import QRCode from 'react-native-qrcode'
-import { ADDRESS_URL, TEST_URL } from '../../../common/models'
+import { TEST_URL } from '../../../common/models'
 import axios from 'axios'
 import DatePicker from 'react-native-datepicker'
 import MultiSelect from '../../../libraries/components/MultipleSelect'
@@ -149,8 +149,8 @@ export default class UserInformation extends Component {
   }
 
   getDistrictInCity(id){
-    // const url = `${TEST_URL}/api/cities/${id}/districts`
-    const url = `${TEST_URL}/api/districts`
+    const url = `${TEST_URL}/api/cities/${id}/districts`
+    // const url = `${TEST_URL}/api/districts`
     this.setState({ loading: true }, () => {
       axios({
         url,
@@ -168,26 +168,6 @@ export default class UserInformation extends Component {
     })
   }
 
-  // getDistrict(id){
-  //   const url = `${ADDRESS_URL}/api/district/${id}`
-  //   this.setState({ loading: true }, () => {
-  //     axios({
-  //       url,
-  //       timeout: 5000
-  //     })
-  //     .then(response => {
-  //       this.setState({
-  //         loading: false
-  //       })
-  //       return response.data
-  //     })
-  //     .catch(e => {
-  //       this.setState({loading: false })
-  //       return null
-  //     })
-  //   })
-  // }
-
   onChangeValue(selectedItem, value){
     const { errors } = this.state
     this.setState({ 
@@ -199,6 +179,7 @@ export default class UserInformation extends Component {
     })
     if(selectedItem == 'selectedCity'){
       this.getDistrictInCity(value)
+      this.setState({['selectedDistrict']: ''})
     }
     // return Alert.alert(
     //   'CANT LOG IN',

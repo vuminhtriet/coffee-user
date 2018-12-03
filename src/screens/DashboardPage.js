@@ -2,7 +2,9 @@ import React, { Component } from 'react'
 import {
   View,
   ScrollView,
-  RefreshControl
+  RefreshControl,
+  Alert,
+  BackHandler
 } from 'react-native'
 import DefaultPage from '../common/hocs/defaultPage'
 import DashboardHeaderSearch from '../modules/dashboard/containers/DashboardHeaderSearch'
@@ -11,16 +13,25 @@ import DashboardPopularProducts from '../modules/dashboard/containers/DashboardP
 import DashboardCategoryList from '../modules/dashboard/containers/DashboardCategoryList'
 import DashboardProductToday from '../modules/dashboard/containers/DashboardProductToday'
 import DashboardSlider from '../modules/dashboard/containers/DashboardSlider'
+import DashboardLocation from '../modules/dashboard/containers/DashboardLocation'
+import DashboardNearbyShops from '../modules/dashboard/containers/DashboardNearbyShops'
 import DashboardPopularShops from '../modules/dashboard/containers/DashboardPopularShops';
 
 const ALL_REFRESH = 4
 const MAX_TIME = 8000
 export default class DashboardPage extends Component {
+  _didFocusSubscription
+  _willBlurSubscription
+
   constructor (props) {
     super(props)
+    this._didFocusSubscription = props.navigation.addListener('didFocus', payload =>
+      BackHandler.addEventListener('hardwareBackPress', this.onBackButtonPressAndroid)
+    )
     this.state = {
       refreshing: false,
-      refreshCount: 0
+      refreshCount: 0,
+      doExit: true
     }
     this.timeout = null
     this.onRefresh = this.onRefresh.bind(this)
@@ -55,6 +66,25 @@ export default class DashboardPage extends Component {
     })
   }
 
+  componentDidMount() {
+    // this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+    //   BackHandler.exitApp()
+    //   return true
+    // })
+    this._willBlurSubscription = this.props.navigation.addListener('willBlur', payload =>
+      BackHandler.removeEventListener('hardwareBackPress', this.onBackButtonPressAndroid)
+    )
+  }
+
+  componentWillUnmount() {
+    this._didFocusSubscription && this._didFocusSubscription.remove()
+    this._willBlurSubscription && this._willBlurSubscription.remove()
+  }
+
+  onBackButtonPressAndroid = () => {
+    BackHandler.exitApp()
+  }
+
   render () {
     const { refreshing } = this.state
     return (
@@ -76,6 +106,7 @@ export default class DashboardPage extends Component {
             />
           }
         >
+          <DashboardLocation/>
           <DashboardSlider
             refreshing={refreshing}
             stopRefresh={this.stopRefresh}
@@ -88,6 +119,10 @@ export default class DashboardPage extends Component {
             refreshing={refreshing}
             stopRefresh={this.stopRefresh}
           /> */}
+          <DashboardNearbyShops
+            refreshing={refreshing}
+            stopRefresh={this.stopRefresh}
+          />
           <DashboardPopularShops
             refreshing={refreshing}
             stopRefresh={this.stopRefresh}

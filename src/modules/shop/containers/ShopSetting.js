@@ -52,6 +52,11 @@ export const mapDispatchToProps = (dispatch, props) => ({
             // }
           }, dispatch)
           if (response_ && response_.data) {
+            const images = {
+              "shopFeaturedImages": response.data.shopFeaturedImages 
+              && response.data.shopFeaturedImages,
+              "shopLogo": response.data.shopLogo && response.data.shopLogo
+            }
             dispatch(setShopInformation({
               ...response.data,
               products: undefined,
@@ -61,7 +66,7 @@ export const mapDispatchToProps = (dispatch, props) => ({
               shopShippingTypes: undefined
             }))
             dispatch(getShopProducts(response.data.products))
-            dispatch(setShopImage(response.data.images))
+            dispatch(setShopImage(images))
             dispatch(setShopAddress(response.data.address))
             dispatch(setShopPayment(response.data.shopPaymentMethods))
             dispatch(setShopDeliveryMethods(response.data.shopShippingTypes))
@@ -77,48 +82,63 @@ export const mapDispatchToProps = (dispatch, props) => ({
       return false
     }
   },
-  getShopProducts: async (shop, page = 0, sort = 'productTotalRating DESC') => {
+  getShopProducts: async (shop, page = 0, sort = 'avgRating DESC', options = {}) => {
     try {
-      // const filter = {
-      //   include: [
-      //     {
-      //       'relation': 'productPrices',
-      //       'scope': {
-      //         'where': {
-      //           'status': 1
-      //         },
-      //         'include': [
-      //           'cashUnit',
-      //           'electricUnit',
-      //           'promotionPrice'
-      //         ]
-      //       }
-      //     },
-      //     'countries',
-      //     {
-      //       'relation': 'productVariations',
-      //       'scope': {
-      //         'where': {
-      //           'status': 1
-      //         }
-      //       }
-      //     },
-      //     'images',
-      //     {
-      //       'relation': 'productShippingCountries',
-      //       'scope': {
-      //         'where': {
-      //           'status': 1
-      //         }
-      //       }
-      //     }
-      //   ],
-      //   'limit': PAGE_SIZE,
-      //   'offset': page * PAGE_SIZE,
-      //   'order': sort
-      // }
-      // const url = `${BASE_URL}/api/shops/${shop.id}/products?filter=${JSON.stringify(filter)}`
-      const url = `${TEST_URL}/api/shops/${shop.id}/products?filter[order]=${sort}`
+      var filter = {
+        "order":sort
+      }
+
+      {options.cityId && !options.max &&
+        (filter = {
+          "where":{
+           "address.cityId":options.cityId,
+           "address.districtId":options.districtId
+          },
+          "order": sort
+        })
+      }
+
+       {!options.cityId && options.max > 0 && !options.min &&
+        (filter = {
+          "where":{
+           "productPrice":{"lte":options.max}
+          },
+          "order": sort
+        })
+      }
+
+      {!options.cityId && options.max > 0 && options.min &&
+        (filter = {
+          "where":{
+           "and":[{"productPrice":{"gte":options.min}},{"productPrice":{"lte":options.max}}]
+          },
+          "order": sort
+        })
+      }
+
+      {options.cityId && options.max > 0 && !options.min &&
+        (filter = {
+          "where":{
+              "address.cityId":options.cityId,
+              "address.districtId":options.districtId,
+              "productPrice":{"lte":options.max}
+          },
+          "order": sort
+        })
+      }
+
+      {options.cityId && options.max > 0 && options.min &&
+        (filter = {
+          "where":{
+              "address.cityId":options.cityId,
+              "address.districtId":options.districtId,
+              "and":[{"productPrice":{"gte":options.min}},{"productPrice":{"lte":options.max}}]
+          },
+          "order": sort
+        })
+      }
+
+      const url = `${TEST_URL}/api/shops/${shop.id}/products?filter=${JSON.stringify(filter)}`
       const response = await axios({
         url
       })
@@ -140,84 +160,145 @@ export const mapDispatchToProps = (dispatch, props) => ({
   },
   getShopImages: async (shop) => {
     try {
-      const filter = {
-        where: {
-          shopId: shop.id
-        }
-      }
-      const images = await axios({
-        url: `${BASE_URL}/api/images`,
-        params: {
-          filter: JSON.stringify(filter)
-        }
+      const response = await axios({
+        url: `${TEST_URL}/api/shops/${shop.id}`
       })
-      if (images.data) {
-        dispatch(setShopImage(images.data))
-        return images.data
+      if (response.data) {
+        const images = {
+          "shopFeaturedImages": response.data.shopFeaturedImages 
+          && response.data.shopFeaturedImages,
+          "shopLogo": response.data.shopLogo && response.data.shopLogo
+        }
+        dispatch(setShopImage(images))
+        return images
       }
       return false
     } catch (error) {
       return false
     }
   },
-  uploadImages: async (token, shop, newImages, deleteImages, editImages) => {
+  uploadImages: async (token, shop, newImages, deleteImages, cover) => {
     try {
+      const date = moment().format()
+      let mainImages = shop.shopFeaturedImages || []
       const result = await loading(dispatch, async () => {
-        await Promise.all(deleteImages.map(item => {
-          return deleteShopImage(item.url)
-            .catch(() => null)
-            .then(response => {
-              return fetch({
-                url: `${BASE_URL}/api/images/${item.id}`,
-                method: 'DELETE',
-                headers: {
-                  Authorization: token
-                }
-              }, dispatch)
-            }).catch(err => {
-              console.log('DELETE IMAGE ERROR', err.response)
+        //edit image at index 0 if image is string
+        if(typeof(cover) === "string"){
+          let index = mainImages.indexOf(cover)
+          let element = mainImages.splice(index,1)
+          mainImages.unshift(element[0])
+        }
+        
+        //Delete cover images
+        if (deleteImages.shopFeaturedImages.length > 0){
+          await Promise.all(deleteImages.shopFeaturedImages.map(item => {
+            let response =  fetch({
+              url: item.replace("download", "files"),
+              method: 'DELETE'
             })
-        }))
-        // Edited
-        await Promise.all(editImages.map(item => {
-          return fetch({
-            url: `${BASE_URL}/api/images/${item.id}`,
-            method: 'PUT',
-            headers: {
-              Authorization: token
-            },
-            data: {
-              ...item
+            if (response){
+              let index = mainImages.indexOf(item)
+              mainImages.splice(index, 1)
             }
-          }, dispatch).catch(err => {
-            console.log('editImages IMAGE ERROR', err.response)
+            })
+          )
+        }
+
+        // Instal new cover images
+        if (newImages.shopFeaturedImages.length > 0){
+          await Promise.all(
+            newImages.shopFeaturedImages.map(item => {
+            let image = new FormData()
+            image.append(date + item.fileName, {
+              uri: item.fileUri,
+              type: "image/jpeg",
+              name: date + item.fileName
+            })
+            let response = fetch({
+              url: `${TEST_URL}/api/containers/drink2pics/upload`,
+              method: 'POST',
+              data: image
+            })
+            if (response){
+              if(item === cover){
+                mainImages.unshift(
+                  `${TEST_URL}/api/containers/drink2pics/download/${date + item.fileName}`)
+                  console.log(mainImages)
+              }
+              else {
+                mainImages.push(
+                  `${TEST_URL}/api/containers/drink2pics/download/${date + item.fileName}`)
+                  console.log(mainImages)
+              }
+            }
+            })
+          )
+        }
+        
+        //final patch cover image
+        if (mainImages){
+          let response = await fetch({
+          url: `${TEST_URL}/api/shops/${shop.id}`,
+          method: 'PATCH',
+          data: {
+            shopFeaturedImages: mainImages
+          }
           })
-        }))
-        // Instal new images
-        await Promise.all(newImages.map(item => {
-          return uploadShopImage(shop.id, item.fileName, item.resized
-            ? item.resized.uri : item.fileUri)
-            .then(response => {
-              return fetch({
-                url: `${BASE_URL}/api/images`,
-                method: 'POST',
-                headers: {
-                  Authorization: token
-                },
-                data: {
-                  type: item.type,
-                  url: response.ref,
-                  fullUrl: response.downloadURL,
-                  size: response.totalBytes,
-                  shopId: shop.id,
-                  createdAt: moment().format()
-                }
-              }, dispatch)
+          if(response && response.data){
+            console.log(response.data)
+          }
+          else{
+            console.log('patch complete cover image error')
+          }
+        }
+
+        //delete logo image
+        if (deleteImages.shopLogo) {
+          let response = await fetch({
+            url: deleteImages.shopLogo.replace("download", "files"),
+            method: 'DELETE'
+          })
+          if (response && response.data) {
+            console.log(response.data)
+          }
+          else{
+            console.log('delete logo error')
+          }
+        }
+
+        //add logo image
+        if (newImages.shopLogo) {
+          let image = new FormData()
+          image.append(date + newImages.shopLogo.fileName, {
+            uri: newImages.shopLogo.fileUri,
+            type: "image/jpeg",
+            name: date + newImages.shopLogo.fileName
+          })
+          let response = await fetch({
+            url: `${TEST_URL}/api/containers/drink2pics/upload`,
+            method: 'POST',
+            data: image
+          })
+          if(response && response.data){
+            let response_ = await fetch({
+              url: `${TEST_URL}/api/shops/${shop.id}`,
+              method: 'PATCH',
+              data: {
+                shopLogo: `${TEST_URL}/api/containers/drink2pics/download/${date + newImages.shopLogo.fileName}`
+              }
             })
-            .catch(err => {
-              console.log('UPLOAD IMAGE ERROR', err.response)
-            })
-        }))
+            if(response_ && response_.data){
+              console.log(response_.data)
+            }
+            else{
+              console.log('patch logo error')
+            }
+          }
+          else{
+            console.log('post logo error')
+          }
+        }
+
         return true
       })
       return result
@@ -232,8 +313,7 @@ const mapStateToProps = state => ({
   user: state[USER_MODULE].user,
   shop: state[SHOP_MODULE].shop,
   shopImages: state[SHOP_MODULE].shopImages,
-  cover: state[SHOP_MODULE].shopImages && state[SHOP_MODULE].shopImages
-    .find(item => item.type === 2)
+  cover: state[SHOP_MODULE].shopImages && state[SHOP_MODULE].shopImages.shopFeaturedImages
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShopSetting)

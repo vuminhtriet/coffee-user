@@ -8,38 +8,106 @@ import { PAGE_SIZE } from '../../../common/configs'
 import { getPopularProducts, loadMorePopularProducts } from '../actions'
 
 const mapDispatchToProps = (dispatch, props) => ({
-  getPopularProducts: async (page = 0, sort = 'productTotalRating DESC', options = {}) => {
+  getPopularProducts: async (page = 0, sort = 'avgRating DESC', options = {}) => {
     try {
-      const filter = {"include":{"relation":"shop","scope":{"fields":"shopName"}},"where":{"productIsPopular":true},"order":sort}
-      // const filter = {
-      //   'include': [
-      //     'images',
-      //     'shop',
-      //     {
-      //       'relation': 'productPrices',
-      //       'scope': {
-      //         'where': {
-      //           'status': 1
-      //         },
-      //         'include': [
-      //           'cashUnit',
-      //           'electricUnit',
-      //           'promotionPrice'
-      //         ]
-      //       }
-      //     }
-      //   ],
-      //   'where': {
-      //     'status': 1
-      //   },
-      //   'limit': PAGE_SIZE
-      // }
-      // const url = `${BASE_URL}/api/products?filter=${JSON.stringify(filter)}`
-      // const filter = {
-      //   'include': ['shop']
-      // }
-      // const url = `${BASE_URL}/api/products/search?searchStr=&page=${page}&pageSize=${PAGE_SIZE}&sort=${sort}&options=${JSON.stringify(options)}`
-      // const url = `${TEST_URL}/api/products?filter%5Bwhere%5D%5BproductIsPopular%5D=true&filter[order]=${sort}`
+      var filter = {
+        "include":{
+           "relation":"shop",
+           "scope":{
+              "fields":"shopName"
+           }
+        },
+        "where":{
+           "productIsPopular":true
+        },
+        "order":sort
+     }
+
+     {options.cityId && !options.max &&
+      (filter = {
+        "where":{
+         "productIsPopular":true,
+         "address.cityId":options.cityId,
+         "address.districtId":options.districtId
+        },
+        "include":{
+         "relation":"shop",
+         "scope":{
+            "fields":"shopName"
+         }
+         },
+        "order": sort
+      })
+    }
+
+     {!options.cityId && options.max > 0 && !options.min &&
+      (filter = {
+        "where":{
+         "productIsPopular":true,
+         "productPrice":{"lte":options.max}
+        },
+        "include":{
+         "relation":"shop",
+         "scope":{
+            "fields":"shopName"
+         }
+         },
+        "order": sort
+      })
+    }
+
+    {!options.cityId && options.max > 0 && options.min &&
+      (filter = {
+        "where":{
+         "productIsPopular":true,
+         "and":[{"productPrice":{"gte":options.min}},{"productPrice":{"lte":options.max}}]
+        },
+        "include":{
+         "relation":"shop",
+         "scope":{
+            "fields":"shopName"
+         }
+         },
+        "order": sort
+      })
+    }
+
+    {options.cityId && options.max > 0 && !options.min &&
+      (filter = {
+        "where":{
+         "productIsPopular":true,
+            "address.cityId":options.cityId,
+            "address.districtId":options.districtId,
+            "productPrice":{"lte":options.max}
+        },
+        "include":{
+         "relation":"shop",
+         "scope":{
+            "fields":"shopName"
+         }
+         },
+        "order": sort
+      })
+    }
+
+    {options.cityId && options.max > 0 && options.min &&
+      (filter = {
+        "where":{
+          "productIsPopular":true,
+            "address.cityId":options.cityId,
+            "address.districtId":options.districtId,
+            "and":[{"productPrice":{"gte":options.min}},{"productPrice":{"lte":options.max}}]
+        },
+        "include":{
+         "relation":"shop",
+         "scope":{
+            "fields":"shopName"
+         }
+         },
+        "order": sort
+      })
+    }
+
       const url = `${TEST_URL}/api/products?filter=${JSON.stringify(filter)}`
       const response = await axios({ url })
       if (response && response.data) {

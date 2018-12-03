@@ -26,9 +26,9 @@ const handlers = {
     ...state,
     ...{ shopInfo: { ...action.payload } }
   }),
-  [actions.getShopRatingAndComment]: (state, action) => ({
+  [actions.getavgRatingAndComment]: (state, action) => ({
     ...state,
-    ...{ shopRatingAndComment: action.payload }
+    ...{ avgRatingAndComment: action.payload }
   }),
   [actions.getShopProducts]: (state, action) => ({
     ...state,

@@ -6,6 +6,7 @@ import {
   Alert
 } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
+import call from 'react-native-phone-call'
 
 export default class StoreContact extends Component {
   setClipboardContent = (msg) => {
@@ -15,6 +16,15 @@ export default class StoreContact extends Component {
       'Text has been already copied.'
     )
   };
+
+  call = (number) => {
+    const args = {
+      number: number, // String value with the number to call
+      prompt: false // Optional boolean property. Determines if the user should be prompt prior to the call 
+    }
+    call(args).catch(console.error)
+  };
+
 
   render() {
     const { shop } = this.props
@@ -35,7 +45,8 @@ export default class StoreContact extends Component {
         </Text>
         <View style={{ display: 'flex', flexDirection: 'row' }}>
           <Icon
-            name={'ios-link'}
+            name={'md-globe'}
+            // type="material-community-icons"
             size={20}
             style={{
               marginTop: 5,
@@ -47,9 +58,10 @@ export default class StoreContact extends Component {
             <Text style={{ color: '#212121' }}>Website:</Text> {shop.website}
           </Text>
         </View>
-        <View style={{ display: 'flex', flexDirection: 'row' }}>
+        {/* <View style={{ display: 'flex', flexDirection: 'row' }}>
           <Icon
             name={'logo-facebook'}
+            // type="font-awesome"
             size={20}
             style={{
               marginTop: 5,
@@ -60,28 +72,31 @@ export default class StoreContact extends Component {
           <Text style={{ paddingLeft: 10, color: '#b5b5b5', lineHeight: 22, fontSize: 14 }} onPress={() => this.setClipboardContent(shop.facebookUrl)}>
             <Text style={{ color: '#212121' }}>Facebook:</Text> {shop.facebookUrl}
           </Text>
-        </View>
-        <View style={{ display: 'flex', flexDirection: 'row' }}>
+        </View> */}
+        {/* <View style={{ display: 'flex', flexDirection: 'row' }}>
           <Icon
-            name={'ios-mail'}
+            name={'md-at'}
+            // type="entypo"
             size={20}
             style={{
               marginTop: 5,
-              marginRight: 5,
+              marginRight: 4,
               color: '#ff6600'
             }}
           />
           <Text style={{ paddingLeft: 10, color: '#b5b5b5', lineHeight: 22, fontSize: 14 }} onPress={() => this.setClipboardContent(shop.email)}>
             <Text style={{ color: '#212121' }}>Email:</Text> {shop.email}
           </Text>
-        </View>
+        </View> */}
         <View style={{ display: 'flex', flexDirection: 'row' }}>
           <Icon
-            name={'ios-call'}
+            name={'md-keypad'}
+            // type="entypo"
             size={20}
             style={{
               marginTop: 5,
-              marginRight: 5,
+              marginRight: 6,
+              marginLeft: 2,
               color: '#1f89de'
             }}
           />
@@ -91,7 +106,8 @@ export default class StoreContact extends Component {
         </View>
         <View style={{ display: 'flex', flexDirection: 'row' }}>
           <Icon
-            name={'ios-paper'}
+            name={'ios-card'}
+            // type="font-awesome"
             size={20}
             style={{
               marginTop: 5,

@@ -19,7 +19,7 @@ import {
   FormValidationMessage,
   Icon
 } from 'react-native-elements'
-import { BASE_URL, ADDRESS_URL, TEST_URL } from '../../../common/models'
+import { BASE_URL, TEST_URL } from '../../../common/models'
 import { validatePhoneNumber } from '../../../common/utils/validate'
 import axios from 'axios'
 import { isEmpty } from 'lodash'
@@ -32,12 +32,14 @@ export default class ShopInformation extends Component {
       errors: {},
       districts: {},
       refreshing: false,
+      disabled: false,
       shopName: shop.shopName || '',
       website: shop.website || '',
       shopPhoneNumber: shop.shopPhoneNumber || '',
       selectedCity: (shop.address && `${shop.address.cityId}`) || '',
       selectedDistrict: (shop.address && `${shop.address.districtId}`) || '',
-      fullAddress: (shop.address && `${shop.address.fullAddress}`) || ''
+      fullAddress: (shop.address && `${shop.address.fullAddress}`) || '',
+      selectedStyle: (shop.style && `${shop.style.styId}`) || ''
     }
     // this.getCities = this.getCities.bind(this)
     this.updateInformation = this.updateInformation.bind(this)
@@ -48,18 +50,14 @@ export default class ShopInformation extends Component {
     const {
       token,
       navigation,
-      updateShop, shop } = this.props
+      updateShop, 
+      shop,
+      getShopLatLong,
+      cities,
+      styles } = this.props
     const { selectedCity, selectedDistrict, shopName, shopPhoneNumber,
-        website, fullAddress } = this.state
-    // return Alert.alert(
-    //   'KHÔNG THỂ CẬP NHẬT',
-    //   JSON.stringify({ selectedCity, selectedDistrict, shopName, shopPhoneNumber,
-    //     website, fullAddress }),
-    //   [
-    //     {text: 'OK', onPress: () => console.log('OK Pressed')}
-    //   ],
-    //   { cancelable: false }
-    // )
+        website, fullAddress, districts, selectedStyle } = this.state
+    this.setState({ disabled: true })
     const errors = {}
     if (!shopName) {
       errors.shopName = '* Thiếu tên quán'
@@ -73,29 +71,40 @@ export default class ShopInformation extends Component {
     if (!fullAddress) {
       errors.fullAddress = '* Thiếu địa chỉ'
     }
+    if (!selectedStyle) {
+      errors.selectedStyle = '* Thiếu phong cách quán'
+    }
     if (!shopPhoneNumber) {
       errors.shopPhoneNumber = '* Thiếu số điện thoại'
     }else if (!validatePhoneNumber(shopPhoneNumber)) {
       errors.shopPhoneNumber = '* Số điện thoại không hợp lệ.'
     }
     if (!isEmpty(errors)) {
-      return this.setState({ errors })
-    } 
-    const result = await updateShop(token, shop, shopName, shopPhoneNumber, website, 
-      selectedCity, selectedDistrict, fullAddress)
-    if (result) {
-      return navigation.goBack()
+      return this.setState({ errors, disabled: false })
     }
-    else{
-      return Alert.alert(
-        'KHÔNG THỂ CẬP NHẬT',
-        'Lỗi từ server',
-        [
-          {text: 'OK', onPress: () => console.log('OK Pressed')}
-        ],
-        { cancelable: false }
-      )
+    const city = cities && cities.find(item => `${item.id}` === `${selectedCity}`)
+    const district = districts && districts.find(item => `${item.id}` === `${selectedDistrict}`)
+    const style = styles && styles.find(item => `${item.styId}` === `${selectedStyle}`)
+    const latlng = await getShopLatLong(fullAddress.split(' ').join('+'), 
+    city.name.split(' ').join('+'), district.name.split(' ').join('+'))
+    if (latlng && latlng.lat && latlng.lng){
+      const result = await updateShop(token, shop, shopName, shopPhoneNumber, website, 
+      selectedCity, selectedDistrict, selectedStyle, style.name, fullAddress, latlng.lat, latlng.lng)
+      if (result) {
+        return navigation.goBack()
+      }
+      else{
+        return Alert.alert(
+          'KHÔNG THỂ CẬP NHẬT',
+          'Lỗi từ server',
+          [
+            {text: 'OK', onPress: () => console.log('OK Pressed')}
+          ],
+          { cancelable: false }
+        )
+      }
     }
+    this.setState({ disabled: false })
   }
 
   onChangeText (text, field) {
@@ -109,6 +118,7 @@ export default class ShopInformation extends Component {
     })
     if(field == 'selectedCity'){
       this.getDistrictInCity(text)
+      this.setState({['selectedDistrict']: ''})
     }
   }
 
@@ -131,6 +141,7 @@ export default class ShopInformation extends Component {
         nationality: (addresses && `${addresses.countryId}`) || '',
         selectedCity: (addresses && `${addresses.cityId}`) || '',
         selectedDistrict: (addresses && `${addresses.districtId}`) || '',
+        selectedStyle: (shop.style && `${shop.style.styId}`) || '',
         address: (addresses && `${addresses.fullAddress}`) || '',
         errors: {}
       })
@@ -138,8 +149,8 @@ export default class ShopInformation extends Component {
   }
 
   getDistrictInCity(id){
-    // const url = `${TEST_URL}/api/cities/${id}/districts`
-    const url = `${TEST_URL}/api/districts`
+    const url = `${TEST_URL}/api/cities/${id}/districts`
+    // const url = `${TEST_URL}/api/districts`
     this.setState({ loading: true }, () => {
       axios({
         url,
@@ -157,39 +168,17 @@ export default class ShopInformation extends Component {
     })
   }
 
-  // async getCities (countryId) {
-  //   const { countries } = this.props
-  //   let data = []
-  //   const country = countries.find(item => item.id === parseInt(countryId))
-  //   const filter = {
-  //     where: {
-  //       country: country.code
-  //     }
-  //   }
-  //   const url = `${BASE_URL}/api/cities?filter=${JSON.stringify(filter)}`
-  //   const response = await axios({ url })
-  //   if (response && response.data) {
-  //     data = response.data.map(item => {
-  //       return {
-  //         value: `${item.id}`,
-  //         label: item.name
-  //       }
-  //     })
-  //   }
-  //   this.setState({ cities: data })
-  // }
-
   render () {
     const {
       navigation,
-      countries,
       changeText,
-      cities
+      cities,
+      styles
     } = this.props
     const { districts, errors, selectedCity, selectedDistrict, shopName, shopPhoneNumber,
-    website, fullAddress } = this.state
-    // const country = countries.find(item => `${item.id}` === `${currentAddress.countryId}`)
+    website, fullAddress, disabled, selectedStyle } = this.state
     const city = cities && cities.find(item => `${item.id}` === `${selectedCity}`)
+    const style = styles && styles.find(item => `${item.styId}` === `${selectedStyle}`)
     const district = districts.length > 0  
     ? districts.find(item => `${item.id}` === `${selectedDistrict}`)
     : ''
@@ -214,8 +203,9 @@ export default class ShopInformation extends Component {
             />
             {errors.shopName &&
               (<FormValidationMessage>{errors.shopName}</FormValidationMessage>)}
-            {/* <FormLabel>
-              Country
+
+            <FormLabel>
+              Phong cách quán
             </FormLabel>
             <View
               style={{
@@ -226,15 +216,13 @@ export default class ShopInformation extends Component {
               <MultiSelect
                 hideTags
                 single
-                items={countries}
-                uniqueKey='id'
-                ref={(component) => { this.multiSelect = component }}
-                onSelectedItemsChange={(text) => {
-                  changeText(text[0], 'address', 'countryId')
-                }}
-                selectedItems={[`${country ? country.id : undefined}`]}
-                selectText={!country ? 'Choose your country' : country.name}
-                searchInputPlaceholderText='Search country...'
+                items={styles || []}
+                uniqueKey='styId'
+                ref={(component) => { this.multiSelectDistrict = component }}
+                onSelectedItemsChange={(value) => this.onChangeText(value[0], 'selectedStyle')}
+                selectedItems={styles}
+                selectText={!style ? 'Chọn phong cách quán' : style.name}
+                searchInputPlaceholderText='Tìm kiếm...'
                 tagRemoveIconColor='transparent'
                 tagBorderColor='#CCC'
                 tagTextColor='#CCC'
@@ -244,30 +232,16 @@ export default class ShopInformation extends Component {
                 displayKey='name'
                 submitButtonColor='#CCC'
                 submitButtonText='Submit'
-                fixedHeight
+                // fixedHeight
                 hideSubmitButton
                 searchInputStyle={{
                   color: '#CCC',
-                  height: 30
+                  height: 40
                 }}
               />
-            </View> */}
-            {/* <Dropdown
-              value={currentAddress.countryId
-                ? `${currentAddress.countryId}` : ''}
-              label='Country'
-              data={countries.map(item => {
-                return {
-                  value: `${item.id}`,
-                  label: item.name
-                }
-              })}
-              onChangeText={(text) => {
-                changeText(text, 'address', 'countryId')
-                this.getCities(text)
-              }}
-              containerStyle={{ marginHorizontal: 20 }}
-            /> */}
+            </View>
+            {errors.selectedStyle &&
+              (<FormValidationMessage>{errors.selectedStyle}</FormValidationMessage>)}
 
             <FormLabel>
               Thành phố
@@ -307,14 +281,6 @@ export default class ShopInformation extends Component {
             </View>
             {errors.selectedCity &&
               (<FormValidationMessage>{errors.selectedCity}</FormValidationMessage>)}
-            {/* <Dropdown
-              value={currentAddress.cityId
-                ? `${currentAddress.cityId}` : ''}
-              label='City'
-              data={cities}
-              onChangeText={(text) => changeText(text, 'address', 'cityId')}
-              containerStyle={{ marginHorizontal: 20 }}
-            /> */}
 
             <FormLabel>
               Quận
@@ -393,11 +359,14 @@ export default class ShopInformation extends Component {
           style={{ width: '100%', height: 60, flexDirection: 'row', alignItems: 'center' }}
         >
           <View style={{ flex: 1 }}>
-            <Button title='Hủy' onPress={() => navigation.goBack()} />
+            <Button title='Hủy' 
+            disabled={disabled} 
+            onPress={() => navigation.goBack()} />
           </View>
           <View style={{ flex: 1 }}>
             <Button
               title='Cập nhật'
+              disabled={disabled}
               backgroundColor='#E44C4C'
               onPress={this.updateInformation}
             />

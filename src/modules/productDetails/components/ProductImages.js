@@ -40,8 +40,9 @@ export default class ProductImages extends Component {
 
   render () {
     const { productItem } = this.props
-    const images = productItem.productCoverImage
-    console.log(images)
+    const images = productItem.productCoverImage && productItem.productCoverImage[0]
+    && productItem.productCoverImage[0].length > 0
+    ? productItem.productCoverImage : [""]
     return (
       <View style={{ height: 200 }}>
         <Carousel

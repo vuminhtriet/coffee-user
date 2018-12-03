@@ -6,7 +6,8 @@ const defaultState = {
   stores: [],
   detail: null,
   categoryProducts: [],
-  privateCategories: []
+  privateCategories: [],
+  storeRatings: []
 }
 
 const handlers = {
@@ -21,6 +22,10 @@ const handlers = {
   [actions.setStoreInformation]: (state, action) => ({
     ...state,
     ...{ detail: action.payload }
+  }),
+  [actions.getStoreRatings]: (state, action) => ({
+    ...state,
+    ...{ storeRatings: action.payload }
   }),
   [actions.getCategoryProducts]: (state, action) => ({
     ...state,

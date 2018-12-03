@@ -13,6 +13,7 @@ import { SCREENS } from '../../screens'
 import Ion from 'react-native-vector-icons/Ionicons'
 import { withNavigation } from 'react-navigation'
 import { getTop2ActivePrice, getFirstImgUrl } from '../../utils/productUtils'
+import { TextInputMask } from 'react-native-masked-text'
 
 class ProductItem extends Component {
 
@@ -58,8 +59,8 @@ class ProductItem extends Component {
 
   render() {
     const { item, itemWith, itemHeight, currencyUnits, shopName } = this.props
-    const { productCoverImage } = item
-    // const fullUrl = getFirstImgUrl(images)
+    // const { productCoverImage } = item
+    const image = item.productCoverImage && item.productCoverImage[0] ? item.productCoverImage[0] : ''
     return (
       <TouchableOpacity
         style={{
@@ -74,8 +75,8 @@ class ProductItem extends Component {
         <View
           style={{
             padding: 5,
-            borderWidth: 1,
-            borderColor: '#D4D4D4',
+            // borderWidth: 1,
+            // borderColor: '#D4D4D4',
             flex: 1
           }}
         >
@@ -99,10 +100,10 @@ class ProductItem extends Component {
               {`${shopName || 'không xác định'}`}
             </Text>
           }
-          {productCoverImage
+          {image
             ? <Image
               style={{ height: 155, marginTop: 10 }}
-              source={{ uri: productCoverImage[0] }}
+              source={{ uri: image }}
             /> : <Image
               style={{ height: 155, width: '100%' }}
               source={require('../../../assets/drinkplaceholder.png')}
@@ -126,8 +127,25 @@ class ProductItem extends Component {
               justifyContent: 'flex-start'
             }}>
               <View style={{ display: 'flex', flexDirection: 'row' }}>
-                <Text style={{ fontSize: 16, color: '#6F4E37', fontWeight: 'bold' }} numberOfLines={1}>
-                {item.productPrice}<Text style={{ fontSize: 16 }}>đ</Text></Text>
+                {/* <Text style={{ fontSize: 16, color: '#6F4E37', fontWeight: 'bold' }} numberOfLines={1}>
+                {item.productPrice}<Text style={{ fontSize: 16 }}>đ</Text></Text> */}
+                <TextInputMask
+                ref={ref => (this.inputRef = ref)}
+                numberOfLines = {1}
+                type={'money'}
+                options={{
+                  suffixUnit: 'đ',
+                  unit: '',
+                  separator: ' ',
+                  precision: 0
+                }}
+                style={{ 
+                  fontSize: 16, color: '#6F4E37', fontWeight: 'bold', marginBottom: 0,
+                  marginLeft: 2, padding: 0
+                }}
+                editable={false}
+                value={item.productPrice}
+              />
               </View>
             </View>
             <View
@@ -142,7 +160,7 @@ class ProductItem extends Component {
                   <Rating
                     type='custom'
                     fractions={1}
-                    startingValue={item.productTotalRating || 0}
+                    startingValue={item.avgRating || 0}
                     readonly
                     imageSize={14}
                     showRating={false}

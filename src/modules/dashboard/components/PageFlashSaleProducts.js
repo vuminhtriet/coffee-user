@@ -41,8 +41,8 @@ class DashboardFlashSaldeProducts extends Component {
       },
       chosenPrice: {
         unitId: '',
-        min: '',
-        max: ''
+        min: 0,
+        max: 0
       }
     }
   }
@@ -167,8 +167,8 @@ class DashboardFlashSaldeProducts extends Component {
       },
       chosenPrice: {
         id: '',
-        min: '',
-        max: ''
+        min: 0,
+        max: 0
       }
     })
   }

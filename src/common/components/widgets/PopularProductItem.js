@@ -10,6 +10,7 @@ import axios from 'axios'
 import { TEST_URL } from '../../../common/models'
 import { SCREENS } from '../../screens'
 import { getTop2ActivePrice, getFirstImgUrl } from '../../utils/productUtils'
+import { TextInputMask } from 'react-native-masked-text'
 
 class PopularProductItem extends Component {
   constructor(props) {
@@ -67,13 +68,13 @@ class PopularProductItem extends Component {
       >
         <View
           style={{
-            borderWidth: 1,
-            borderColor: '#D4D4D4',
+            // borderWidth: 1,
+            // borderColor: '#D4D4D4',
             padding: 4,
             flex: 1
           }}
         >
-          {productCoverImage
+          {productCoverImage && productCoverImage[0]
             ? <Image
               style={{ height: 124, width: '100%' }}
               source={{ uri: productCoverImage[0] }}
@@ -87,11 +88,11 @@ class PopularProductItem extends Component {
             {`${item.productName}`}
           </Text>
           {item.shop && item.shop.shopName
-            ? <Text numberOfLines={1} style={{ marginTop: 5, marginBottom: 0, textAlign: 'center', 
+            ? <Text numberOfLines={1} style={{ marginTop: 2, marginBottom: 0, textAlign: 'center', 
             paddingLeft: 5, paddingRight: 5 }}>
               {`${item.shop.shopName}`}
             </Text>
-            : <Text numberOfLines={1} style={{ marginTop: 5, marginBottom: 0, textAlign: 'center', 
+            : <Text numberOfLines={1} style={{ marginTop: 2, marginBottom: 0, textAlign: 'center', 
             paddingLeft: 5, paddingRight: 5 }}>
               {`không xác định`}
             </Text>
@@ -100,7 +101,7 @@ class PopularProductItem extends Component {
             marginBottom: 0,
             marginTop: 3,
             position: 'absolute',
-            bottom: 3,
+            bottom: 1,
             justifyContent: 'center',
             alignItems: 'center',
             width: '100%'
@@ -108,8 +109,25 @@ class PopularProductItem extends Component {
             <View
               style={{ display: 'flex', flexDirection: 'row', marginLeft: 7 }}
             >
-              <Text style={{ fontSize: 16, color: '#6F4E37', fontWeight: 'bold' }} numberOfLines={1}>
-              {item.productPrice}<Text style={{ fontSize: 16 }}>đ</Text></Text>
+              {/* <Text style={{ fontSize: 16, color: '#6F4E37', fontWeight: 'bold' }} numberOfLines={1}>
+              {item.productPrice}<Text style={{ fontSize: 16 }}>đ</Text></Text> */}
+              <TextInputMask
+                ref={ref => (this.inputRef = ref)}
+                numberOfLines = {1}
+                type={'money'}
+                options={{
+                  suffixUnit: 'đ',
+                  unit: '',
+                  separator: ' ',
+                  precision: 0
+                }}
+                style={{ 
+                  fontSize: 16, color: '#6F4E37', fontWeight: 'bold', marginBottom: 0,
+                  marginLeft: 6, padding: 0
+                }}
+                editable={false}
+                value={item.productPrice}
+              />
             </View>
           </View>
         </View>

@@ -9,11 +9,124 @@ import { PAGE_SIZE } from '../../../common/configs'
 
 
 const mapDispatchToProps = (dispatch, props) => ({
-  searchProducts: async (keyword, page = 0, sort = "productTotalRating DESC", options = {}) => {
+  searchProducts: async (keyword, page = 0, sort = "avgRating DESC", options = {}) => {
     try {
-      const filter = {"include":{"relation":"shop","scope":{"fields":"shopName"}},"where":{"productName":{"like":keyword,"options":"i"}},"order":sort}
-      // const url = `${BASE_URL}/api/products/search?searchStr=${keyword}&page=${page}&pageSize=${PAGE_SIZE}&sort=${sort}&options=${JSON.stringify(options)}`
-      // const url = `${TEST_URL}/api/products/?filter%5Bwhere%5D%5BproductName%5D%5Blike%5D=${keyword}&filter[order]=${sort}`
+      var filter = {
+        "include":{
+           "relation":"shop",
+           "scope":{
+              "fields":"shopName"
+           }
+        },
+        "where":{
+           "productName":{
+              "like":keyword,
+              "options":"i"
+           }
+        },
+        "order":sort
+      }
+
+      {options.cityId && !options.max &&
+         (filter = {
+           "where":{
+            "productName":{
+               "like":keyword,
+               "options":"i"
+            },
+            "address.cityId":options.cityId,
+            "address.districtId":options.districtId
+           },
+           "include":{
+            "relation":"shop",
+            "scope":{
+               "fields":"shopName"
+            }
+            },
+           "order": sort
+         })
+       }
+ 
+       {!options.cityId && options.max > 0 && !options.min &&
+         (filter = {
+           "where":{
+            "productName":{
+               "like":keyword,
+               "options":"i"
+            },
+            "productPrice":{"lte":options.max}
+           },
+           "include":{
+            "relation":"shop",
+            "scope":{
+               "fields":"shopName"
+            }
+            },
+           "order": sort
+         })
+       }
+ 
+       {!options.cityId && options.max > 0 && options.min &&
+         (filter = {
+           "where":{
+            "productName":{
+               "like":keyword,
+               "options":"i"
+            },
+            "and":[{"productPrice":{"gte":options.min}},{"productPrice":{"lte":options.max}}]
+           },
+           "include":{
+            "relation":"shop",
+            "scope":{
+               "fields":"shopName"
+            }
+            },
+           "order": sort
+         })
+       }
+ 
+       {options.cityId && options.max > 0 && !options.min &&
+         (filter = {
+           "where":{
+            "productName":{
+               "like":keyword,
+               "options":"i"
+            },
+               "address.cityId":options.cityId,
+               "address.districtId":options.districtId,
+               "productPrice":{"lte":options.max}
+           },
+           "include":{
+            "relation":"shop",
+            "scope":{
+               "fields":"shopName"
+            }
+            },
+           "order": sort
+         })
+       }
+ 
+       {options.cityId && options.max > 0 && options.min &&
+         (filter = {
+           "where":{
+            "productName":{
+               "like":keyword,
+               "options":"i"
+            },
+               "address.cityId":options.cityId,
+               "address.districtId":options.districtId,
+               "and":[{"productPrice":{"gte":options.min}},{"productPrice":{"lte":options.max}}]
+           },
+           "include":{
+            "relation":"shop",
+            "scope":{
+               "fields":"shopName"
+            }
+            },
+           "order": sort
+         })
+       }
+      
       const url = `${TEST_URL}/api/products?filter=${JSON.stringify(filter)}`
       const response = await axios({
         url

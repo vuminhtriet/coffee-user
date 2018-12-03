@@ -80,14 +80,24 @@ export default class StoreHeader extends Component {
     })
   }
 
-  onChatWithShop = () => {
+  componentWillMount(){
+    const { getStoreInformation, id } = this.props
+    // id && getStoreInformation(id)
+  }
+
+  componentWillUpdate(){ 
+    const { getStoreInformation, id } = this.props
+    // id && getStoreInformation(id)
+  }
+
+  bookTable = () => {
     const { navigation, detail, token } = this.props
     if (!token) {
       navigation.navigate(SCREENS.AuthenticatePage)
       return
     }
-    if (detail && detail.userId) {
-      navigation.navigate(SCREENS.ChatDetailPage, { userId: detail.userId })
+    if (detail) {
+      navigation.navigate(SCREENS.BookDetailPage, { shop: detail })
     }
   }
 
@@ -111,11 +121,12 @@ export default class StoreHeader extends Component {
   }
 
   renderScene({ route }) {
-    const { detail, shippingTypes, paymentTypes, privateCategories } = this.props
+    const { detail, shippingTypes, paymentTypes, privateCategories, navigation, getStoreInformation } = this.props
     const { categories } = this.state
     switch (route.key) {
       case 'information':
-        return <StoreInformation detail={detail} shippingTypes={shippingTypes} paymentTypes={paymentTypes} />
+        return <StoreInformation detail={detail} shippingTypes={shippingTypes} 
+        paymentTypes={paymentTypes} navigation={navigation} getStoreInformation={getStoreInformation} />
       case 'categories':
         return <CategoryList categories={categories} />
       case 'products':
@@ -154,9 +165,9 @@ export default class StoreHeader extends Component {
                     borderWidth: 1,
                     borderColor: '#fff'
                   }}
-                  onPress={this.onChatWithShop}
+                  onPress={this.bookTable}
                 >
-                  Chat now
+                  Đặt chỗ
                 </Text>)}
               />
               <Animated.Image

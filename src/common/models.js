@@ -18,9 +18,11 @@ export const DATA_STORE = 'data'
 
 export const BASE_URL = 'http://188.166.183.113:5001'
 
-export const TEST_URL = 'https://drinkaway.herokuapp.com'
+export const TEST_URL = 'https://drink2.herokuapp.com'
 
-export const ADDRESS_URL = 'https://thongtindoanhnghiep.co'
+export const GOOGLE_URL = 'https://maps.googleapis.com'
+
+export const API_KEY = 'AIzaSyDq0Q6p0m2bJr5BDxobYqCTupsK0gLJxdg'
 
 export const CART_STATUS = {
   SHOPPING: 0,
@@ -115,7 +117,7 @@ export const PRODUCT_SORT_LIST = [
   {
     id: 1,
     title: 'Độ phổ biến',
-    value: 'productTotalRating DESC',
+    value: 'avgRating DESC',
     type: 1
   },
   {
@@ -126,14 +128,14 @@ export const PRODUCT_SORT_LIST = [
   },
   {
     id: 3,
-    title: 'Cũ nhất',
-    value: 'productCreatedAt ASC',
+    title: 'Giá cao',
+    value: 'productPrice DESC',
     type: 0
   },
   {
     id: 4,
-    title: 'Mới nhất',
-    value: 'productCreatedAt DESC',
+    title: 'Giá thấp',
+    value: 'productPrice ASC',
     type: 0
   },
 ]
@@ -142,7 +144,7 @@ export const SHOP_SORT_LIST = [
   {
     id: 1,
     title: 'Độ phổ biến',
-    value: 'shopRating DESC',
+    value: 'avgRating DESC',
     type: 1
   },
   {

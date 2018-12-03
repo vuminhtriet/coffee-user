@@ -2,7 +2,7 @@ import moment from 'moment'
 import axios from 'axios'
 import { connect } from 'react-redux'
 import Product from '../components/Product'
-import { loading } from '../../../common/effects'
+import { loading, fetch } from '../../../common/effects'
 import { BASE_URL, TEST_URL } from '../../../common/models'
 import { uploadProductImage } from '../../../common/firebase'
 import { MODULE_NAME as MODULE_SHOP } from '../../shop/models'
@@ -13,29 +13,34 @@ const mapDispatchToProps = (dispatch, props) => ({
   addProduct: async (token, product, images, shop) => {
     try {
       const url = `${TEST_URL}/api/products`
-      const metaData = {
-        productName: product.name,
-        productDescription: product.description,
-        productCreatedAt: moment().format(),
-        productUpdatedAt: moment().format(),
-        productStatus: product.quantity > 0 ? true : false,
-        productTotalRating: 0,
-        productTotalFavorite: 0,
-        productPrice: product.productPrices,
-        productQuantity: product.quantity,
-        shopId: shop.id,
-        categoryId: product.publicCategoryId && product.publicCategoryId.id
-      }
-      // const variations = product.productVariants.map(item => {
-      //   return { ...item, status: 1 }
-      // })
-      // const tags = []
-      // const shippingToCountries = product.productCountries.map(item => {
-      //   return { countryId: item }
-      // })
-
+      const date = moment().format()
       const result = await loading(dispatch, async () => {
-        const response = await axios({
+        let mainImages = []
+        if (images.length > 0){
+          await Promise.all(
+            images.map(item => {
+            let image = new FormData()
+            image.append(date + item.fileName, {
+              uri: item.fileUri,
+              type: "image/jpeg",
+              name: date + item.fileName
+            })
+            let response = fetch({
+              url: `${TEST_URL}/api/containers/drink2pics/upload`,
+              method: 'POST',
+              data: image
+            })
+            console.log(response)
+            if (response){
+              mainImages.push(
+                `${TEST_URL}/api/containers/drink2pics/download/${date + item.fileName}`)
+              console.log(mainImages)
+            }
+            })
+          )
+        }
+
+        let response = await axios({
           url,
           method: 'POST',
           // headers: {
@@ -47,16 +52,14 @@ const mapDispatchToProps = (dispatch, props) => ({
             productCreatedAt: moment().format(),
             productUpdatedAt: moment().format(),
             productStatus: true,
-            productTotalRating: 0,
+            avgRating: 0,
             productTotalFavorite: 0,
             productPrice: product.productPrices,
-            productQuantity: product.quantity,
+            // productQuantity: product.quantity,
             shopId: shop.id,
-            categoryId: product.publicCategoryId && product.publicCategoryId.id
-            // variations,
-            // prices,
-            // tags,
-            // shippingToCountries
+            categoryId: product.publicCategoryId && product.publicCategoryId.id,
+            productCoverImage: mainImages,
+            address: shop.address
           }
         })
 

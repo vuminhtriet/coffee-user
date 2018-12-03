@@ -18,7 +18,7 @@ import { SHOP_SORT_LIST } from '../../../common/models';
 const { width } = Dimensions.get('window')
 const NUMBER_OF_ITEM = 2
 const ITEM_WITDH = (width) / NUMBER_OF_ITEM
-const ITEM_HEIGHT = 300
+const ITEM_HEIGHT = 280
 const DEFAULT_SORT_TYPE = SHOP_SORT_LIST.find(item => item.type === 1)
 
 export default class PageSearchShops extends Component {
@@ -37,13 +37,15 @@ export default class PageSearchShops extends Component {
       filterType: '',
       chosenCategories: [],
       chosenLocation: {
-        countryId: '',
+        districtId: '',
         cityId: ''
       },
       chosenPrice: {
-        unitId: '',
-        min: '',
-        max: ''
+        min: 0,
+        max: 0
+      },
+      chosenStyle: {
+        styleId: ''
       }
     }
   }
@@ -136,16 +138,25 @@ export default class PageSearchShops extends Component {
   }
 
   submitFilter = () => {
-    const { chosenCategories, chosenLocation, chosenPrice } = this.state
+    const { chosenCategories, chosenLocation, chosenPrice, chosenStyle } = this.state
     const options = {}
     if (chosenCategories.length > 0) {
       options.publicCategoryId = chosenCategories
     }
-    if (chosenLocation.countryId) {
-      options.countryId = chosenLocation.countryId
+    if (chosenLocation.cityId) {
+      options.cityId = chosenLocation.cityId
     }
-    if (chosenPrice.unitId) {
-      options.price = chosenPrice
+    if (chosenLocation.districtId) {
+      options.districtId = chosenLocation.districtId
+    }
+    if (chosenPrice.min) {
+      options.min = chosenPrice.min
+    }
+    if (chosenPrice.max) {
+      options.max = chosenPrice.max
+    }
+    if (chosenStyle.styleId) {
+      options.styleId = chosenStyle.styleId
     }
     return options
   }
@@ -171,31 +182,44 @@ export default class PageSearchShops extends Component {
     this.setState({ chosenLocation: { ...chosenLocation, ...item } })
   }
 
+  chooseStyle = (item) => {
+    const { chosenStyle } = this.state
+    this.setState({ chosenStyle: { ...chosenStyle, ...item } })
+  }
+
   resetFilter = () => {
     this.setState({
       chosenCategories: [],
       chosenLocation: {
-        countryId: '',
+        districtId: '',
         cityId: ''
       },
       chosenPrice: {
         id: '',
-        min: '',
-        max: ''
+        min: 0,
+        max: 0
+      },
+      chosenStyle: {
+        styleId: ''
       }
     })
   }
 
-  _renderItem = ({ item }) => (
-    <ShopItem
-      item={item}
-      itemWith={ITEM_WITDH}
-      itemHeight={ITEM_HEIGHT}
-    />
-  )
+  _renderItem = ({ item }) => {
+    const { latlng } = this.props
+    return (
+      <ShopItem
+        item={item}
+        itemWith={ITEM_WITDH}
+        itemHeight={ITEM_HEIGHT}
+        latlng={latlng}
+      />
+    )
+  }
 
   render() {
-    const { refreshing, showFilter, showSort, filterType, sortType, chosenCategories, chosenLocation, chosenPrice } = this.state
+    const { refreshing, showFilter, showSort, filterType, sortType, chosenCategories, 
+      chosenLocation, chosenPrice, chosenStyle } = this.state
     const { shops } = this.props
 
     return (
@@ -262,6 +286,8 @@ export default class PageSearchShops extends Component {
             chosenPrice={chosenPrice}
             chooseLocation={this.chooseLocation}
             chosenLocation={chosenLocation}
+            chooseStyle={this.chooseStyle}
+            chosenStyle={chosenStyle}
             resetFilter={this.resetFilter}
           />
         </Modal>

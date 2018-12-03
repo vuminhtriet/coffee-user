@@ -13,7 +13,7 @@ import ProductItem from '../../../common/components/widgets/ProductItem'
 const { width } = Dimensions.get('window')
 const NUMBER_OF_ITEM = 2
 const ITEM_WITDH = (width) / NUMBER_OF_ITEM
-const ITEM_HEIGHT = 300
+const ITEM_HEIGHT = 285
 
 class DashboardProductToday extends Component {
   constructor (props) {

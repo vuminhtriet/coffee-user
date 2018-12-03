@@ -25,14 +25,20 @@ export default class StoreSummary extends Component {
         <View style={{ paddingLeft: 10 }}>
           <View style={{ display: 'flex', flexDirection: 'row' }}>
             <Text style={{ paddingRight: 10, color: '#b5b5b5', lineHeight: 26, fontSize: 14 }}>
-              <Text style={{ color: '#212121' }}>Số lượng đồ uống:</Text> {shop.numberOfProducts}
+              <Text style={{ color: '#212121' }}>Số lượng đồ uống:</Text> {shop.products.length}
             </Text>
           </View>
           <View style={{ display: 'flex', flexDirection: 'row' }}>
             <Text style={{ paddingRight: 10, color: '#b5b5b5', lineHeight: 26, fontSize: 14 }}>
-              <Text style={{ color: '#212121' }}>Thời gian trả lời:</Text> {shop.responseRate}
+              <Text style={{ color: '#212121' }}>Phong cách quán:</Text> {shop.style && shop.style.name ?
+               shop.style.name : ""}
             </Text>
           </View>
+          {/* <View style={{ display: 'flex', flexDirection: 'row' }}>
+            <Text style={{ paddingRight: 10, color: '#b5b5b5', lineHeight: 26, fontSize: 14 }}>
+              <Text style={{ color: '#212121' }}>Thời gian trả lời:</Text> {shop.responseRate}
+            </Text>
+          </View> */}
           {/* <View style={{ display: 'flex', flexDirection: 'row' }}>
             <Text style={{ paddingRight: 10, color: '#b5b5b5', lineHeight: 26, fontSize: 14 }}>
               <Text style={{ color: '#212121' }}>Major:</Text> Cloths, etc.
@@ -46,7 +52,7 @@ export default class StoreSummary extends Component {
               <Rating
                 type='custom'
                 fractions={1}
-                startingValue={shop.shopRating || 0}
+                startingValue={shop.avgRating || 0}
                 readonly
                 imageSize={14}
                 showRating={false}
@@ -57,7 +63,7 @@ export default class StoreSummary extends Component {
             </View>
             <View>
               <Text style={{ marginBottom: 0, paddingTop: 7, paddingLeft: 5, textAlign: 'left', color: '#b5b5b5' }}>
-                {` ${shop.shopRating || 0}/5 (${shop.totalUserRating || 0} đánh giá)`}
+                {` ${shop.avgRating || 0}/5 (${shop.numRating || 0} đánh giá)`}
               </Text>
             </View>
           </View>

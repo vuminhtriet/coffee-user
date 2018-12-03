@@ -46,14 +46,14 @@ class RatingItem extends PureComponent {
             </View>
 
             {/* IsVerified */}
-            {this.props.isVerified && <View style={{ flexDirection: 'row', paddingBottom: 5 }}>
+            {/* {this.props.isVerified && <View style={{ flexDirection: 'row', paddingBottom: 5 }}>
               <View>
                 <Ion name={'ios-checkmark-circle-outline'} size={20} color={'#6F4E37'} />
               </View>
               <View>
                 <Text style={{ paddingLeft: 10 }}>purchased</Text>
               </View>
-            </View>}
+            </View>} */}
 
             <View>
               <Text style={{ paddingBottom: 10, lineHeight: 24 }}>{this.props.comment}</Text>
@@ -80,32 +80,35 @@ class RatingItem extends PureComponent {
             {/* Display name, Rating value, Rating comment, CreatedAt */}
             <View style={{ flex: 1 }}>
               <Text>{this.props.displayName}</Text>
-              <View>
-                <Rating
-                  type='custom'
-                  fractions={1}
-                  startingValue={this.props.value || 0}
-                  readonly
-                  imageSize={14}
-                  showRating={false}
-                  ratingImage={require('../../../assets/images/star.png')}
-                  ratingColor='#FF6A00'
-                  ratingBackgroundColor='transparent'
-                  style={{ paddingBottom: 10, paddingTop: 3 }} />
+              <View style={{ flexDirection: 'row', paddingBottom: 5 }}>
+                <View>
+                  <Rating
+                    type='custom'
+                    fractions={1}
+                    startingValue={this.props.value || 0}
+                    readonly
+                    imageSize={14}
+                    showRating={false}
+                    ratingImage={require('../../../assets/images/star.png')}
+                    ratingColor='#FF6A00'
+                    ratingBackgroundColor='transparent'
+                    style={{ paddingBottom: 10, paddingTop: 3 }} />
+                </View>
+                <Text style={{ fontSize: 16, paddingLeft: 15 }}>{this.props.title}</Text>
               </View>
               <Text style={{ paddingBottom: 10, lineHeight: 24 }}>{this.props.comment}</Text>
               <Text style={{ color: '#adc0d1' }}>{moment(this.props.createdAt).format('LLL')}</Text>
             </View>
 
             {/* IsVerified */}
-            {this.props.isVerified && <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+            {/* {this.props.isVerified && <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
               <View style={{ paddingLeft: 5 }}>
                 <Ion name={'ios-checkmark-circle-outline'} size={20} color={'#6F4E37'} />
               </View>
               <View>
                 <Text style={{ paddingLeft: 10 }}>purchased</Text>
               </View>
-            </View>}
+            </View>} */}
           </View>
         </View>
       );
@@ -131,13 +134,14 @@ export default class RatingList extends PureComponent {
       id={item.id}
       onPressItem={this._onPressItem}
       mode={this.props.mode}
-      displayName={item.user && item.user.displayName}
-      value={item.value}
-      title={item.title}
-      comment={item.comment}
-      createdAt={item.createdAt}
-      isVerified={item.isVerified}
-      uri={item.user && item.user.images && item.user.images.length > 0 ? item.user.images[0].fullUrl : 'https://cdn1.iconfinder.com/data/icons/user-pictures/101/malecostume-512.png'}
+      displayName={item.member && item.member.displayName || "unknown"}
+      value={item.rating}
+      title={item.title || ""}
+      comment={item.content}
+      createdAt={item.date}
+      // isVerified={item.isVerified}
+      uri={item.member && item.member.userPhoto && item.member.userPhoto.length > 0 ? item.member.userPhoto 
+        : 'https://qualiscare.com/wp-content/uploads/2017/08/default-user.png'}
     />
   );
 
