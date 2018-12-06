@@ -59,7 +59,8 @@ const mapDispatchToProps = (dispatch, props) => ({
             shopId: shop.id,
             categoryId: product.publicCategoryId && product.publicCategoryId.id,
             productCoverImage: mainImages,
-            address: shop.address
+            address: shop.address,
+            productIsPopular: false
           }
         })
 

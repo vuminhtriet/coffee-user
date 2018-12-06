@@ -63,12 +63,12 @@ const MENU_LIST = [
   //   iconType: 'font-awesome',
   //   screen: SCREENS.ProcessingCart
   // },
-  // {
-  //   title: 'Order Management',
-  //   iconName: 'file-check',
-  //   iconType: 'material-community',
-  //   screen: SCREENS.OrderManagement
-  // },
+  {
+    title: 'Quản lý Đơn Đặt Chỗ',
+    iconName: 'table',
+    iconType: 'font-awesome',
+    screen: SCREENS.BookManagement
+  },
   // {
   //   title: 'In Processing Orders',
   //   iconName: 'hourglass-2',

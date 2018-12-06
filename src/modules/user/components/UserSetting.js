@@ -227,15 +227,15 @@ export default class UserSetting extends Component {
               title='User Payment Methods'
               hideChevron
               containerStyle={{ borderBottomWidth: 0, borderTopWidth: 0 }}
-            />
+            /> */}
             <ListItem
-              onPress={() => token && navigation.navigate(SCREENS.UserOrderManagement)}
-              leftIcon={{ name: 'list-alt', type: 'font-awesome' }}
-              title='My orders'
+              onPress={() => token && navigation.navigate(SCREENS.UserBookManagement)}
+              leftIcon={{ name: 'table', type: 'font-awesome' }}
+              title='Quản Lý Đơn Đặt Chỗ'
               hideChevron
               containerStyle={{ borderBottomWidth: 0, borderTopWidth: 0 }}
             />
-            <ListItem
+            {/* <ListItem
               onPress={() => token && navigation.navigate(SCREENS.BoughtProductPage)}
               leftIcon={{ name: 'file-check', type: 'material-community' }}
               title='My bought products - Write a review'

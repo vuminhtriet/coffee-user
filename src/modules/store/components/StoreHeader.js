@@ -23,20 +23,6 @@ const initialLayout = {
   width: Dimensions.get('window').width
 }
 
-const filter = {
-	"include":{
-		"relation":"categories",
-		"scope":{
-			"include":{
-				"relation":"products",
-				"scope":{
-					"fields":"productName"
-				}
-			}
-		}
-	}
-}
-
 export default class StoreHeader extends Component {
   constructor(props) {
     super(props)
@@ -44,6 +30,7 @@ export default class StoreHeader extends Component {
       cover: {},
       index: 0,
       categories: null,
+      orders: [],
       routes: [
         { key: 'information', title: 'Thông tin' },
         { key: 'categories', title: 'Danh mục' },
@@ -56,8 +43,22 @@ export default class StoreHeader extends Component {
   }
 
   componentDidMount() {
-    const { getStoreInformation, id } = this.props
+    const { getStoreInformation, id, user } = this.props
     id && getStoreInformation(id)
+
+    const filter = {
+      "include":{
+        "relation":"categories",
+        "scope":{
+          "include":{
+            "relation":"products",
+            "scope":{
+              "fields":"productName"
+            }
+          }
+        }
+      }
+    }
 
     // const url = `${TEST_URL}/api/categories?filter[where][shopId]=${id}`
     const url = `${TEST_URL}/api/shops/${id}?filter=${JSON.stringify(filter)}`
@@ -69,9 +70,11 @@ export default class StoreHeader extends Component {
       })
         .then(response => {
           const privateCategories = response.data.categories
+          const orders = response.data.orders
           this.setState({
             categories: privateCategories,
-            loading: false
+            loading: false,
+            orders
           })
         })
         .catch(e => {
@@ -91,13 +94,19 @@ export default class StoreHeader extends Component {
   }
 
   bookTable = () => {
-    const { navigation, detail, token } = this.props
+    const { navigation, detail, token, id, user } = this.props
+    const { orders } = this.state
     if (!token) {
       navigation.navigate(SCREENS.AuthenticatePage)
       return
     }
     if (detail) {
-      navigation.navigate(SCREENS.BookDetailPage, { shop: detail })
+      // if(orders.length > 0){
+      //   navigation.navigate(SCREENS.BookConfirmPage, { memberId: user.id, shopId: id })
+      // }
+      // else{
+        navigation.navigate(SCREENS.BookDetailPage, { shop: detail, memberId: user.id })
+      // }
     }
   }
 

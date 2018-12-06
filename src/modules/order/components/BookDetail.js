@@ -26,7 +26,7 @@ import {
 import { isEmpty } from 'lodash'
 
 
-export default class UserInformation extends Component {
+export default class BookDetail extends Component {
   constructor (props) {
     super(props)
     const { user } = props
@@ -93,7 +93,14 @@ export default class UserInformation extends Component {
             email}
         )
         if(request){
-          return navigation.goBack()
+          return Alert.alert(
+            'ĐẶT BÀN THÀNH CÔNG',
+            'Nhấn lại phần đặt chỗ để xem trạng thái.',
+            [
+              {text: 'OK', onPress: () => navigation.goBack()}
+            ],
+            { cancelable: false }
+          )
         }
         else{
           return Alert.alert(
@@ -186,6 +193,8 @@ export default class UserInformation extends Component {
             }}>
             <Text style={{ fontWeight: 'bold', fontSize: 20, color: '#E64B47', marginLeft: 10 }}>
             {shop.shopName}</Text>
+            <Text style={{ fontWeight: 'bold', fontSize: 16, marginLeft: 10 }}>
+            {shop.address && shop.address.fullAddress}</Text>  
             <FormLabel>
               Tên người đặt
             </FormLabel>
@@ -237,6 +246,8 @@ export default class UserInformation extends Component {
             />
             {errors.dateTime &&
               (<FormValidationMessage>{errors.dateTime}</FormValidationMessage>)}
+
+            <FormValidationMessage>{'* 30 phút sau giờ đặt, đơn sẽ tự hủy'}</FormValidationMessage>
 
             <FormLabel>
               Số lượng người
@@ -304,41 +315,6 @@ export default class UserInformation extends Component {
             </View>
           </View>
         </ScrollView>
-        <Modal
-          onModalHide={() => this.setState({ qrcode: null })}
-          visible={qrcode !== null}
-          transparent
-          onBackdropPress={() => this.setState({ qrcode: null })}
-        >
-          <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
-            <TouchableOpacity
-              onPress={() => this.setState({ qrcode: null })}
-              style={{
-                width: '100%',
-                height: '100%',
-                position: 'absolute',
-                zIndex: 1,
-                backgroundColor:
-                  '#000',
-                opacity: 0.2
-              }}
-            />
-            <View
-              style={{
-                width: 300,
-                height: 300,
-                zIndex: 2,
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: '#FFFFFF'
-              }}>
-              <QRCode
-                value={qrcode || ''}
-                size={250}
-              />
-            </View>
-          </View>
-        </Modal>
       </KeyboardAvoidingView>
     )
   }

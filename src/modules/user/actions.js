@@ -8,6 +8,7 @@ export const setCities = createAction(`${MODULE_NAME}_setCities`)
 
 export const setBoughtProduct = createAction(`${MODULE_NAME}_setBoughtProduct`)
 export const setUserOrders = createAction(`${MODULE_NAME}_setUserOrders`)
+export const setOrderDetail = createAction(`${MODULE_NAME}_setOrderDetail`)
 
 export const setUserPayment = createAction(`${MODULE_NAME}_setUserPayment`)
 export const addUserPayments = createAction(`${MODULE_NAME}_addUserPayments`)

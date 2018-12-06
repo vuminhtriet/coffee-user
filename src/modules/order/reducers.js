@@ -8,7 +8,9 @@ const defaultState = {
   paymentTypes: [
   ],
   paymentMethods: [
-  ]
+  ],
+  shop:{},
+  order:{}
 }
 
 const handlers = {
@@ -19,6 +21,14 @@ const handlers = {
   [actions.setCurrencyUnit]: (state, action) => ({
     ...state,
     ...{ units: action.payload }
+  }),
+  [actions.setOrder]: (state, action) => ({
+    ...state,
+    ...{ order: action.payload }
+  }),
+  [actions.setShopDetail]: (state, action) => ({
+    ...state,
+    ...{ shop: action.payload }
   })
 }
 

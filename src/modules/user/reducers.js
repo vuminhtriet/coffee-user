@@ -10,7 +10,8 @@ const defaultState = {
   userOrders: [],
   cities: [],
   userPayments: [],
-  userImage: null
+  userImage: null,
+  order: null
 }
 
 const handlers = {
@@ -37,6 +38,10 @@ const handlers = {
   [actions.setUserOrders]: (state, action) => ({
     ...state,
     ...{ userOrders: action.payload }
+  }),
+  [actions.setOrderDetail]: (state, action) => ({
+    ...state,
+    ...{ order: action.payload }
   }),
   [actions.setCities]: (state, action) => ({
     ...state,

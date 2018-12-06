@@ -16,6 +16,7 @@ import ShopInformationPage from '../screens/ShopInformationPage'
 import ProductManagementPage from '../screens/ProductManagementPage'
 import ProcessingCartPage from '../screens/ProcessingCartPage'
 import OrderManagementPage from '../screens/OrderManagementPage'
+import BookManagementPage from '../screens/BookManagementPage'
 import UserPage from '../screens/UserPage'
 import UserInformationPage from '../screens/UserInformationPage'
 import CategoryPage from '../screens/CategoryPage'
@@ -35,6 +36,7 @@ import UserCartPage from '../screens/UserCartPage'
 import ChatHistoryPage from '../screens/ChatHistoryPage'
 import ChatDetailPage from '../screens/ChatDetailPage'
 import UserOrderManagementPage from '../screens/UserOrderManagementPage'
+import UserBookManagementPage from '../screens/UserBookManagementPage'
 import EditProductPage from '../screens/EditProductPage'
 import StoreCategoryProductPage from '../screens/StoreCategoryProductPage'
 import SearchProductPage from '../screens/SearchProductPage'
@@ -45,6 +47,7 @@ import ShopPaymentMethodPage from '../screens/ShopPaymentMethodPage'
 import ShopShippingTypePage from '../screens/ShopShippingTypePage'
 import UserPaymentMethodPage from '../screens/UserPaymentMethodPage'
 import BookDetailPage from '../screens/BookDetailPage'
+import BookConfirmPage from '../screens/BookConfirmPage'
 const { width, height } = Dimensions.get('window')
 
 export const SCREENS = {
@@ -63,10 +66,12 @@ export const SCREENS = {
   ProductManagement: 'ProductManagement',
   ProcessingCart: 'ProcessingCart',
   OrderManagement: 'OrderManagement',
+  BookManagement: 'BookManagement',
   UserSetting: 'UserSetting',
   UserInformation: 'UserInformation',
   BoughtProductPage: 'BoughtProductPage',
   UserOrderManagement: 'UserOrderManagement',
+  UserBookManagement: 'UserBookManagement',
   ShopPaymentMethod: 'ShopPaymentMethod',
   ShopShippingType: 'ShopShippingType',
   UserPaymentMethod: 'UserPaymentMethod',
@@ -91,6 +96,7 @@ export const SCREENS = {
 
   //Book:
   BookDetailPage: 'BookDetailPage',
+  BookConfirmPage: 'BookConfirmPage',
 
   // Store:
   StoreDetail: 'StoreDetailPage',
@@ -239,6 +245,9 @@ export default ({ token = undefined, store = {} }) => {
       [SCREENS.OrderManagement]: {
         screen: OrderManagementPage
       },
+      [SCREENS.BookManagement]: {
+        screen: BookManagementPage
+      },
       [SCREENS.EditProductPage]: {
         screen: EditProductPage
       }
@@ -258,6 +267,9 @@ export default ({ token = undefined, store = {} }) => {
       },
       [SCREENS.UserOrderManagement]: {
         screen: UserOrderManagementPage
+      },
+      [SCREENS.UserBookManagement]: {
+        screen: UserBookManagementPage
       }
     }, defaultStackConfig)
   }
@@ -392,6 +404,9 @@ export default ({ token = undefined, store = {} }) => {
     },
     [SCREENS.BookDetailPage]: {
       screen: BookDetailPage
+    },
+    [SCREENS.BookConfirmPage]: {
+      screen: BookConfirmPage
     }
   }, defaultStackConfig)
 

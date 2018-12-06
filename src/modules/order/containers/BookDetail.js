@@ -10,23 +10,24 @@ import { MODULE_NAME as USER_MODULE } from '../../user/models'
 export const mapDispatchToProps = (dispatch, props) => ({
   bookTable: (token, information, contact) => {
     try {
-      const url = `${TEST_URL}/api/members/${user.id}`
+      const url = `${TEST_URL}/api/orders`
       return loading(dispatch, async () => {
         const response = await fetch({
           url,
-          method: 'PATCH',
+          method: 'POST',
           // headers: {
           //   Authorization: token
           // },
           data: {
-            displayName: user.displayName,
-            birthdate: moment(user.birthdate).format(),
-            isMale: user.gender,
-            address: {
-              cityId: address.selectedCity,
-              districtId: address.selectedDistrict,
-              fullAddress: address.address
-            }
+            customerName: contact.displayName,
+            orderTime: moment(information.dateTime).format(),
+            customerAmount: information.amount,
+            customerEmail: contact.email,
+            customerPhone: contact.phone,
+            shopId: information.shopId,
+            memberId: information.id,
+            orderCode: Math.random().toString(36).substring(7),
+            status: 0
           }
         }, dispatch)
         // TODO: fetch register
@@ -44,7 +45,7 @@ export const mapDispatchToProps = (dispatch, props) => ({
 
 const mapStateToProps = state => ({
   user: state[USER_MODULE].user,
-  token: state[MODULE_NAME].token
+  token: state[USER_MODULE].token
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(BookDetail)
