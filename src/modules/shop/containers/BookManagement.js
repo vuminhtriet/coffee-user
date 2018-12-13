@@ -8,13 +8,19 @@ import { MODULE_NAME as MODULE_SHOP } from '../models'
 import { MODULE_NAME as MODULE_USER } from '../../user/models'
 
 const mapDispatchToProps = (dispatch, props) => ({
-  getOrders: (id, token) => {
+  getOrders: (id, token, chosenOption, chosenStatus) => {
     try {
-      const filter = {
+      let filter = {
         where: {
           'shopId': id
-        }
+        },
+        order: chosenOption
       }
+
+      if(chosenStatus === 0 || chosenStatus === 1 || chosenStatus === 2 || chosenStatus === 3){
+        filter.where["status"] = chosenStatus
+      }
+
       const url = `${TEST_URL}/api/orders?filter=${JSON.stringify(filter)}`
       return loading(dispatch, async () => {
         const response = await fetch({

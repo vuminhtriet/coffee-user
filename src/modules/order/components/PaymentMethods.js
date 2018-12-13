@@ -16,7 +16,8 @@ import Modal from 'react-native-modal'
 import QRCode from 'react-native-qrcode'
 import ImageResizer from 'react-native-image-resizer'
 import { PAYMENT_METHODS } from '../models'
-const ImagePicker = require('react-native-image-picker')
+// const ImagePicker = require('react-native-image-picker')
+import ImagePicker from 'react-native-image-picker'
 
 const options = {
   title: 'Upload your payment proof',

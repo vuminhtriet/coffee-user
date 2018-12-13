@@ -17,6 +17,9 @@ import ProductManagementPage from '../screens/ProductManagementPage'
 import ProcessingCartPage from '../screens/ProcessingCartPage'
 import OrderManagementPage from '../screens/OrderManagementPage'
 import BookManagementPage from '../screens/BookManagementPage'
+import ShopPointManagementPage from '../screens/ShopPointManagementPage'
+import ShopDetailPointListPage from '../screens/ShopDetailPointListPage'
+import AddReceiptPage from '../screens/AddReceiptPage'
 import UserPage from '../screens/UserPage'
 import UserInformationPage from '../screens/UserInformationPage'
 import CategoryPage from '../screens/CategoryPage'
@@ -37,6 +40,9 @@ import ChatHistoryPage from '../screens/ChatHistoryPage'
 import ChatDetailPage from '../screens/ChatDetailPage'
 import UserOrderManagementPage from '../screens/UserOrderManagementPage'
 import UserBookManagementPage from '../screens/UserBookManagementPage'
+import UserQrPage from '../screens/UserQrPage'
+import UserPointManagementPage from '../screens/UserPointManagementPage'
+import UserDetailPointListPage from '../screens/UserDetailPointListPage'
 import EditProductPage from '../screens/EditProductPage'
 import StoreCategoryProductPage from '../screens/StoreCategoryProductPage'
 import SearchProductPage from '../screens/SearchProductPage'
@@ -67,11 +73,16 @@ export const SCREENS = {
   ProcessingCart: 'ProcessingCart',
   OrderManagement: 'OrderManagement',
   BookManagement: 'BookManagement',
+  PointManagement: 'PointManagement',
+  DetailPointList: 'DetailPointList',
   UserSetting: 'UserSetting',
   UserInformation: 'UserInformation',
   BoughtProductPage: 'BoughtProductPage',
   UserOrderManagement: 'UserOrderManagement',
   UserBookManagement: 'UserBookManagement',
+  UserPointManagement: 'UserPointManagement',
+  UserDetailPointList: 'UserDetailPointList',
+  UserQr: 'UserQr',
   ShopPaymentMethod: 'ShopPaymentMethod',
   ShopShippingType: 'ShopShippingType',
   UserPaymentMethod: 'UserPaymentMethod',
@@ -90,6 +101,9 @@ export const SCREENS = {
   UserCart: 'UserCartPage',
   SearchProductPage: 'SearchProductPage',
   SearchPage: 'SearchPage',
+
+  //Recepit
+  AddReceiptPage: 'AddReceiptPage',
 
   // Cart:
   Cart: 'CartPage',
@@ -236,6 +250,9 @@ export default ({ token = undefined, store = {} }) => {
       [SCREENS.AddProductPage]: {
         screen: AddProductPage
       },
+      [SCREENS.AddReceiptPage]: {
+        screen: AddReceiptPage
+      },
       [SCREENS.ProductManagement]: {
         screen: ProductManagementPage
       },
@@ -247,6 +264,12 @@ export default ({ token = undefined, store = {} }) => {
       },
       [SCREENS.BookManagement]: {
         screen: BookManagementPage
+      },
+      [SCREENS.PointManagement]: {
+        screen: ShopPointManagementPage
+      },
+      [SCREENS.DetailPointList]: {
+        screen: ShopDetailPointListPage
       },
       [SCREENS.EditProductPage]: {
         screen: EditProductPage
@@ -270,7 +293,16 @@ export default ({ token = undefined, store = {} }) => {
       },
       [SCREENS.UserBookManagement]: {
         screen: UserBookManagementPage
-      }
+      },
+      [SCREENS.UserQr]: {
+        screen: UserQrPage
+      },
+      [SCREENS.UserPointManagement]: {
+        screen: UserPointManagementPage
+      },
+      [SCREENS.UserDetailPointList]: {
+        screen: UserDetailPointListPage
+      },
     }, defaultStackConfig)
   }
 

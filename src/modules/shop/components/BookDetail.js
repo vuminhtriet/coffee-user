@@ -161,7 +161,7 @@ export default class BookDetail extends Component {
                   {/* Display name */}
                   <View style={{ flex: 1 }}>
                     <Text style={{ fontSize: 16, marginBottom: 7 }}>
-                    {'Người dùng tạo đơn: '}</Text>  
+                    {'Người tạo: '}</Text>  
                     <Text style={{fontWeight: 'bold', fontSize: 18}}>{order.member.displayName}</Text>
                   </View>
                 </View>

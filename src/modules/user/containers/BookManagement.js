@@ -7,14 +7,20 @@ import { fetch, loading } from '../../../common/effects'
 import { BASE_URL, TEST_URL } from '../../../common/models'
 
 const mapDispatchToProps = (dispatch, props) => ({
-  getOrders: async (id, token) => {
+  getOrders: async (id, token, chosenOption, chosenStatus) => {
     try {
-      const filter = {
+      let filter = {
         include: 'shop',
         where: {
           memberId: id
-        }
+        },
+        order: chosenOption
       }
+
+      if(chosenStatus === 0 || chosenStatus === 1 || chosenStatus === 2 || chosenStatus === 3){
+        filter.where["status"] = chosenStatus
+      }
+
       const url = `${TEST_URL}/api/orders?filter=${JSON.stringify(filter)}`
       return loading(dispatch, async () => {
         const response = await fetch({

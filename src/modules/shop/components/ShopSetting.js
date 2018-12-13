@@ -13,7 +13,8 @@ import { FormValidationMessage, Button, Icon, Card, ListItem, FormLabel } from '
 import { SCREENS } from '../../../common/screens'
 import Modal from '../../../common/components/elements/Modal'
 import LoginForm from '../../user/containers/LoginForm';
-const ImagePicker = require('react-native-image-picker')
+// const ImagePicker = require('react-native-image-picker')
+import ImagePicker from 'react-native-image-picker'
 
 const options = {
   title: 'Đăng hình của bạn',
@@ -68,6 +69,12 @@ const MENU_LIST = [
     iconName: 'table',
     iconType: 'font-awesome',
     screen: SCREENS.BookManagement
+  },
+  {
+    title: 'Quản lý Tích Điểm',
+    iconName: 'list-alt',
+    iconType: 'font-awesome',
+    screen: SCREENS.PointManagement
   },
   // {
   //   title: 'In Processing Orders',

@@ -28,7 +28,8 @@ import MultiSelect from 'react-native-multiple-select'
 import ProductPriceEdit from '../containers/ProductPriceEdit'
 import ProductPrice from '../containers/ProductPrice'
 import CategoryList from '../containers/CategoryList'
-const ImagePicker = require('react-native-image-picker')
+// const ImagePicker = require('react-native-image-picker')
+import ImagePicker from 'react-native-image-picker'
 const { height } = Dimensions.get('window')
 import { TextInputMask } from 'react-native-masked-text'
 import { validatePhoneNumber } from '../../../common/utils/validate'

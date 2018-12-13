@@ -14,3 +14,8 @@ export const setUserPayment = createAction(`${MODULE_NAME}_setUserPayment`)
 export const addUserPayments = createAction(`${MODULE_NAME}_addUserPayments`)
 
 export const setUserImage = createAction(`${MODULE_NAME}_setUserImage`)
+
+export const getUserPoints = createAction(`${MODULE_NAME}_getUserPoints`)
+export const getDetailPointLists = createAction(`${MODULE_NAME}_getDetailPointLists`)
+export const loadMoreUserPoints = createAction(`${MODULE_NAME}_loadMoreUserPoints`)
+export const loadMoreDetailPointLists = createAction(`${MODULE_NAME}_loadMoreDetailPointLists`)

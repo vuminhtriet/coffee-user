@@ -20,7 +20,11 @@ export const setShippingType = createAction(`${MODULE_NAME}_setShippingType`)
 export const setShopCategories = createAction(`${MODULE_NAME}_setShopCategories`)
 
 export const getShopProducts = createAction(`${MODULE_NAME}_getShopProducts`)
+export const getUserPoints = createAction(`${MODULE_NAME}_getUserPoints`)
+export const getDetailPointLists = createAction(`${MODULE_NAME}_getDetailPointLists`)
 export const loadMoreShopProducts = createAction(`${MODULE_NAME}_loadMoreShopProducts`)
+export const loadMoreUserPoints = createAction(`${MODULE_NAME}_loadMoreUserPoints`)
+export const loadMoreDetailPointLists = createAction(`${MODULE_NAME}_loadMoreDetailPointLists`)
 export const setShopImage = createAction(`${MODULE_NAME}_setShopImage`)
 
 export const deleteShopPayment = createAction(`${MODULE_NAME}_deleteShopPayment`)

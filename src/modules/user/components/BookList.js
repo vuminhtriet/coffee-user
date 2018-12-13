@@ -31,6 +31,20 @@ class OrderItem extends PureComponent {
       itemHeight,
       item
     } = this.props
+    let status = ''
+    if(item.status === 0) {
+      status = 'Chờ xác nhận'
+    }
+    else if(item.status === 1){
+      status = 'Đã hủy'
+    }
+    else if(item.status === 2){
+      status = 'Đã xác nhận'
+    }
+    else if(item.status === 3){
+      status = 'Kết thúc'
+    }
+
     return (
       <TouchableOpacity
         style={{
@@ -96,25 +110,29 @@ class OrderItem extends PureComponent {
               : <Text numberOfLines = {2} style={{ }}>{`không xác định`}</Text>
               }
               {item.status === 0 &&
-                <Text numberOfLines = {1} style={{alignContent: 'flex-end', fontWeight: 'bold'
-                    , alignItems: 'flex-end', justifyContent: 'flex-end', fontSize: 18, color: '#E0C4BE'}}>
-                    {`Chờ xác nhận`} 
-                    </Text>}
-                {item.status === 1 &&
-                <Text numberOfLines = {1} style={{alignContent: 'flex-end', fontWeight: 'bold'
-                    , alignItems: 'flex-end', justifyContent: 'flex-end', fontSize: 18, color: 'red'}}>
-                    {`Đã hủy`} 
-                    </Text>}
-                {item.status === 2 &&
-                <Text numberOfLines = {1} style={{alignContent: 'flex-end', fontWeight: 'bold'
-                    , alignItems: 'flex-end', justifyContent: 'flex-end', fontSize: 18, color: 'green'}}>
-                    {`Đã xác nhận`} 
-                    </Text>}
-                {item.status === 3 &&
-                <Text numberOfLines = {1} style={{alignContent: 'flex-end', fontWeight: 'bold'
-                    , alignItems: 'flex-end', justifyContent: 'flex-end', fontSize: 18, color: 'green'}}>
-                    {`Kết thúc`} 
-                    </Text>}
+              <Text numberOfLines = {1} style={{alignContent: 'flex-end', fontWeight: 'bold'
+                  , alignItems: 'flex-end', justifyContent: 'flex-end', fontSize: 18, color: '#E0C4BE'}}>
+                  {`Chờ xác nhận`} 
+                  </Text>}
+              {item.status === 1 &&
+              <Text numberOfLines = {1} style={{alignContent: 'flex-end', fontWeight: 'bold'
+                  , alignItems: 'flex-end', justifyContent: 'flex-end', fontSize: 18, color: 'red'}}>
+                  {`Đã hủy`} 
+                  </Text>}
+              {item.status === 2 &&
+              <Text numberOfLines = {1} style={{alignContent: 'flex-end', fontWeight: 'bold'
+                  , alignItems: 'flex-end', justifyContent: 'flex-end', fontSize: 18, color: 'green'}}>
+                  {`Đã xác nhận`} 
+                  </Text>}
+              {item.status === 3 &&
+              <Text numberOfLines = {1} style={{alignContent: 'flex-end', fontWeight: 'bold'
+                  , alignItems: 'flex-end', justifyContent: 'flex-end', fontSize: 18, color: 'green'}}>
+                  {`Kết thúc`} 
+                  </Text>}
+              {/* <Text numberOfLines = {1} style={{alignContent: 'flex-end', fontWeight: 'bold', marginBottom: 0
+                , alignItems: 'flex-end', justifyContent: 'flex-end', fontSize: 18, color: 'green'}}>
+                {status} 
+                </Text> */}
             </View>
           </View>
         </View>

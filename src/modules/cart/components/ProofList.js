@@ -9,7 +9,8 @@ import { Card, Button } from 'react-native-elements'
 import HeaderFilter from '../../../common/components/elements/HeaderFilter'
 import ImageResizer from 'react-native-image-resizer'
 import { PAYMENT_TYPE } from '../../../common/models';
-const ImagePicker = require('react-native-image-picker')
+// const ImagePicker = require('react-native-image-picker')
+import ImagePicker from 'react-native-image-picker'
 const options = {
   title: 'Upload your payment proof',
   storageOptions: {

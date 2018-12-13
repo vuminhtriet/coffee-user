@@ -16,7 +16,8 @@ import moment from 'moment'
 const day = moment().get('date')
 const month = moment().get('month')
 
-const ImagePicker = require('react-native-image-picker')
+// const ImagePicker = require('react-native-image-picker')
+import ImagePicker from 'react-native-image-picker'
 
 const options = {
   title: 'Đăng hình của bạn',
@@ -232,6 +233,20 @@ export default class UserSetting extends Component {
               onPress={() => token && navigation.navigate(SCREENS.UserBookManagement)}
               leftIcon={{ name: 'table', type: 'font-awesome' }}
               title='Quản Lý Đơn Đặt Chỗ'
+              hideChevron
+              containerStyle={{ borderBottomWidth: 0, borderTopWidth: 0 }}
+            />
+            <ListItem
+              onPress={() => token && navigation.navigate(SCREENS.UserQr)}
+              leftIcon={{ name: 'qrcode', type: 'font-awesome' }}
+              title='Mã Qr Của Bạn'
+              hideChevron
+              containerStyle={{ borderBottomWidth: 0, borderTopWidth: 0 }}
+            />
+            <ListItem
+              onPress={() => token && navigation.navigate(SCREENS.UserPointManagement)}
+              leftIcon={{ name: 'table', type: 'font-awesome' }}
+              title='Quản Lý Tích Điểm'
               hideChevron
               containerStyle={{ borderBottomWidth: 0, borderTopWidth: 0 }}
             />

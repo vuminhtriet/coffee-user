@@ -47,7 +47,7 @@ class HeaderSearch extends PureComponent {
           inputStyle={{ backgroundColor: 'white' }}
         />
 
-        <View style={styles.notificationContainer}>
+        {/* <View style={styles.notificationContainer}>
           <Icon
             name='comment'
             size={26}
@@ -60,7 +60,7 @@ class HeaderSearch extends PureComponent {
             size={26}
             style={styles.icon}
             onPress={onBack || null} />
-        </View>
+        </View> */}
       </View>
     )
   }

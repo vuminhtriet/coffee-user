@@ -213,7 +213,7 @@ export default class ProductDetailPage extends Component {
     const { navigation } = this.props
     const productItem = navigation.getParam('productItem', {})
     const filter =
-    {"include":{"products":[{"reviewProducts":["member"]}]}}
+    {"include":[{"products":[{"reviewProducts":["member"]}]},"reviewShops"]}
     const url = `${TEST_URL}/api/shops/${productItem.shopId}?filter=${JSON.stringify(filter)}`
 
     this.setState({ loading: true }, () => {

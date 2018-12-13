@@ -12,6 +12,8 @@ const defaultState = {
   shopDeliveryMethods: [],
   orders: [],
   order: null,
+  userPoints: [],
+  pointDetailLists: [],
   carts: [],
   shopImages: []
 }
@@ -97,9 +99,25 @@ const handlers = {
     ...state,
     ...{ shopProducts: action.payload }
   }),
+  [actions.getUserPoints]: (state, action) => ({
+    ...state,
+    ...{ userPoints: action.payload }
+  }),
+  [actions.getDetailPointLists]: (state, action) => ({
+    ...state,
+    ...{ pointDetailLists: action.payload }
+  }),
   [actions.loadMoreShopProducts]: (state, action) => ({
     ...state,
     ...{ shopProducts: [...state.shopProducts, ...action.payload] }
+  }),
+  [actions.loadMoreUserPoints]: (state, action) => ({
+    ...state,
+    ...{ userPoints: [...state.userPoints, ...action.payload] }
+  }),
+  [actions.loadMoreDetailPointLists]: (state, action) => ({
+    ...state,
+    ...{ pointDetailLists: [...state.pointDetailLists, ...action.payload] }
   }),
   [actions.setShopImage]: (state, action) => {
     return {

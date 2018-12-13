@@ -79,7 +79,7 @@ export default class ShopInfo extends Component {
             <Text>Đồ uống</Text>
           </View>
           <View style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: 'red', fontSize: 22 }}>{shopInfo.avgRating || 0}</Text>
+            <Text style={{ color: 'red', fontSize: 22 }}>{shopInfo.reviewShops.length || 0}</Text>
             <Text>Đánh giá</Text>
           </View>
         </View>

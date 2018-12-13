@@ -166,3 +166,117 @@ export const SHOP_SORT_LIST = [
     type: 0
   },
 ]
+
+export const BOOK_OPTION_LIST = [
+  {
+    id: 1,
+    title: 'Thời gian đặt gần nhất',
+    value: 'orderTime DESC',
+    type: 1
+  },
+  {
+    id: 2,
+    title: 'Thời gian đặt xa nhất',
+    value: 'orderTime ASC',
+    type: 0
+  },
+  {
+    id: 3,
+    title: 'Thời gian tạo gần nhất',
+    value: 'dateCreatedAt DESC',
+    type: 0
+  },
+  {
+    id: 4,
+    title: 'Thời gian tạo xa nhất',
+    value: 'dateCreatedAt ASC',
+    type: 0
+  },
+  {
+    id: 5,
+    title: 'Số người nhiều nhất',
+    value: 'customerAmount DESC',
+    type: 0
+  },
+  {
+    id: 6,
+    title: 'Số người ít nhất',
+    value: 'customerAmount ASC',
+    type: 0
+  }
+]
+
+export const BOOK_STATUS_LIST = [
+  {
+    id: 1,
+    title: 'Trạng thái: Chưa xác nhận',
+    value: 0,
+    type: 0
+  },
+  {
+    id: 2,
+    title: 'Trạng thái: Xác nhận',
+    value: 2,
+    type: 0
+  },
+  {
+    id: 3,
+    title: 'Trạng thái: Đã hủy',
+    value: 1,
+    type: 0
+  },
+  {
+    id: 4,
+    title: 'Trạng thái: Khách đã tới',
+    value: 3,
+    type: 0
+  },
+  {
+    id: 5,
+    title: 'Tất cả',
+    value: 4,
+    type: 1
+  },
+]
+
+export const POINT_SORT_LIST = [
+  {
+    id: 1,
+    title: 'Điểm nhiều nhất',
+    value: 'avgRating DESC',
+    type: 1
+  },
+  {
+    id: 2,
+    title: 'Điểm ít nhất',
+    value: 'shopName ASC',
+    type: 0
+  }
+]
+
+export const DETAIL_POINT_SORT_LIST = [
+  {
+    id: 1,
+    title: 'Điểm nhiều nhất',
+    value: 'avgRating DESC',
+    type: 1
+  },
+  {
+    id: 2,
+    title: 'Điểm ít nhất',
+    value: 'shopName ASC',
+    type: 0
+  },
+  {
+    id: 3,
+    title: 'Thời gian tạo gần nhất',
+    value: 'dateCreatedAt DESC',
+    type: 0
+  },
+  {
+    id: 4,
+    title: 'Thời gian tạo xa nhất',
+    value: 'dateCreatedAt ASC',
+    type: 0
+  },
+]

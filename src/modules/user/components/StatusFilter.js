@@ -8,7 +8,7 @@ import {
 import { ListItem, List, Card, CheckBox } from 'react-native-elements'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
 import HeaderTitle from '../../../common/components/elements/HeaderTitle'
-import { PRODUCT_SORT_LIST } from '../../../common/models';
+import { BOOK_STATUS_LIST } from '../../../common/models';
 
 class SortItem extends PureComponent {
   _onPress = () => {
@@ -17,7 +17,7 @@ class SortItem extends PureComponent {
   }
 
   render() {
-    const { id, title, isChecked } = this.props
+    const { id, title, isChecked, chooseStatus, value } = this.props
     return (
       <ListItem
         key={id}
@@ -35,7 +35,7 @@ class SortItem extends PureComponent {
   }
 }
 
-export default class ProductSortList extends Component {
+export default class StatusFilter extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -44,7 +44,7 @@ export default class ProductSortList extends Component {
   }
 
   render() {
-    const { toggleSort, sortType, onSort } = this.props
+    const { closeModal, onSort, chooseStatus, chosenStatus } = this.props
     return (
       <View style={{
         width: '100%',
@@ -64,7 +64,7 @@ export default class ProductSortList extends Component {
         })
       }}>
         <TouchableOpacity
-          onPress={toggleSort}
+          onPress={closeModal}
           style={{
             position: 'absolute',
             width: '100%',
@@ -83,12 +83,13 @@ export default class ProductSortList extends Component {
           titleStyle={{ textAlign: 'left' }}
         >
           {
-            PRODUCT_SORT_LIST.map((item) => (
+            BOOK_STATUS_LIST.map((item) => (
               <SortItem
+                chooseStatus={chooseStatus}
                 id={item.id}
                 title={item.title}
                 value={item.value}
-                isChecked={item.id === sortType.id}
+                isChecked={item.id === chosenStatus.id}
                 onSort={onSort}
               />
             ))

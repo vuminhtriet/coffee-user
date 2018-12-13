@@ -8,7 +8,7 @@ import {
 import { ListItem, List, Card, CheckBox } from 'react-native-elements'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
 import HeaderTitle from '../../../common/components/elements/HeaderTitle'
-import { PRODUCT_SORT_LIST } from '../../../common/models';
+import { POINT_SORT_LIST } from '../../../common/models';
 
 class SortItem extends PureComponent {
   _onPress = () => {
@@ -83,7 +83,7 @@ export default class ProductSortList extends Component {
           titleStyle={{ textAlign: 'left' }}
         >
           {
-            PRODUCT_SORT_LIST.map((item) => (
+            POINT_SORT_LIST.map((item) => (
               <SortItem
                 id={item.id}
                 title={item.title}

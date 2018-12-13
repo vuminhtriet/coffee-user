@@ -7,26 +7,20 @@ import DefaultPage from '../common/hocs/defaultPage'
 import ModalWrapper from '../common/components/elements/Modal'
 import HeaderTitle from '../common/components/elements/HeaderTitle'
 import BookManagement from '../modules/user/containers/BookManagement'
-import SortList from '../modules/shop/components/SortList'
+import UserBookFilter from '../modules/user/components/UserBookFilter'
 
 export default class UserBookManagementPage extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      openSort: false
+      openSort: false,
+      chosenStatus: '',
+      chosenOption: ''
     }
-    this.onSortType = this.onSortType.bind(this)
-  }
-
-  onSortType () {
-    const { openSort } = this.state
-    this.setState({
-      openSort: !openSort
-    })
   }
 
   render () {
-    const { openSort } = this.state
+    // const {  } = this.state
     const { navigation } = this.props
     return (
       <DefaultPage
@@ -36,20 +30,30 @@ export default class UserBookManagementPage extends Component {
         <View style={{ width: '100%' }}>
           <HeaderTitle
             canBack={false} onBack={() => navigation.goBack()}
-            onSort={this.onSortType}
+            // onSort={this.onSortType}
             title='Đơn đặt chỗ của tôi'
           />
         </View>
         <View style={{ width: '100%', flex: 1 }}>
-          <BookManagement navigation={navigation} />
+          <BookManagement navigation={navigation} 
+            // chosenOption={chosenOption}
+            // chosenStatus={chosenStatus}
+            />
         </View>
-        <ModalWrapper
+        {/* <ModalWrapper
           animationType='slide'
           transparent={false}
           visible={openSort}
         >
-          <SortList toggleSort={this.onSortType} />
-        </ModalWrapper>
+          <UserBookFilter
+            toggleFilter={this.onFilter}
+            // onFilter={this.onFilter}
+            chooseOption={this.chooseOption}
+            chosenOption={chosenOption}
+            chooseStatus={this.chooseStatus}
+            chosenStatus={chosenStatus}
+          />
+        </ModalWrapper> */}
       </DefaultPage>
     )
   }

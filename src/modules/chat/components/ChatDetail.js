@@ -17,7 +17,8 @@ import ChatItem from './ChatItem'
 import { STRING_DELIMITER } from '../models'
 import styles from '../styles/chatDetailStyles'
 import { SCREENS } from '../../../common/screens'
-const ImagePicker = require('react-native-image-picker')
+// const ImagePicker = require('react-native-image-picker')
+import ImagePicker from 'react-native-image-picker'
 const { height } = Dimensions.get('window')
 
 const options = {

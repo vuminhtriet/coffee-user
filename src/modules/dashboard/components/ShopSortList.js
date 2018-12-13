@@ -74,7 +74,7 @@ export default class ShopSortList extends Component {
           }}
         />
         <Card
-          title='Sort by:'
+          title='Tìm theo:'
           containerStyle={{
             width: '80%',
             height: '80%',

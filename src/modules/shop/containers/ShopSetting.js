@@ -14,7 +14,11 @@ import {
   setShopPayment,
   setShopDeliveryMethods,
   setShopCategories,
-  loadMoreShopProducts
+  loadMoreShopProducts,
+  getUserPoints,
+  loadMoreUserPoints,
+  getDetailPointLists,
+  loadMoreDetailPointLists
 } from '../actions'
 import { MODULE_NAME as SHOP_MODULE } from '../models'
 import { MODULE_NAME as USER_MODULE } from '../../user/models'
@@ -158,6 +162,70 @@ export const mapDispatchToProps = (dispatch, props) => ({
       return false
     }
   },
+  getUserPoints: async (shop, page = 0, sort = 'avgRating DESC') => {
+    try {
+      var filter = {
+        "where": {
+          "shopId": shop.id
+        },
+        "include":{
+          "relation":"member"
+         },
+        "order":sort
+      }
+
+      const url = `${TEST_URL}/api/points?filter=${JSON.stringify(filter)}`
+      const response = await axios({
+        url
+      })
+      if (response && response.data) {
+        if (response.data.length === 0) {
+          return false
+        }
+        if (page === 0) {
+          dispatch(getUserPoints([...response.data]))
+        } else {
+          dispatch(loadMoreUserPoints([...response.data]))
+        }
+        return true
+      }
+      return false
+    } catch (error) {
+      return false
+    }
+  },
+
+  getDetailPointLists: async (shop, page = 0, sort = 'avgRating DESC', memberId) => {
+    try {
+      var filter = {
+        "where": {
+          "memberId": memberId,
+          "shopId": shop.id
+        },
+        "order":sort
+      }
+
+      const url = `${TEST_URL}/api/shops/${shop.id}/products?filter=${JSON.stringify(filter)}`
+      const response = await axios({
+        url
+      })
+      if (response && response.data) {
+        if (response.data.length === 0) {
+          return false
+        }
+        if (page === 0) {
+          dispatch(getDetailPointLists([...response.data]))
+        } else {
+          dispatch(loadMoreDetailPointLists([...response.data]))
+        }
+        return true
+      }
+      return false
+    } catch (error) {
+      return false
+    }
+  },
+
   getShopImages: async (shop) => {
     try {
       const response = await axios({

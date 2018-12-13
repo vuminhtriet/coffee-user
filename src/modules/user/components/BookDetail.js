@@ -82,7 +82,7 @@ export default class BookDetail extends Component {
     })
   }
 
-  deleteOrder = async () => {
+  deleteBook = () => {
     const { deleteOrder, token, onBack, getOrders, id } = this.props
     Alert.alert(
       'Xác nhận',
@@ -337,7 +337,7 @@ export default class BookDetail extends Component {
                 alignItems: 'center'
               }}>
               <View style={{ flex: 1 }}>
-                <Button title='Xóa đơn' onPress={this.delete} />
+                <Button title='Xóa đơn' onPress={() => this.deleteBook()} />
               </View>
               {/* <View style={{ flex: 1 }}>
                 <Button
@@ -365,7 +365,7 @@ export default class BookDetail extends Component {
                 alignItems: 'center'
               }}>
               <View style={{ flex: 1 }}>
-                <Button title='Xóa đơn' onPress={this.delete} />
+                <Button title='Xóa đơn' onPress={() => this.deleteBook()} />
               </View>
               {/* <View style={{ flex: 1 }}>
                 <Button

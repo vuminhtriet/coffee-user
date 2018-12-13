@@ -10,6 +10,8 @@ const defaultState = {
   userOrders: [],
   cities: [],
   userPayments: [],
+  userPoints: [],
+  pointDetailLists: [],
   userImage: null,
   order: null
 }
@@ -50,6 +52,21 @@ const handlers = {
   [actions.setUserPayment]: (state, action) => ({
     ...state,
     ...{ userPayments: action.payload }
+  }),[actions.getUserPoints]: (state, action) => ({
+    ...state,
+    ...{ userPoints: action.payload }
+  }),
+  [actions.getDetailPointLists]: (state, action) => ({
+    ...state,
+    ...{ pointDetailLists: action.payload }
+  }),
+  [actions.loadMoreUserPoints]: (state, action) => ({
+    ...state,
+    ...{ userPoints: [...state.userPoints, ...action.payload] }
+  }),
+  [actions.loadMoreDetailPointLists]: (state, action) => ({
+    ...state,
+    ...{ pointDetailLists: [...state.pointDetailLists, ...action.payload] }
   }),
   [actions.addUserPayments]: (state, action) => ({
     ...state,
