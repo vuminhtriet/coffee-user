@@ -367,7 +367,7 @@ export default class ProductDetailPage extends Component {
             <View style={{ width: '100%', flex: 1 }}>
               <HeaderTitle
                 onBack={this.onBack}
-                title={thisProduct.productName.toUpperCase()} />
+                title={thisProduct.productName} />
               <View style={{ flex: 1 }}>
                 <ScrollView
                   style={{ paddingBottom: 100 }}

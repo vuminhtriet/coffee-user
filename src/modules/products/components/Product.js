@@ -472,7 +472,7 @@ export default class Product extends Component {
                   precision: 0
                 }}
                 style={{ 
-                  width: '80%', fontSize: 15, marginLeft: 15
+                  width: '100%', fontSize: 15, marginLeft: 15
                 }}
                 value={ productPrices}
                 onChangeText={(text) => {
@@ -486,7 +486,7 @@ export default class Product extends Component {
           <ListItem
             containerStyle={{ backgroundColor: '#FFFFFF' }}
             leftIcon={{ name: 'format-align-left' }}
-            title='Category'
+            title='Danh mục'
             onPress={this.addCategoryModal}
           />
 

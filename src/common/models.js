@@ -243,13 +243,13 @@ export const POINT_SORT_LIST = [
   {
     id: 1,
     title: 'Điểm nhiều nhất',
-    value: 'avgRating DESC',
+    value: 'point DESC',
     type: 1
   },
   {
     id: 2,
     title: 'Điểm ít nhất',
-    value: 'shopName ASC',
+    value: 'point ASC',
     type: 0
   }
 ]
@@ -258,13 +258,13 @@ export const DETAIL_POINT_SORT_LIST = [
   {
     id: 1,
     title: 'Điểm nhiều nhất',
-    value: 'avgRating DESC',
+    value: 'point DESC',
     type: 1
   },
   {
     id: 2,
     title: 'Điểm ít nhất',
-    value: 'shopName ASC',
+    value: 'point ASC',
     type: 0
   },
   {

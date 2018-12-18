@@ -13,7 +13,7 @@ import {
   } from '../actions'
 
 export const mapDispatchToProps = (dispatch, props) => ({
-    getDetailPoints: async (userPoint, page = 0, sort = 'avgRating DESC') => {
+    getDetailPoints: async (userPoint, page = 0, sort = 'point DESC') => {
         try {
           var filter = {
             "where":{

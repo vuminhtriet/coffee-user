@@ -162,7 +162,7 @@ export const mapDispatchToProps = (dispatch, props) => ({
       return false
     }
   },
-  getUserPoints: async (shop, page = 0, sort = 'avgRating DESC') => {
+  getUserPoints: async (shop, page = 0, sort = 'point DESC') => {
     try {
       var filter = {
         "where": {
@@ -195,7 +195,7 @@ export const mapDispatchToProps = (dispatch, props) => ({
     }
   },
 
-  getDetailPointLists: async (shop, page = 0, sort = 'avgRating DESC', memberId) => {
+  getDetailPointLists: async (shop, page = 0, sort = 'point DESC', memberId) => {
     try {
       var filter = {
         "where": {

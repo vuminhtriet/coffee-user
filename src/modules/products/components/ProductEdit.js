@@ -480,7 +480,7 @@ export default class ProductEdit extends Component {
                   precision: 0
                 }}
                 style={{ 
-                  width: '80%', fontSize: 15, marginLeft: 15
+                  width: '100%', fontSize: 15, marginLeft: 15
                 }}
                 placeholder='Nhập giá tiền'
                 value={ productPrices}
@@ -495,7 +495,7 @@ export default class ProductEdit extends Component {
           <ListItem
             containerStyle={{ backgroundColor: '#FFFFFF' }}
             leftIcon={{ name: 'format-align-left' }}
-            title='Category'
+            title='Danh mục'
             onPress={this.addCategoryModal}
           />
           {privateCategoryId && (<ListItem

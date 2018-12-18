@@ -20,7 +20,7 @@ import { POINT_SORT_LIST } from '../../../common/models';
 const { width } = Dimensions.get('window')
 const NUMBER_OF_ITEM = 2
 const ITEM_WITDH = (width) / NUMBER_OF_ITEM
-const ITEM_HEIGHT = 270
+const ITEM_HEIGHT = 250
 const DEFAULT_SORT_TYPE = POINT_SORT_LIST.find(item => item.type === 1)
 
 class PointItem extends PureComponent {
@@ -195,7 +195,7 @@ class PointManagement extends Component {
           onLeftComponent={
             <View style={{ marginLeft: 12 }}>
               <TouchableOpacity
-                onPress={this.toggleSort}
+                // onPress={this.toggleSort}
               >
                 <Text style={{ fontSize: 16 }}>Tìm theo {sortType.title.toLowerCase()}</Text>
               </TouchableOpacity>

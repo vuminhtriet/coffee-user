@@ -221,7 +221,7 @@ class PointManagement extends Component {
           onLeftComponent={
             <View style={{ marginLeft: 12 }}>
               <TouchableOpacity
-                onPress={this.toggleSort}
+                // onPress={this.toggleSort}
               >
                 <Text style={{ fontSize: 16 }}>Tìm theo {sortType.title.toLowerCase()}</Text>
               </TouchableOpacity>

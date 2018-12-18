@@ -96,7 +96,7 @@ class DetailPointManagement extends Component {
 
   componentWillMount() {
     const { getDetailPoints, userPoint } = this.props
-
+    
     this.setState({ refreshing: true }, async () => {
       await getDetailPoints(userPoint)
       this.setState({ refreshing: false, page: 1, isLastedPage: false })

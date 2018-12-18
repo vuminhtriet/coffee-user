@@ -34,7 +34,7 @@ export default class UserInformationPage extends Component {
       >
         <View style={{ width: '100%' }}>
           <HeaderTitle
-            title='General Information'
+            title='Thông tin chung'
             onBack={() => navigation.goBack()} />
         </View>
         <View style={{ width: '100%', flex: 1 }}>

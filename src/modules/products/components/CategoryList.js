@@ -84,7 +84,7 @@ export default class CategoryList extends Component {
         styles={{ flexDirection: 'column', height }}
       >
         <View style={{ width: '100%', height: undefined }}>
-          <HeaderTitle title='Add Category' onBack={this.goBack} />
+          <HeaderTitle title='Thêm danh mục' onBack={this.goBack} />
         </View>
         <View style={{ width: '100%', flex: 1 }}>
           <FlatList

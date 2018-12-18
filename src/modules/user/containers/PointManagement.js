@@ -13,7 +13,7 @@ import {
   } from '../actions'
 
 export const mapDispatchToProps = (dispatch, props) => ({
-    getUserPoints: async (user, page = 0, sort = 'avgRating DESC') => {
+    getUserPoints: async (user, page = 0, sort = 'point DESC') => {
         try {
           var filter = {
             "where":{
@@ -52,23 +52,37 @@ const mapStateToProps = state => ({
   token: state[MODULE_NAME].token,
   // userPoints: state[MODULE_NAME].userPoints,
   userPoints: (() => {
-    let finalLists = []
-    state[MODULE_NAME].userPoints.map(item => {
-      if(finalLists.length === 0){
-        finalLists.push(item)
-      }
-      else {
-        finalLists.map(item1 => {
-          if(item1.shopId !== item.shopId){
-            finalLists.push(item)
-          }
-          else{
-            item1.point += item.point
-          }
-        })
-      }
-    })
-    return finalLists.sort(function(a, b){return b.point-a.point})
+    // let finalLists = []
+    // state[MODULE_NAME].userPoints.map(item => {
+    //   if(finalLists.length === 0){
+    //     finalLists.push(item)
+    //   }
+    //   else {
+    //     finalLists.map(item1 => {
+    //       if(item1.shopId !== item.shopId){
+    //         finalLists.push(item)
+    //       }
+    //       else{
+    //         item1.point += item.point
+    //       }
+    //     })
+    //   }
+    // })
+    var result = [];
+    state[MODULE_NAME].userPoints.reduce(function (res, value) {
+        if (!res[value.shopId]) {
+            res[value.shopId] = {
+                point: 0,
+                shopId: value.shopId,
+                memberId: value.memberId,
+                shop: value.shop
+            };
+            result.push(res[value.shopId])
+        }
+        res[value.shopId].point += value.point
+        return res;
+    }, {})
+    return result.sort(function(a, b){return b.point-a.point})
   })(),
 })
 

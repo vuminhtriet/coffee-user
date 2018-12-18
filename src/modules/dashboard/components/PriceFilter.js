@@ -121,7 +121,7 @@ export default class PriceFilter extends Component {
               precision: 0
             }}
             style={{ 
-              width: '80%', fontSize: 15, marginLeft: 15
+              width: '100%', fontSize: 15, marginLeft: 15
             }}
             value={chosenPrice.min}
             onChangeText={(text) => {
@@ -145,7 +145,7 @@ export default class PriceFilter extends Component {
               precision: 0
             }}
             style={{ 
-              width: '80%', fontSize: 15, marginLeft: 15
+              width: '80%', fontSize: 15, marginLeft: 15, marginTop: 20
             }}
             value={chosenPrice.max}
             onChangeText={(text) => {
