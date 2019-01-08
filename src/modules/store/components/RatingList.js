@@ -42,7 +42,7 @@ class RatingItem extends PureComponent {
 
             {/* Display name - CreatedAt */}
             <View style={{ paddingBottom: 5 }}>
-              <Text style={{ color: '#adc0d1' }}>{this.props.displayName} - {moment(this.props.createdAt).format('LLL')}</Text>
+              <Text style={{ color: '#adc0d1' }}>{this.props.displayName} - {moment(this.props.createdAt).format('DD-MM-YYYY HH:mm')}</Text>
             </View>
 
             {/* IsVerified */}
@@ -97,7 +97,7 @@ class RatingItem extends PureComponent {
                 <Text style={{ fontSize: 16, paddingLeft: 15 }}>{this.props.title}</Text>
               </View>
               <Text style={{ paddingBottom: 10, lineHeight: 24 }}>{this.props.comment}</Text>
-              <Text style={{ color: '#adc0d1' }}>{moment(this.props.createdAt).format('LLL')}</Text>
+              <Text style={{ color: '#adc0d1' }}>{moment(this.props.createdAt).format('DD-MM-YYYY HH:mm')}</Text>
             </View>
 
             {/* IsVerified */}

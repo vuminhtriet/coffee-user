@@ -31,7 +31,7 @@ import { getDashboardPopularProducts } from '../actions'
 //   'limit': PAGE_SIZE
 // }
 
-const filter = {"include":{"relation":"shop","scope":{"fields":"shopName"}},"where":{"productIsPopular":true},"order":"avgRating%20DESC"}
+const filter = {"include":{"relation":"shop","scope":{"fields":"shopName"}},"where":{"productIsPopular":true},"order":"avgRating%20DESC","limit": 6}
 
 const mapDispatchToProps = (dispatch, props) => ({
   getPopularProducts: async (token) => {

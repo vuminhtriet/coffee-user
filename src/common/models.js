@@ -22,7 +22,7 @@ export const TEST_URL = 'https://drink2.herokuapp.com'
 
 export const GOOGLE_URL = 'https://maps.googleapis.com'
 
-export const API_KEY = 'AIzaSyDq0Q6p0m2bJr5BDxobYqCTupsK0gLJxdg'
+export const API_KEY = 'AIzaSyBGvkfSkkoYyz7nvbD9PQ2sCwYEqajIe0Q'
 
 export const CART_STATUS = {
   SHOPPING: 0,
@@ -170,25 +170,25 @@ export const SHOP_SORT_LIST = [
 export const BOOK_OPTION_LIST = [
   {
     id: 1,
-    title: 'Thời gian đặt gần nhất',
+    title: 'Ngày đặt gần nhất',
     value: 'orderTime DESC',
     type: 1
   },
   {
     id: 2,
-    title: 'Thời gian đặt xa nhất',
+    title: 'Ngày đặt xa nhất',
     value: 'orderTime ASC',
     type: 0
   },
   {
     id: 3,
-    title: 'Thời gian tạo gần nhất',
+    title: 'Ngày tạo gần nhất',
     value: 'dateCreatedAt DESC',
     type: 0
   },
   {
     id: 4,
-    title: 'Thời gian tạo xa nhất',
+    title: 'Ngày tạo xa nhất',
     value: 'dateCreatedAt ASC',
     type: 0
   },
@@ -227,7 +227,7 @@ export const BOOK_STATUS_LIST = [
   },
   {
     id: 4,
-    title: 'Trạng thái: Khách đã tới',
+    title: 'Trạng thái: Đã tới',
     value: 3,
     type: 0
   },
@@ -269,13 +269,13 @@ export const DETAIL_POINT_SORT_LIST = [
   },
   {
     id: 3,
-    title: 'Thời gian tạo gần nhất',
+    title: 'Ngày tạo gần nhất',
     value: 'dateCreatedAt DESC',
     type: 0
   },
   {
     id: 4,
-    title: 'Thời gian tạo xa nhất',
+    title: 'Ngày tạo xa nhất',
     value: 'dateCreatedAt ASC',
     type: 0
   },

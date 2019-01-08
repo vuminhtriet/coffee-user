@@ -122,7 +122,7 @@ export default class PriceFilter extends Component {
         }}
       >
         <View style={{ width: '100%', height: 40 }}>
-          <HeaderTitle title='Vị trí' />
+          <HeaderTitle  onBack={closeModal} title='Vị trí' />
         </View>
         <SubHeader
           onLeftComponent={

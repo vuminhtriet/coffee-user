@@ -63,6 +63,29 @@ export const mapDispatchToProps = (dispatch, props) => ({
     } catch (error) {
       return false
     }
+  },
+  updateOrder: (id, status, token) => {
+    try {
+      const url = `${TEST_URL}/api/orders/${id}`
+      return loading(dispatch, async () => {
+        const response = await fetch({
+          url,
+          method: 'PATCH',
+          data: {
+            status: status
+          }
+          // headers: {
+          //   Authorization: token
+          // }
+        }, dispatch)
+        if (response && response.data) {
+          return true
+        }
+        return false
+      })
+    } catch (error) {
+      return false
+    }
   }
 })
 

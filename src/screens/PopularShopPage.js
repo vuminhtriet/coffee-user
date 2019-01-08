@@ -25,7 +25,7 @@ export default class ShopsPage extends Component {
         style={{ flexDirection: 'column' }}
       >
         <View style={{ display: 'flex', width: '100%' }}>
-          <Header onBack={this.onBack} title='Thương hiệu phổ biến' />
+          <Header onBack={this.onBack} title='Quán cafe phổ biến' />
         </View>
         <PagePopularShops/>
       </DefaultPage>

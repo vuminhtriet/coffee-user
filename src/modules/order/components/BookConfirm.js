@@ -61,6 +61,28 @@ export default class BookConfirm extends Component {
     })
   }
 
+  updateOrder = async (status) => {
+    const { updateOrder, token, order, navigation } = this.props
+    Alert.alert(
+      'Xác nhận',
+      'Bạn có muốn hủy đơn?',
+      [
+        { text: 'Thoát', onPress: () => { } },
+        {
+          text: 'OK', onPress: async () => {
+            this.setState({ loading: true })
+              const response = await updateOrder(order.id, status, token)
+              if (response) {
+                this.setState({ loading: false })
+                return navigation.goBack()
+              }
+          }
+        }
+      ],
+      { cancelable: false }
+    )
+  }
+
   delete () {
     const { deleteOrder, navigation, shop, order } = this.props
     // const { shop, order } = this.state
@@ -113,7 +135,9 @@ export default class BookConfirm extends Component {
             marginTop: 15 }}>
             {shop.shopName}</Text>
             <Text style={{ fontWeight: 'bold', fontSize: 16, marginLeft: 15 }}>
-            {shop.address && shop.address.fullAddress}</Text> 
+            {shop.address && 
+              `${shop.address.fullAddress}, ${isNaN(shop.address.districtName) ? '' : 'Quận '}${shop.address.districtName 
+              || ''}, ${shop.address.cityName || ''}`}</Text> 
             <Text style={{ fontWeight: 'bold', fontSize: 16, marginLeft: 15, marginBottom: 12 }}>
             {shop.shopPhoneNumber}</Text>
             <Image
@@ -145,8 +169,8 @@ export default class BookConfirm extends Component {
                 </Text>
             </View>
               <Text style={{ fontSize: 14, marginLeft: 48 }}>
-              {'Mã đặt là ' + order.orderCode + ' cho ' + order.customerAmount + 
-              ' người vào lúc ' + moment(order.orderTime).format('lll')}
+              {'Mã đặt là ' + order.orderCode.toUpperCase() + ' cho ' + order.customerAmount + 
+              ' người vào lúc ' + moment(order.orderTime).format('DD-MM-YYYY HH:mm')}
               {/* {JSON.stringify(order) || ''} */}
               </Text> 
           </View>
@@ -284,10 +308,38 @@ export default class BookConfirm extends Component {
                     }}
                 />
                 <Text style={{ fontWeight: 'bold', paddingLeft: 10, fontSize: 18 }}>
-                Kết thúc (khách đã tới)
+                Kết thúc (đã tới)
                 </Text>
             </View>
             }
+
+          {order.status === 0 && 
+          <View
+            style={{
+              margin: 0,
+              width: undefined,
+              height: undefined
+            }}>
+            <View
+              style={{
+                width: undefined,
+                height: 60,
+                marginTop: 10,
+                flexDirection: 'row',
+                alignItems: 'center'
+              }}>
+              <View style={{ flex: 1 }}>
+                <Button title='Hủy đơn' onPress={() => this.updateOrder(1)} />
+              </View>
+              {/* <View style={{ flex: 1 }}>
+                <Button
+                  title='Đặt bàn'
+                  onPress={this.submit}
+                  backgroundColor='#E44C4C'
+                />
+              </View> */}
+            </View>
+          </View> }
 
           {order.status === 1 && 
           <View
@@ -305,7 +357,35 @@ export default class BookConfirm extends Component {
                 alignItems: 'center'
               }}>
               <View style={{ flex: 1 }}>
-                <Button title='Xóa đơn' onPress={this.delete} />
+                <Button title='Tạo đơn mới' onPress={this.delete} />
+              </View>
+              {/* <View style={{ flex: 1 }}>
+                <Button
+                  title='Đặt bàn'
+                  onPress={this.submit}
+                  backgroundColor='#E44C4C'
+                />
+              </View> */}
+            </View>
+          </View> }
+
+          {order.status === 2 && 
+          <View
+            style={{
+              margin: 0,
+              width: undefined,
+              height: undefined
+            }}>
+            <View
+              style={{
+                width: undefined,
+                height: 60,
+                marginTop: 10,
+                flexDirection: 'row',
+                alignItems: 'center'
+              }}>
+              <View style={{ flex: 1 }}>
+                <Button title='Hủy đơn' onPress={() => this.updateOrder(1)} />
               </View>
               {/* <View style={{ flex: 1 }}>
                 <Button
@@ -333,7 +413,7 @@ export default class BookConfirm extends Component {
                 alignItems: 'center'
               }}>
               <View style={{ flex: 1 }}>
-                <Button title='Xóa đơn' onPress={this.delete} />
+                <Button title='Tạo đơn mới' onPress={this.delete} />
               </View>
               {/* <View style={{ flex: 1 }}>
                 <Button

@@ -8,13 +8,13 @@ import {
 } from 'react-native'
 import { withNavigation } from 'react-navigation'
 import { SCREENS } from '../../../common/screens'
-import CategoryItem from '../../../common/components/widgets/CategoryItem'
+import StyleItem from '../../../common/components/widgets/StyleItem'
 
 const { width } = Dimensions.get('window')
 const ITEM_WITDH = (width - 10) / 3
 const ITEM_HEIGHT = 190
 
-class DashboardCategoryList extends PureComponent {
+class DashboardStyleList extends PureComponent {
   constructor(props) {
     super(props)
     this.state = {
@@ -23,14 +23,14 @@ class DashboardCategoryList extends PureComponent {
   }
 
   componentDidMount() {
-    const { getCategories } = this.props
-    getCategories()
+    const { getStyles } = this.props
+    getStyles()
   }
 
   async componentWillReceiveProps(nextProps) {
-    const { refreshing, stopRefresh, getCategories } = this.props
+    const { refreshing, stopRefresh, getStyles } = this.props
     if (nextProps.refreshing !== refreshing && nextProps.refreshing) {
-      await getCategories()
+      await getStyles()
       stopRefresh()
     }
   }
@@ -38,27 +38,27 @@ class DashboardCategoryList extends PureComponent {
   _keyExtractor = (item, index) => item.id
 
   _renderItem = ({ item }) => {
-    const image = item.images && item.images.length > 0 && item.images[0].fullUrl
+    const image = item.styleImg && item.styleImg.length > 0 && item.styleImg
     return (
-      <CategoryItem
+      <StyleItem
         id={item.id}
         image={image}
         name={item.name}
-        totalProduct={item.totalProduct}
+        totalShop={item.shops.length}
         itemWidth={ITEM_WITDH}
         itemHeight={ITEM_HEIGHT}
       />
     )
   }
 
-  _onNavigateToCategoryPage = () => {
+  _onNavigateToStylePage = () => {
     const { navigation } = this.props
-    navigation.navigate(SCREENS.Category)
+    navigation.navigate(SCREENS.Style)
   }
 
   render() {
     const { refreshing } = this.state
-    const { categories } = this.props
+    const { styles } = this.props
     return (
       <View
         style={{
@@ -72,21 +72,21 @@ class DashboardCategoryList extends PureComponent {
           style={{ width: '100%', flexDirection: 'row', height: 40, alignItems: 'center', backgroundColor: '#FFFFFF' }}
         >
           <View style={{ flex: 1, paddingLeft: 10 }}>
-            <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#E64B47' }}>Categories</Text>
+            <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#E64B47' }}>Phong cách quán</Text>
           </View>
           <View style={{ flex: 1, paddingRight: 10 }}>
-            <TouchableOpacity onPress={this._onNavigateToCategoryPage}>
-              <Text style={{ textAlign: 'right', color: '#67B6F4' }}>VIEW ALL</Text>
+            <TouchableOpacity onPress={this._onNavigateToStylePage}>
+              <Text style={{ textAlign: 'right', color: '#67B6F4' }}>XEM TẤT CẢ</Text>
             </TouchableOpacity>
           </View>
         </View>
 
         <View style={{ paddingHorizontal: 5 }}>
           <FlatList
-            data={categories}
+            data={styles}
             numColumns={3}
             refreshing={refreshing}
-            extraData={categories}
+            extraData={styles}
             keyExtractor={this._keyExtractor}
             renderItem={this._renderItem}
             onEndReachedThreshold={1}
@@ -96,4 +96,4 @@ class DashboardCategoryList extends PureComponent {
   }
 }
 
-export default withNavigation(DashboardCategoryList)
+export default withNavigation(DashboardStyleList)

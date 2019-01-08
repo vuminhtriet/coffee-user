@@ -160,23 +160,27 @@ export default class BookDetail extends Component {
 
                   {/* Display name */}
                   <View style={{ flex: 1 }}>
-                    <Text style={{ fontSize: 16, marginBottom: 7 }}>
-                    {'Người tạo: '}</Text>  
-                    <Text style={{fontWeight: 'bold', fontSize: 18}}>{order.member.displayName}</Text>
+                    <Text style={{ fontSize: 16, marginBottom: 4 }}>
+                    {'Tạo bởi user: '}</Text>  
+                    <Text style={{fontWeight: 'bold', fontSize: 18, marginBottom: 6}}>{order.member.displayName}</Text>
+                    <Text style={{ fontSize: 16, marginBottom: 4 }}>
+                    {'Vào lúc: '}</Text>  
+                    <Text style={{fontWeight: 'bold', fontSize: 18}}>
+                    {moment(order.dateCreatedAt).format('DD-MM-YYYY HH:mm')}</Text>
                   </View>
                 </View>
 
                 <FormLabel>
-                  Tên người đặt
+                  Tên người liên hệ
                 </FormLabel>
                 <Text style={{ fontSize: 16, marginTop: 7, marginLeft: 20 }}>
                 {order.customerName}</Text>   
 
                 <FormLabel>
-                  Thời gian đặt
+                  Ngày đặt
                 </FormLabel>
                 <Text style={{ fontSize: 16, marginTop: 7, marginLeft: 20 }}>
-                {moment(order.orderTime).format('lll')}</Text>  
+                {moment(order.orderTime).format('DD-MM-YYYY HH:mm')}</Text>  
 
                 <FormLabel>
                   Số lượng người
@@ -200,7 +204,7 @@ export default class BookDetail extends Component {
                   Mã đặt
                 </FormLabel>
                 <Text style={{ fontSize: 16, marginLeft: 7, marginLeft: 20 }}>
-                {order.orderCode}</Text>
+                {order.orderCode.toUpperCase()}</Text>
 
                 <FormLabel>
                   Trạng thái đơn
@@ -294,7 +298,7 @@ export default class BookDetail extends Component {
                   </View>
                   <View style={{ flex: 1 }}>
                     <Button
-                      title='Xác nhận khách tới'
+                      title='Xác nhận đã tới'
                       onPress={() => this.updateOrder(order.id, 3)}
                       backgroundColor='#E44C4C'
                     />
@@ -318,7 +322,7 @@ export default class BookDetail extends Component {
                     alignItems: 'center'
                   }}>
                   <View style={{ flex: 1 }}>
-                    <Button title='Khách đã tới - kết thúc đơn' 
+                    <Button title='Đã tới - kết thúc đơn' 
                     disable={true} />
                   </View>
                 </View>

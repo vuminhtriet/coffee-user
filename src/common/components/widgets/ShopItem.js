@@ -80,8 +80,11 @@ class ShopItem extends Component {
               flexDirection: 'column',
               justifyContent: 'flex-start'
             }}>
-              {item.address && item.address.fullAddress
-              ? <Text numberOfLines = {2} style={{ }}>{`${item.address.fullAddress}`}</Text>
+              {item.address && item.address.fullAddress && item.address.districtName && item.address.cityName
+              ? <Text numberOfLines = {2} style={{ }}>
+              {`${item.address.fullAddress}, ${isNaN(item.address.districtName) ? '' : 'Quận '}${item.address.districtName 
+                || ''}, ${item.address.cityName || ''}`}
+              </Text>
               : <Text numberOfLines = {2} style={{ }}>{`không xác định`}</Text>
               }
             </View>
@@ -92,26 +95,29 @@ class ShopItem extends Component {
                 justifyContent: 'space-between'
               }}
             >
-              <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-                <View>
-                  <Rating
-                    type='custom'
-                    fractions={1}
-                    startingValue={item.avgRating || 0}
-                    readonly
-                    imageSize={14}
-                    showRating={false}
-                    ratingImage={require('../../../assets/images/star.png')}
-                    ratingColor='#FF6A00'
-                    ratingBackgroundColor='transparent'
-                    style={{ paddingVertical: 10 }} />
-                </View>
+              <View style={{ display: 'flex', flexDirection: 'row'}}>
+              <View style = {{flexDirection: 'row'}}>
+                <Rating
+                  type='custom'
+                  fractions={1}
+                  startingValue={item.avgRating || 0}
+                  readonly
+                  imageSize={16}
+                  showRating={false}
+                  ratingImage={require('../../../assets/images/star.png')}
+                  ratingColor='#FF6A00'
+                  ratingBackgroundColor='transparent'
+                  style={{ paddingVertical: 10 }} />
+                <Text style={{ marginBottom: 0, paddingTop: 8, textAlign: 'left' }}>
+                        {` (${item.numRating || 0})`}
+                      </Text>
+              </View>
                 {/* <View style = {{marginBottom: 7 }}> */}
                   {/* <Text style={{ marginBottom: 0, paddingTop: 7, textAlign: 'left' }}>
                     {` (${item.totalUserRating || 0})`}
                   </Text> */}
                   {item.shopLocation && item.shopLocation.lat && item.shopLocation.lng
-                    ? <Text style={{fontWeight: 'bold', marginLeft: 60,
+                    ? <Text style={{fontWeight: 'bold', marginLeft: 35,
                     textAlign: 'left', marginBottom: 0, paddingTop: 7}}>
                       {`${getDistanceFromLatLonInKm(latlng.lat, latlng.lng, item.shopLocation.lat, item.shopLocation.lng)} km`} 
                     </Text>

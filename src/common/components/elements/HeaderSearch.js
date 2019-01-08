@@ -28,6 +28,10 @@ class HeaderSearch extends PureComponent {
     const { onSearch } = this.props
     onSearch(text)
   }
+  _onBack = () => {
+    const { navigation } = this.props
+    navigation.goBack()
+  }
 
   render () {
     const {
@@ -37,8 +41,15 @@ class HeaderSearch extends PureComponent {
     
     return (
       <View style={styles.container}>
+        <View style={styles.iconContainer}>
+          <MaterialIcon
+            name={'arrow-back'}
+            size={26}
+            style={styles.icon}
+            onPress={this._onBack} />
+        </View>
         <SearchBar
-          searchIcon={false} // You could have passed `null` too
+          searchIcon={null} // You could have passed `null` too
           onChangeText={this._onChangeText}
           onClear={this._onClear}
           onSubmitEditing={this._onSearch}

@@ -30,7 +30,7 @@ import { TEST_URL } from '../../../common/models'
 //   'limit': 20,
 //   'order': 'createdAt DESC'
 // }
-const filter = {"include":{"relation":"shop","scope":{"fields":"shopName"}},"order":"productCreatedAt%20DESC"}
+const filter = {"include":{"relation":"shop","scope":{"fields":"shopName"}},"order":"productCreatedAt%20DESC","limit": 6}
 
 const mapDispatchToProps = (dispatch, props) => ({
   getTodayProducts: async () => {
@@ -51,7 +51,7 @@ const mapDispatchToProps = (dispatch, props) => ({
 })
 
 const mapStateToProps = state => ({
-  products: state[MODULE_NAME].todayProducts.slice(0,15)
+  products: state[MODULE_NAME].todayProducts.slice(0,6)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardProductToday)

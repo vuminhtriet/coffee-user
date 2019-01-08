@@ -12,7 +12,8 @@ import {
   setCities,
   setUserLocation,
   setUserLatLng,
-  setStyle
+  setStyle,
+  setBrand
 } from '../../../common/actions/common'
 
 const style = [{"id": 1,"name":"Vintage"},{"id": 2,"name":"Scandinavian"},
@@ -82,6 +83,22 @@ const mapDispatchToProps = (dispatch, props) => ({
       })
       if (response && response.data) {
         return dispatch(setStyle(response.data))
+      }
+      return false
+    } catch (error) {
+      return false
+    }
+  },
+
+  getBrand: async () => {
+    try {
+      const url = `${TEST_URL}/api/brands`
+      const response = await axios({
+        url,
+        timeout: 10000
+      })
+      if (response && response.data) {
+        return dispatch(setBrand(response.data))
       }
       return false
     } catch (error) {

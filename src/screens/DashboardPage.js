@@ -10,12 +10,13 @@ import DefaultPage from '../common/hocs/defaultPage'
 import DashboardHeaderSearch from '../modules/dashboard/containers/DashboardHeaderSearch'
 import DashboardFlashSaleProducts from '../modules/dashboard/containers/DashboardFlashSaleProducts'
 import DashboardPopularProducts from '../modules/dashboard/containers/DashboardPopularProducts'
-import DashboardCategoryList from '../modules/dashboard/containers/DashboardCategoryList'
+import DashboardStyleList from '../modules/dashboard/containers/DashboardStyleList'
 import DashboardProductToday from '../modules/dashboard/containers/DashboardProductToday'
 import DashboardSlider from '../modules/dashboard/containers/DashboardSlider'
 import DashboardLocation from '../modules/dashboard/containers/DashboardLocation'
 import DashboardNearbyShops from '../modules/dashboard/containers/DashboardNearbyShops'
-import DashboardPopularShops from '../modules/dashboard/containers/DashboardPopularShops';
+import DashboardPopularShops from '../modules/dashboard/containers/DashboardPopularShops'
+import DashboardPopularBrands from '../modules/dashboard/containers/DashboardPopularBrands'
 
 const ALL_REFRESH = 4
 const MAX_TIME = 8000
@@ -115,10 +116,14 @@ export default class DashboardPage extends Component {
             refreshing={refreshing}
             stopRefresh={this.stopRefresh}
           /> */}
-          {/* <DashboardCategoryList
+          <DashboardStyleList
             refreshing={refreshing}
             stopRefresh={this.stopRefresh}
-          /> */}
+          />
+          <DashboardPopularBrands
+            refreshing={refreshing}
+            stopRefresh={this.stopRefresh}
+          />
           <DashboardNearbyShops
             refreshing={refreshing}
             stopRefresh={this.stopRefresh}

@@ -15,7 +15,8 @@ const defaultState = {
   userPoints: [],
   pointDetailLists: [],
   carts: [],
-  shopImages: []
+  shopImages: [],
+  tempAddress: {}
 }
 
 const handlers = {
@@ -114,6 +115,10 @@ const handlers = {
   [actions.loadMoreUserPoints]: (state, action) => ({
     ...state,
     ...{ userPoints: [...state.userPoints, ...action.payload] }
+  }),
+  [actions.setTempAddress]: (state, action) => ({
+    ...state,
+    ...{ tempAddress: action.payload }
   }),
   [actions.loadMoreDetailPointLists]: (state, action) => ({
     ...state,

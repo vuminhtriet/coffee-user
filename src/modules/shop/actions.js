@@ -31,3 +31,5 @@ export const deleteShopPayment = createAction(`${MODULE_NAME}_deleteShopPayment`
 export const deleteShopShippingType = createAction(`${MODULE_NAME}_deleteShopShippingType`)
 
 export const deleteProof = createAction(`${MODULE_NAME}_deleteProof`)
+
+export const setTempAddress = createAction(`${MODULE_NAME}_setTempAddress`)

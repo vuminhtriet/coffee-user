@@ -431,14 +431,14 @@ export default class Product extends Component {
             {errors.name &&
               (<FormValidationMessage>{errors.name}</FormValidationMessage>)}
 
-            <View style={{ width: undefined }}>
+            <View style={{ width: '100%' }}>
               <FormInput
                 value={description}
                 multiline
                 style={{
-                  height: undefined
+                  marginRight: 10
                 }}
-                inputStyle={{ width: '100%', textDecorationColor: 'black', color: 'black' }}
+                inputStyle={{ textDecorationColor: 'black', color: 'black' }}
                 containerStyle={{ minHeight: 20, marginVertical: 0, padding: 0 }}
                 placeholder='Nhập mô tả'
                 onChangeText={(text) => {
@@ -472,7 +472,7 @@ export default class Product extends Component {
                   precision: 0
                 }}
                 style={{ 
-                  width: '100%', fontSize: 15, marginLeft: 15
+                   fontSize: 15, marginLeft: 15, marginRight: 10
                 }}
                 value={ productPrices}
                 onChangeText={(text) => {

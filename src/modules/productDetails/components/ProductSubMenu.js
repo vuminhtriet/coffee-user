@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import {
   View,
   TouchableOpacity,
-  Text
+  Text,
+  Alert
 } from 'react-native'
 import Ion from 'react-native-vector-icons/Ionicons'
 import { SCREENS } from '../../../common/screens'
@@ -32,11 +33,22 @@ export default class ProductSubMenu extends Component {
 
   call = () => {
     const { shopInfo } = this.props
-    const args = {
-      number: shopInfo.shopPhoneNumber, // String value with the number to call
-      prompt: false // Optional boolean property. Determines if the user should be prompt prior to the call 
+    if (shopInfo && shopInfo.shopPhoneNumber) {
+      const args = {
+        number: shopInfo.shopPhoneNumber, // String value with the number to call
+        prompt: false // Optional boolean property. Determines if the user should be prompt prior to the call 
+      }
+      call(args).catch(console.error)
     }
-    call(args).catch(console.error)
+    else{
+      Alert.alert(
+        'Không gọi được',
+        'Quán chưa cung cấp số điện thoại.',
+        [
+          { text: 'OK', onPress: () => { } }
+        ]
+      )
+    }
   }
 
   render() {
@@ -53,7 +65,7 @@ export default class ProductSubMenu extends Component {
           height: 70,
           display: 'flex',
           flexDirection: 'row',
-          backgroundColor: 'white',
+          backgroundColor: '#6F4E37',
           borderTopColor: '#EFEFF4',
           borderTopWidth: 2
         }}
@@ -72,10 +84,10 @@ export default class ProductSubMenu extends Component {
           <Ion
             name={'ios-call'}
             size={30}
-            color='green'
+            color='#68FF33'
             containerStyle={{}}
           />
-          <Text style={{ fontSize: 16 }}>Gọi quán</Text>
+          <Text style={{ fontSize: 16, color: 'white' }}>Gọi quán</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={{
@@ -91,10 +103,10 @@ export default class ProductSubMenu extends Component {
           <Ion
             name={'ios-chatboxes'}
             size={30}
-            color='#FFB233'
+            color='#FFFF33'
             containerStyle={{}}
           />
-          <Text style={{ fontSize: 16 }}>Đánh giá</Text>
+          <Text style={{ fontSize: 16, color: 'white' }}>Đánh giá</Text>
         </TouchableOpacity>
       </View>
     )

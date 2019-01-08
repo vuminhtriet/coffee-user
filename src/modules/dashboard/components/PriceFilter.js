@@ -80,7 +80,7 @@ export default class PriceFilter extends Component {
         }}
       >
         <View style={{ width: '100%', height: 40 }}>
-          <HeaderTitle title='Giá' />
+          <HeaderTitle onBack={closeModal} title='Giá' />
         </View>
         <SubHeader
           onLeftComponent={
@@ -121,7 +121,7 @@ export default class PriceFilter extends Component {
               precision: 0
             }}
             style={{ 
-              width: '100%', fontSize: 15, marginLeft: 15
+              width: '90%', fontSize: 15, marginLeft: 15
             }}
             value={chosenPrice.min}
             onChangeText={(text) => {
@@ -145,7 +145,7 @@ export default class PriceFilter extends Component {
               precision: 0
             }}
             style={{ 
-              width: '80%', fontSize: 15, marginLeft: 15, marginTop: 20
+              width: '90%', fontSize: 15, marginLeft: 15, marginTop: 20
             }}
             value={chosenPrice.max}
             onChangeText={(text) => {

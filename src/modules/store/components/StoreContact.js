@@ -13,7 +13,7 @@ export default class StoreContact extends Component {
     Clipboard.setString(msg);
     Alert.alert(
       '',
-      'Text has been already copied.'
+      'Đoạn chữ đã được sao chép.'
     )
   };
 
@@ -29,7 +29,10 @@ export default class StoreContact extends Component {
   render() {
     const { shop } = this.props
     // const address = shop.addresses && shop.addresses.length > 0 ? shop.addresses.find(address => address.isDefault == true) : {}
-    const address = shop.address && shop.address.fullAddress ? shop.address.fullAddress : 'No Address'
+    const address = shop.address && shop.address.fullAddress ? 
+    `${shop.address.fullAddress}, ${isNaN(shop.address.districtName) ? '' : 'Quận '}${shop.address.districtName 
+      || ''}, ${shop.address.cityName || ''}`
+    : 'No Address'
     return (
       <View style={{
         marginTop: 7,
@@ -55,7 +58,8 @@ export default class StoreContact extends Component {
             }}
           />
           <Text style={{ paddingLeft: 10, color: '#b5b5b5', lineHeight: 22, fontSize: 14 }} onPress={() => this.setClipboardContent(shop.website)}>
-            <Text style={{ color: '#212121' }}>Website:</Text> {shop.website}
+            <Text style={{ color: '#212121' }}>Website: </Text> 
+            {shop.website || 'none'}
           </Text>
         </View>
         {/* <View style={{ display: 'flex', flexDirection: 'row' }}>
@@ -101,7 +105,8 @@ export default class StoreContact extends Component {
             }}
           />
           <Text style={{ paddingLeft: 10, color: '#b5b5b5', lineHeight: 22, fontSize: 14 }} onPress={() => this.setClipboardContent(shop.shopPhoneNumber)}>
-            <Text style={{ color: '#212121' }}>SĐT:</Text> {shop.shopPhoneNumber}
+            <Text style={{ color: '#212121' }}>SĐT: </Text> 
+            {shop.shopPhoneNumber}
           </Text>
         </View>
         <View style={{ display: 'flex', flexDirection: 'row' }}>
@@ -115,8 +120,11 @@ export default class StoreContact extends Component {
               color: '#ff6600'
             }}
           />
-          <Text style={{ paddingLeft: 10, color: '#b5b5b5', lineHeight: 22, fontSize: 14 }} onPress={() => this.setClipboardContent(address)}>
-            <Text style={{ color: '#212121' }}>Địa chỉ:</Text> {address}
+          <Text numberOfLines= {3} style={{ paddingLeft: 9, color: '#b5b5b5', 
+          lineHeight: 22, fontSize: 14, marginRight: 25 }} 
+          onPress={() => this.setClipboardContent(address)}>
+            <Text numberOfLines= {3} style={{ color: '#212121' }}>Địa chỉ: </Text> 
+            {address}
           </Text>
         </View>
       </View>

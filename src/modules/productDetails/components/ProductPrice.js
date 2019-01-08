@@ -57,6 +57,12 @@ const normalPrice = (productPrices, currencyUnits) => {
 }
 
 export default class ProductPrice extends Component {
+
+  componentDidMount() {
+    const { productItem, user, updateClick } = this.props
+    user && updateClick(user, productItem.id)
+  }
+
   render () {
     const {
       productItem,
@@ -95,7 +101,7 @@ export default class ProductPrice extends Component {
             precision: 0
           }}
           style={{ 
-            width: '100%', textAlign: 'center' ,fontSize: 20, color: '#6F4E37', fontWeight: 'bold', 
+            textAlign: 'center' ,fontSize: 20, color: '#6F4E37', fontWeight: 'bold', 
             marginBottom: 0, padding: 0
           }}
           editable={false}

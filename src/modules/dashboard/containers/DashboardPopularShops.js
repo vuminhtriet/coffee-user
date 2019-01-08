@@ -12,20 +12,13 @@ import {
   setUserLatLng
 } from '../../../common/actions/common'
 
-const filter = {
-  'include': ['images','addresses'],
-  'order': 'averageRatingValue DESC',
-  'where': {
-    'status': 1
-  },
-  'limit': PAGE_SIZE
-}
+const filter = {"where":{"isPopular":true},"order":"avgRating%20DESC","limit": 6}
 
 const mapDispatchToProps = (dispatch, props) => ({
   getDashboardPopularShops: async (token) => {
     try {
       // const url = `${BASE_URL}/api/shops?filter=${JSON.stringify(filter)}`
-      const url = `${TEST_URL}/api/shops?filter%5Bwhere%5D%5BisPopular%5D=true&filter[order]=avgRating%20DESC`
+      const url = `${TEST_URL}/api/shops?filter=${JSON.stringify(filter)}`
       // const url = `${BASE_URL}/api/shops/search?searchStr=&filter=${JSON.stringify(filter)}`
       // const url = `${BASE_URL}/api/shops/search?searchStr=&page=0&pageSize=${PAGE_SIZE}&sort=averageRatingValue DESC&options={}`
       const response = await axios({ url })

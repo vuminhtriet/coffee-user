@@ -111,14 +111,17 @@ export default class CategoryList extends Component {
       <ListItem
         roundAvatar
         onPress={() => this.showDetail(item)}
-        avatar={{source: require('../../../assets/placeholder.png')}}
+        // avatar={{source: require('../../../assets/placeholder.png')}}
           // image
           // ? { uri: image }
           // : 
           // require('../../../assets/placeholder.png')}
         key={index}
-        title={item.name}
-        subtitle={`${item.products && item.products.length} đồ uống`}
+        title={`${index + 1}. ${item.name}`}
+        // subtitle={`${item.products && item.products.length} đồ uống`}
+        subtitle={
+          <Text style={{marginLeft: 28}}>{`${item.products && item.products.length} đồ uống`}</Text>
+        }  
         rightIcon={parseInt(item.products && item.products.length) <= 0 ? { name: 'delete', color: '#E44C4C' } : undefined}
         onPressRightIcon={() => this.deleteCategory(item)}
       />

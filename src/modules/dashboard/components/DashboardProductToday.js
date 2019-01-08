@@ -76,7 +76,7 @@ class DashboardProductToday extends Component {
           style={{ width: '100%', flexDirection: 'row', height: 40, alignItems: 'center', backgroundColor: '#FFFFFF' }}
         >
           <View style={{ flex: 1, paddingLeft: 10 }}>
-            <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#E64B47' }}>Đồ uống hôm nay</Text>
+            <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#E64B47' }}>Đồ uống mới</Text>
           </View>
         </View>
 

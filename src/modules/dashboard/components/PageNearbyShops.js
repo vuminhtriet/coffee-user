@@ -232,7 +232,7 @@ export default class PageNearbyShops extends Component {
               <TouchableOpacity
                 onPress={this.toggleSort}
               >
-                <Text style={{ fontSize: 16 }}>Tìm theo {sortType.title.toLowerCase()}</Text>
+                <Text style={{ fontSize: 16 }}>Sắp xếp theo {sortType.title.toLowerCase()}</Text>
               </TouchableOpacity>
             </View>
           }

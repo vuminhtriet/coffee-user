@@ -443,9 +443,9 @@ export default class ProductEdit extends Component {
                 value={description}
                 multiline
                 style={{
-                  height: undefined
+                  marginRight: 10
                 }}
-                inputStyle={{ width: '100%', textDecorationColor: 'black', color: 'black' }}
+                inputStyle={{ textDecorationColor: 'black', color: 'black' }}
                 containerStyle={{ minHeight: 20, marginVertical: 0, padding: 0 }}
                 placeholder='Nhập mô tả'
                 onChangeText={(text) => {
@@ -480,7 +480,7 @@ export default class ProductEdit extends Component {
                   precision: 0
                 }}
                 style={{ 
-                  width: '100%', fontSize: 15, marginLeft: 15
+                  fontSize: 15, marginLeft: 15, marginRight: 11
                 }}
                 placeholder='Nhập giá tiền'
                 value={ productPrices}

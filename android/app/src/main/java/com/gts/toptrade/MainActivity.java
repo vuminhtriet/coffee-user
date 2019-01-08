@@ -1,4 +1,4 @@
-package com.gts.toptrade;
+package com.gts.drinkaway;
 
 import com.facebook.react.ReactActivity;
 

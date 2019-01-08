@@ -42,7 +42,8 @@ const mapDispatchToProps = (dispatch, props) => ({
     }
   },
   updateShop: async (token, shop, shopName, shopPhoneNumber, website, 
-    selectedCity, selectedDistrict, selectedStyle, styleName, fullAddress, lat, lng) => {
+    selectedCity, cityName, selectedDistrict, districtName, selectedStyle, styleName, 
+    selectedBrand, brandName, fullAddress, lat, lng) => {
     try {
       const url = `${TEST_URL}/api/shops/${shop.id}`
       return loading(dispatch, async () => {
@@ -63,12 +64,13 @@ const mapDispatchToProps = (dispatch, props) => ({
             address: {
               cityId: selectedCity,
               districtId: selectedDistrict,
-              fullAddress: fullAddress
+              fullAddress: fullAddress,
+              cityName: cityName,
+              districtName: districtName
             },
-            style: {
-              styId: selectedStyle,
-              name: styleName
-            }
+            styleId: selectedStyle,
+            brandId: selectedBrand,
+            // brandName: brandName
           }
         }, dispatch)
         if (response && response.data) {
@@ -111,7 +113,8 @@ const mapStateToProps = state => ({
   token: state[MODULE_USER].token,
   user: state[MODULE_USER].user,
   shopAddress: state[MODULE_NAME].shopAddress,
-  styles: state.common.style
+  styles: state.common.style,
+  brands: state.common.brands
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShopInformation)

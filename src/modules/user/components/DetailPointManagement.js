@@ -18,7 +18,7 @@ import moment from 'moment'
 import { DETAIL_POINT_SORT_LIST } from '../../../common/models';
 
 const { width } = Dimensions.get('window')
-const ITEM_HEIGHT = 80
+const ITEM_HEIGHT = 100
 const DEFAULT_SORT_TYPE = DETAIL_POINT_SORT_LIST.find(item => item.type === 1)
 
 class PointItem extends PureComponent {
@@ -55,7 +55,7 @@ class PointItem extends PureComponent {
 
             <Text numberOfLines = {1} style={{
             fontSize: 15}}>
-                {`${moment(item.dateCreatedAt).format('lll')}`}
+                {`${moment(item.dateCreatedAt).format('DD-MM-YYYY HH:mm')}`}
             </Text>
 
           </View>
@@ -64,7 +64,7 @@ class PointItem extends PureComponent {
                 {`${item.point} điểm`} 
                 </Text>
         </View>
-
+        <View style={{marginTop: 12, width: '100%', height: 1, backgroundColor: '#DCDCDC'}}/>
 
       </View>
     )
@@ -174,7 +174,7 @@ class DetailPointManagement extends Component {
               <TouchableOpacity
                 onPress={this.toggleSort}
               >
-                <Text style={{ fontSize: 16 }}>Tìm theo {sortType.title.toLowerCase()}</Text>
+                <Text style={{ fontSize: 16 }}>Sắp xếp theo {sortType.title.toLowerCase()}</Text>
               </TouchableOpacity>
             </View>
           }

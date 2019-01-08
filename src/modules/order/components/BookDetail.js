@@ -95,7 +95,7 @@ export default class BookDetail extends Component {
         if(request){
           return Alert.alert(
             'ĐẶT BÀN THÀNH CÔNG',
-            'Nhấn lại phần đặt chỗ để xem trạng thái.',
+            'Vui lòng nhấn lại phần đặt chỗ để xem trạng thái.',
             [
               {text: 'OK', onPress: () => navigation.goBack()}
             ],
@@ -194,7 +194,9 @@ export default class BookDetail extends Component {
             <Text style={{ fontWeight: 'bold', fontSize: 20, color: '#E64B47', marginLeft: 10 }}>
             {shop.shopName}</Text>
             <Text style={{ fontWeight: 'bold', fontSize: 16, marginLeft: 10 }}>
-            {shop.address && shop.address.fullAddress}</Text>  
+            {shop.address && 
+              `${shop.address.fullAddress}, ${isNaN(shop.address.districtName) ? '' : 'Quận '}${shop.address.districtName 
+              || ''}, ${shop.address.cityName || ''}`}</Text>  
             <FormLabel>
               Tên người đặt
             </FormLabel>
@@ -247,7 +249,7 @@ export default class BookDetail extends Component {
             {errors.dateTime &&
               (<FormValidationMessage>{errors.dateTime}</FormValidationMessage>)}
 
-            <FormValidationMessage>{'* 30 phút sau giờ đặt, đơn sẽ tự hủy'}</FormValidationMessage>
+            {/* <FormValidationMessage>{'* 30 phút sau giờ đặt, đơn sẽ tự hủy'}</FormValidationMessage> */}
 
             <FormLabel>
               Số lượng người

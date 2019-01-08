@@ -102,11 +102,11 @@ class OrderItem extends PureComponent {
               : <Text numberOfLines = {2} style={{ }}>{`không xác định`}</Text>
               } */}
               {item.orderTime
-              ? <Text numberOfLines = {2} style={{ }}>{`${moment(item.orderTime).format('lll')}`}</Text>
+              ? <Text numberOfLines = {2} style={{ }}>{`${moment(item.orderTime).format('DD-MM-YYYY HH:mm')}`}</Text>
               : <Text numberOfLines = {2} style={{ }}>{`không xác định`}</Text>
               }
               {item.orderCode
-              ? <Text numberOfLines = {2} style={{ }}>{`Mã đặt: ${item.orderCode}`}</Text>
+              ? <Text numberOfLines = {2} style={{ }}>{`Mã đặt: ${item.orderCode.toUpperCase()}`}</Text>
               : <Text numberOfLines = {2} style={{ }}>{`không xác định`}</Text>
               }
               {item.status === 0 &&

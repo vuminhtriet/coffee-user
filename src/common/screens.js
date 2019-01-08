@@ -22,8 +22,10 @@ import ShopDetailPointListPage from '../screens/ShopDetailPointListPage'
 import AddReceiptPage from '../screens/AddReceiptPage'
 import UserPage from '../screens/UserPage'
 import UserInformationPage from '../screens/UserInformationPage'
-import CategoryPage from '../screens/CategoryPage'
+import StylePage from '../screens/StylePage'
+import BrandPage from '../screens/BrandPage'
 import CategoryProductPage from '../screens/CategoryProductPage'
+import StyleShopPage from '../screens/StyleShopPage'
 import ProductDetailPage from '../screens/ProductDetailPage'
 import FlashSalePage from '../screens/FlashSalePage'
 import ProductsPage from '../screens/ProductsPage'
@@ -35,6 +37,7 @@ import NearbyShopPage from '../screens/NearbyShopPage'
 import BoughtProductsPage from '../screens/BoughtProductsPage'
 import CartPage from '../screens/CartPage'
 import StoreDetailPage from '../screens/StoreDetailPage'
+import BrandShopPage from '../screens/BrandShopPage'
 import UserCartPage from '../screens/UserCartPage'
 import ChatHistoryPage from '../screens/ChatHistoryPage'
 import ChatDetailPage from '../screens/ChatDetailPage'
@@ -48,6 +51,7 @@ import StoreCategoryProductPage from '../screens/StoreCategoryProductPage'
 import SearchProductPage from '../screens/SearchProductPage'
 import SearchShopPage from '../screens/SearchShopPage'
 import SearchPage from '../screens/SearchPage'
+import RecommendSearchPage from '../screens/RecommendSearchPage'
 import TabbarIcon from './components/elements/TabbarIcon'
 import ShopPaymentMethodPage from '../screens/ShopPaymentMethodPage'
 import ShopShippingTypePage from '../screens/ShopShippingTypePage'
@@ -87,7 +91,7 @@ export const SCREENS = {
   ShopShippingType: 'ShopShippingType',
   UserPaymentMethod: 'UserPaymentMethod',
   // Products:
-  Category: 'Category',
+  Style: 'Style',
   CategoryProduct: 'CategoryProduct',
   Products: 'Products',
   ProductDetail: 'ProductDetail',
@@ -101,6 +105,9 @@ export const SCREENS = {
   UserCart: 'UserCartPage',
   SearchProductPage: 'SearchProductPage',
   SearchPage: 'SearchPage',
+  RecommendSearchPage: 'RecommendSearchPage',
+
+  StyleShop: 'StyleShop',
 
   //Recepit
   AddReceiptPage: 'AddReceiptPage',
@@ -116,6 +123,8 @@ export const SCREENS = {
   StoreDetail: 'StoreDetailPage',
   StoreCategoryProduct: 'StoreCategoryProductPage',
   SearchShopPage: 'SearchShopPage',
+  BrandShopPage: 'BrandShopPage',
+  Brand: 'Brand',
 
   // Chat
   ChatHistoryPage: 'ChatHistoryPage',
@@ -389,11 +398,17 @@ export default ({ token = undefined, store = {} }) => {
     [SCREENS.DemoPage]: {
       screen: DemoPage
     },
-    [SCREENS.Category]: {
-      screen: CategoryPage
+    [SCREENS.Style]: {
+      screen: StylePage
+    },
+    [SCREENS.Brand]: {
+      screen: BrandPage
     },
     [SCREENS.CategoryProduct]: {
       screen: CategoryProductPage
+    },
+    [SCREENS.StyleShop]: {
+      screen: StyleShopPage
     },
     [SCREENS.Products]: {
       screen: ProductsPage
@@ -406,6 +421,9 @@ export default ({ token = undefined, store = {} }) => {
     },
     [SCREENS.StoreDetail]: {
       screen: StoreDetailPage
+    },
+    [SCREENS.BrandShopPage]: {
+      screen: BrandShopPage
     },
     [SCREENS.StoreCategoryProduct]: {
       screen: StoreCategoryProductPage
@@ -433,6 +451,9 @@ export default ({ token = undefined, store = {} }) => {
     },
     [SCREENS.SearchPage]: {
       screen: SearchPage
+    },
+    [SCREENS.RecommendSearchPage]: {
+      screen: RecommendSearchPage
     },
     [SCREENS.BookDetailPage]: {
       screen: BookDetailPage

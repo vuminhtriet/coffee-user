@@ -148,7 +148,7 @@ const mapDispatchToProps = (dispatch, props) => ({
     }
 
     if (options.styleId && options.styleId !== 14){
-      filter.where["style.styId"] = options.styleId
+      filter.where["styleId"] = options.styleId
     }
 
       const url = `${TEST_URL}/api/shops?filter=${JSON.stringify(filter)}`

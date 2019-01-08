@@ -30,8 +30,14 @@ export default class StoreSummary extends Component {
           </View>
           <View style={{ display: 'flex', flexDirection: 'row' }}>
             <Text style={{ paddingRight: 10, color: '#b5b5b5', lineHeight: 26, fontSize: 14 }}>
-              <Text style={{ color: '#212121' }}>Phong cách quán:</Text> {shop.style && shop.style.name ?
-               shop.style.name : ""}
+              <Text style={{ color: '#212121' }}>Phong cách quán:</Text> {shop.styleName ?
+               shop.styleName : ""}
+            </Text>
+          </View>
+          <View style={{ display: 'flex', flexDirection: 'row' }}>
+            <Text style={{ paddingRight: 10, color: '#b5b5b5', lineHeight: 26, fontSize: 14 }}>
+              <Text style={{ color: '#212121' }}>Thương hiệu:</Text> {shop.brand && shop.brand.name ?
+               shop.brand.name : ""}
             </Text>
           </View>
           {/* <View style={{ display: 'flex', flexDirection: 'row' }}>
@@ -69,7 +75,7 @@ export default class StoreSummary extends Component {
           </View>
           <View style={{ display: 'flex', flexDirection: 'row' }}>
             <Text style={{ paddingRight: 10, color: '#b5b5b5', lineHeight: 26, fontSize: 14 }}>
-              <Text style={{ color: '#212121' }}>Tham gia:</Text> {shop.dateCreatedAt ? moment(shop.dateCreatedAt).format('LL') : ''}
+              <Text style={{ color: '#212121' }}>Tham gia:</Text> {shop.dateCreatedAt ? moment(shop.dateCreatedAt).format('DD-MM-YYYY') : ''}
             </Text>
           </View>
         </View>

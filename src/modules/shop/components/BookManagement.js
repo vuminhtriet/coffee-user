@@ -140,7 +140,7 @@ export default class BookManagement extends PureComponent {
               <TouchableOpacity
                 onPress={this.toggleOption}
               >
-                <Text style={{ fontSize: 16 }}>Tìm theo {chosenOption.title.toLowerCase()}</Text>
+                <Text style={{ fontSize: 16 }}>Sắp xếp theo {chosenOption.title.toLowerCase()}</Text>
               </TouchableOpacity>
             </View>
           }
@@ -164,6 +164,7 @@ export default class BookManagement extends PureComponent {
           itemPress={this.openModal}
           data={orders}
           onRefresh={this.onRefresh}
+          getOrders={this.getOrders}
         />
         <Modal
           animationType='slide'

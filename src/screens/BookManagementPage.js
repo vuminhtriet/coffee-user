@@ -35,7 +35,7 @@ export default class BookManagementPage extends Component {
           <HeaderTitle
             canBack={false} onBack={() => navigation.goBack()}
             // onSort={this.onSortType}
-            title={`Quán lý đặt chỗ`}
+            title={`Quản lý đơn đặt chỗ`}
           />
         </View>
         <View style={{ width: '100%', flex: 1 }}>

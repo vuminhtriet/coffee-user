@@ -104,7 +104,7 @@
           /*
            * The modulo mode used when calculating the modulus: a mod n.
            * The quotient (q = a / n) is calculated according to the corresponding rounding mode.
-           * The remainder (r) is calculated as: r = a - n * q.
+           * The remainder (r) is calculated as: r = a - n *, 
            *
            * UP        0 The remainder is positive if the dividend is negative, else is negative.
            * DOWN      1 The remainder has the same sign as the dividend.
@@ -112,7 +112,7 @@
            *             equivalent to (a % n) in JavaScript.
            * FLOOR     3 The remainder has the same sign as the divisor (Python %).
            * HALF_EVEN 6 This modulo mode implements the IEEE 754 remainder function.
-           * EUCLID    9 Euclidian division. q = sign(n) * floor(a / abs(n)).
+           * EUCLID    9 Euclidian division., = sign(n) * floor(a / abs(n)).
            *             The remainder is always positive.
            *
            * The truncated division, floored division, Euclidian division and IEEE 754 remainder
@@ -784,8 +784,8 @@
                   )
             }
 
-            q = new BigNumber(s)
-            qc = q.c = []
+           , = new BigNumber(s)
+            qc =, c = []
             e = x.e - y.e
             s = dp + e + 1
 
@@ -940,14 +940,14 @@
             }
 
             if (base == BASE) {
-                  // To calculate q.e, first get the number of digits of qc[0].
+                  // To calculate, e, first get the number of digits of qc[0].
               for (i = 1, s = qc[0]; s >= 10; s /= 10, i++);
-              round(q, dp + (q.e = i + e * LOG_BASE - 1) + 1, rm, more)
+              round(q, dp + (Q e = i + e * LOG_BASE - 1) + 1, rm, more)
 
               // Caller is convertBase.
             } else {
-              q.e = e
-              q.r = +more
+             , e = e
+             , r = +more
             }
 
             return q
@@ -1653,18 +1653,18 @@
           }
 
           if (MODULO_MODE == 9) {
-              // Euclidian division: q = sign(y) * floor(x / abs(y))
+              // Euclidian division:, = sign(y) * floor(x / abs(y))
               // r = x - qy    where  0 <= r < abs(y)
             s = y.s
             y.s = 1
-            q = div(x, y, 0, 3)
+           , = div(x, y, 0, 3)
             y.s = s
-            q.s *= s
+           , s *= s
           } else {
-            q = div(x, y, 0, MODULO_MODE)
+           , = div(x, y, 0, MODULO_MODE)
           }
 
-          return x.minus(q.times(y))
+          return x.minus(Q times(y))
         }
 
       /*
@@ -2219,14 +2219,14 @@
           n0.c[0] = 0
 
           for (; ;) {
-            q = div(n, d, 0, 1)
-            d2 = d0.plus(q.times(d1))
+           , = div(n, d, 0, 1)
+            d2 = d0.plus(Q times(d1))
             if (d2.cmp(md) == 1) break
             d0 = d1
             d1 = d2
-            n1 = n0.plus(q.times(d2 = n1))
+            n1 = n0.plus(Q times(d2 = n1))
             n0 = d2
-            d = n.minus(q.times(d2 = d))
+            d = n.minus(Q times(d2 = d))
             n = d2
           }
 
@@ -3222,7 +3222,7 @@
     // deal with leading zeros
           for (var k = 0; source[k] === 0 && k < source.length - 1; ++k) string += ALPHABET[0]
     // convert digits to a string
-          for (var q = digits.length - 1; q >= 0; --q) string += ALPHABET[digits[q]]
+          for (var, = digits.length - 1;, >= 0; --q) string += ALPHABET[digits[q]]
 
           return string
         }
@@ -3814,14 +3814,14 @@
       }
 
 // (protected) divide this by m, quotient and remainder to q, r (HAC 14.20)
-// r != q, this != m.  q or r may be null.
+// r != q, this != m. , or r may be null.
       function bnpDivRemTo (m, q, r) {
         var self = this
         var pm = m.abs()
         if (pm.t <= 0) return
         var pt = self.abs()
         if (pt.t < pm.t) {
-          if (q != null) q.fromInt(0)
+          if (q != null), fromInt(0)
           if (r != null) self.copyTo(r)
           return
         }
@@ -4476,7 +4476,7 @@
 
 // (public) [this/a,this%a]
       function bnDivideAndRemainder (a) {
-        var q = new BigInteger(),
+        var, = new BigInteger(),
           r = new BigInteger()
         this.divRemTo(a, q, r)
         return new Array(q, r)
@@ -5254,7 +5254,7 @@
             /*
              * The modulo mode used when calculating the modulus: a mod n.
              * The quotient (q = a / n) is calculated according to the corresponding rounding mode.
-             * The remainder (r) is calculated as: r = a - n * q.
+             * The remainder (r) is calculated as: r = a - n *, 
              *
              * UP        0 The remainder is positive if the dividend is negative, else is negative.
              * DOWN      1 The remainder has the same sign as the dividend.
@@ -5262,7 +5262,7 @@
              *             equivalent to (a % n) in JavaScript.
              * FLOOR     3 The remainder has the same sign as the divisor (Python %).
              * HALF_EVEN 6 This modulo mode implements the IEEE 754 remainder function.
-             * EUCLID    9 Euclidian division. q = sign(n) * floor(a / abs(n)).
+             * EUCLID    9 Euclidian division., = sign(n) * floor(a / abs(n)).
              *             The remainder is always positive.
              *
              * The truncated division, floored division, Euclidian division and IEEE 754 remainder
@@ -5923,8 +5923,8 @@
                     )
               }
 
-              q = new BigNumber(s)
-              qc = q.c = []
+             , = new BigNumber(s)
+              qc =, c = []
               e = x.e - y.e
               s = dp + e + 1
 
@@ -6079,14 +6079,14 @@
               }
 
               if (base == BASE) {
-                    // To calculate q.e, first get the number of digits of qc[0].
+                    // To calculate, e, first get the number of digits of qc[0].
                 for (i = 1, s = qc[0]; s >= 10; s /= 10, i++);
-                round(q, dp + (q.e = i + e * LOG_BASE - 1) + 1, rm, more)
+                round(q, dp + (Q e = i + e * LOG_BASE - 1) + 1, rm, more)
 
                 // Caller is convertBase.
               } else {
-                q.e = e
-                q.r = +more
+               , e = e
+               , r = +more
               }
 
               return q
@@ -6792,18 +6792,18 @@
             }
 
             if (MODULO_MODE == 9) {
-                // Euclidian division: q = sign(y) * floor(x / abs(y))
+                // Euclidian division:, = sign(y) * floor(x / abs(y))
                 // r = x - qy    where  0 <= r < abs(y)
               s = y.s
               y.s = 1
-              q = div(x, y, 0, 3)
+             , = div(x, y, 0, 3)
               y.s = s
-              q.s *= s
+             , s *= s
             } else {
-              q = div(x, y, 0, MODULO_MODE)
+             , = div(x, y, 0, MODULO_MODE)
             }
 
-            return x.minus(q.times(y))
+            return x.minus(Q times(y))
           }
 
         /*
@@ -7358,14 +7358,14 @@
             n0.c[0] = 0
 
             for (; ;) {
-              q = div(n, d, 0, 1)
-              d2 = d0.plus(q.times(d1))
+             , = div(n, d, 0, 1)
+              d2 = d0.plus(Q times(d1))
               if (d2.cmp(md) == 1) break
               d0 = d1
               d1 = d2
-              n1 = n0.plus(q.times(d2 = n1))
+              n1 = n0.plus(Q times(d2 = n1))
               n0 = d2
-              d = n.minus(q.times(d2 = d))
+              d = n.minus(Q times(d2 = d))
               n = d2
             }
 
@@ -23114,11 +23114,11 @@
 
         var r, s
         deterministicGenerateK(hash, x, function (k) {
-          var Q = G.multiply(k)
+          var, = G.multiply(k)
 
           if (secp256k1.isInfinity(Q)) return false
 
-          r = Q.affineX.mod(n)
+          r =, affineX.mod(n)
           if (r.signum() === 0) return false
 
           s = k.modInverse(n).multiply(e.add(d.multiply(r))).mod(n)
@@ -23242,10 +23242,10 @@
       })
 
       ECPair.fromPublicKeyBuffer = function (buffer, network) {
-        var Q = ecurve.Point.decodeFrom(secp256k1, buffer)
+        var, = ecurve.Point.decodeFrom(secp256k1, buffer)
 
         return new ECPair(null, Q, {
-          compressed: Q.compressed,
+          compressed:, compressed,
           network: network
         })
       }
@@ -23302,7 +23302,7 @@
       }
 
       ECPair.prototype.getPublicKeyBuffer = function () {
-        return this.Q.getEncoded(this.compressed)
+        return this.Q getEncoded(this.compressed)
       }
 
       ECPair.prototype.sign = function (hash) {
@@ -23531,8 +23531,8 @@
 
   // 33 bytes: public key data (0x02 + X or 0x03 + X)
         } else {
-          var Q = ecurve.Point.decodeFrom(curve, buffer.slice(45, 78))
-    // Q.compressed is assumed, if somehow this assumption is broken, `new HDNode` will throw
+          var, = ecurve.Point.decodeFrom(curve, buffer.slice(45, 78))
+    //, compressed is assumed, if somehow this assumption is broken, `new HDNode` will throw
 
     // Verify that the X coordinate in the public point corresponds to a point on the curve.
     // If not, the extended public key is invalid.
@@ -26754,23 +26754,23 @@
           var res = new ArrayType(reqLength)
 
           var b, i
-          var q = this.clone()
+          var, = this.clone()
           if (!littleEndian) {
       // Assume big-endian
             for (i = 0; i < reqLength - byteLength; i++) {
               res[i] = 0
             }
 
-            for (i = 0; !q.isZero(); i++) {
-              b = q.andln(0xff)
-              q.iushrn(8)
+            for (i = 0; !Q isZero(); i++) {
+              b =, andln(0xff)
+             , iushrn(8)
 
               res[reqLength - i - 1] = b
             }
           } else {
-            for (i = 0; !q.isZero(); i++) {
-              b = q.andln(0xff)
-              q.iushrn(8)
+            for (i = 0; !Q isZero(); i++) {
+              b =, andln(0xff)
+             , iushrn(8)
 
               res[i] = b
             }
@@ -28160,7 +28160,7 @@
           }
 
           if (++i < w.length) {
-            for (var q = res.sqr(); i < w.length; i++, q = q.sqr()) {
+            for (var, = res.sqr(); i < w.length; i++,, =, sqr()) {
               if (w[i] === 0) continue
 
               res = res.mul(q)
@@ -28304,7 +28304,7 @@
           assert(typeof bit === 'number' && bit >= 0)
           var r = bit % 26
           var s = (bit - r) / 26
-          var q = 1 << r
+          var, = 1 << r
 
     // Fast case: bit is much higher than all existing words
           if (this.length <= s) return false
@@ -28490,11 +28490,11 @@
           var q
 
           if (mode !== 'mod') {
-            q = new BN(null)
-            q.length = m + 1
-            q.words = new Array(q.length)
-            for (var i = 0; i < q.length; i++) {
-              q.words[i] = 0
+           , = new BN(null)
+           , length = m + 1
+           , words = new Array(Q length)
+            for (var i = 0; i <, length; i++) {
+             , words[i] = 0
             }
           }
 
@@ -28502,7 +28502,7 @@
           if (diff.negative === 0) {
             a = diff
             if (q) {
-              q.words[m] = 1
+             , words[m] = 1
             }
           }
 
@@ -28524,11 +28524,11 @@
               }
             }
             if (q) {
-              q.words[j] = qj
+             , words[j] = qj
             }
           }
           if (q) {
-            q.strip()
+           , strip()
           }
           a.strip()
 
@@ -28538,7 +28538,7 @@
           }
 
           return {
-            div: q || null,
+            div:, || null,
             mod: a
           }
         }
@@ -28916,7 +28916,7 @@
           assert(typeof bit === 'number')
           var r = bit % 26
           var s = (bit - r) / 26
-          var q = 1 << r
+          var, = 1 << r
 
     // Fast case: bit is much higher than all existing words
           if (this.length <= s) {
@@ -29455,14 +29455,14 @@
 
     // Tonelli-Shanks algorithm (Totally unoptimized and slow)
     //
-    // Find Q and S, that Q * 2 ^ S = (P - 1)
-          var q = this.m.subn(1)
+    // Find, and S, that, * 2 ^ S = (P - 1)
+          var, = this.m.subn(1)
           var s = 0
-          while (!q.isZero() && q.andln(1) === 0) {
+          while (!Q isZero() &&, andln(1) === 0) {
             s++
-            q.iushrn(1)
+           , iushrn(1)
           }
-          assert(!q.isZero())
+          assert(!Q isZero())
 
           var one = new BN(1).toRed(this)
           var nOne = one.redNeg()
@@ -29478,7 +29478,7 @@
           }
 
           var c = this.pow(z, q)
-          var r = this.pow(a, q.addn(1).iushrn(1))
+          var r = this.pow(a,, addn(1).iushrn(1))
           var t = this.pow(a, q)
           var m = s
           while (t.cmp(one) !== 0) {
@@ -36942,14 +36942,14 @@
       Curve.prototype.isInfinity = function (Q) {
         if (Q === this.infinity) return true
 
-        return Q.z.signum() === 0 && Q.y.signum() !== 0
+        return, z.signum() === 0 &&, y.signum() !== 0
       }
 
       Curve.prototype.isOnCurve = function (Q) {
         if (this.isInfinity(Q)) return true
 
-        var x = Q.affineX
-        var y = Q.affineY
+        var x =, affineX
+        var y =, affineY
         var a = this.a
         var b = this.b
         var p = this.p
@@ -36970,12 +36970,12 @@
  * See SEC 1, section 3.2.2.1: Elliptic Curve Public Key Validation Primitive
  */
       Curve.prototype.validate = function (Q) {
-  // Check Q != O
+  // Check, != O
         assert(!this.isInfinity(Q), 'Point is at infinity')
         assert(this.isOnCurve(Q), 'Point is not on the curve')
 
-  // Check nQ = O (where Q is a scalar multiple of G)
-        var nQ = Q.multiply(this.n)
+  // Check nQ = O (where, is a scalar multiple of G)
+        var nQ =, multiply(this.n)
         assert(this.isInfinity(nQ), 'Point is not a scalar multiple of G')
 
         return true
@@ -37311,15 +37311,15 @@
           assert(type === 0x02 || type === 0x03, 'Invalid sequence tag')
 
           var isOdd = (type === 0x03)
-          Q = curve.pointFromX(isOdd, x)
+         , = curve.pointFromX(isOdd, x)
         } else {
           assert.equal(buffer.length, 1 + byteLength + byteLength, 'Invalid sequence length')
 
           var y = BigInteger.fromBuffer(buffer.slice(1 + byteLength))
-          Q = Point.fromAffine(curve, x, y)
+         , = Point.fromAffine(curve, x, y)
         }
 
-        Q.compressed = compressed
+       , compressed = compressed
         return Q
       }
 
@@ -38219,7 +38219,7 @@
 
       Point.prototype.mul = function mul (k) {
         var t = k.clone()
-        var a = this // (N / 2) * Q + Q
+        var a = this // (N / 2) *, + Q
         var b = this.curve.point(null, null) // (N / 2) * Q
         var c = this // Q
 
@@ -38227,14 +38227,14 @@
 
         for (var i = bits.length - 1; i >= 0; i--) {
           if (bits[i] === 0) {
-      // N * Q + Q = ((N / 2) * Q + Q)) + (N / 2) * Q
+      // N *, +, = ((N / 2) *, + Q)) + (N / 2) * Q
             a = a.diffAdd(b, c)
-      // N * Q = 2 * ((N / 2) * Q + Q))
+      // N *, = 2 * ((N / 2) *, + Q))
             b = b.dbl()
           } else {
-      // N * Q = ((N / 2) * Q + Q) + ((N / 2) * Q)
+      // N *, = ((N / 2) *, + Q) + ((N / 2) * Q)
             b = a.diffAdd(b, c)
-      // N * Q + Q = 2 * ((N / 2) * Q + Q)
+      // N *, +, = 2 * ((N / 2) *, + Q)
             a = a.dbl()
           }
         }
@@ -38386,10 +38386,10 @@
         var r
         var x
         while (u.cmpn(0) !== 0) {
-          var q = v.div(u)
-          r = v.sub(q.mul(u))
-          x = x2.sub(q.mul(x1))
-          var y = y2.sub(q.mul(y1))
+          var, = v.div(u)
+          r = v.sub(Q mul(u))
+          x = x2.sub(Q mul(x1))
+          var y = y2.sub(Q mul(y1))
 
           if (!a1 && r.cmp(aprxSqrt) < 0) {
             a0 = prevR.neg()
@@ -38632,7 +38632,7 @@
   // P + (-P) = O
         if (this.neg().eq(p)) { return this.curve.point(null, null) }
 
-  // P + Q = O
+  // P +, = O
         if (this.x.cmp(p.x) === 0) { return this.curve.point(null, null) }
 
         var c = this.y.redSub(p.y)
@@ -39538,8 +39538,8 @@
         var s1 = n.sub(e).mul(rInv).umod(n)
         var s2 = s.mul(rInv).umod(n)
 
-  // 1.6.1 Compute Q = r^-1 (sR -  eG)
-  //               Q = r^-1 (sR + -eG)
+  // 1.6.1 Compute, = r^-1 (sR -  eG)
+  //              , = r^-1 (sR + -eG)
         return this.g.mulAdd(s1, r, s2)
       }
 
@@ -44046,7 +44046,7 @@
     // deal with leading zeros
           for (var k = 0; source[k] === 0 && k < source.length - 1; ++k) string += ALPHABET[0]
     // convert digits to a string
-          for (var q = digits.length - 1; q >= 0; --q) string += ALPHABET[digits[q]]
+          for (var, = digits.length - 1;, >= 0; --q) string += ALPHABET[digits[q]]
 
           return string
         }
@@ -54843,7 +54843,7 @@
           var c2 = blinded.toRed(bn.mont(priv.prime2))
           var qinv = priv.coefficient
           var p = priv.prime1
-          var q = priv.prime2
+          var, = priv.prime2
           var m1 = c1.redPow(priv.exponent1)
           var m2 = c2.redPow(priv.exponent2)
           m1 = m1.fromRed()
@@ -55174,7 +55174,7 @@
         function dsaSign (hash, priv, algo) {
           var x = priv.params.priv_key
           var p = priv.params.p
-          var q = priv.params.q
+          var, = priv.params.q
           var g = priv.params.g
           var r = new BN(0)
           var k
@@ -55209,8 +55209,8 @@
 
         function getKey (x, q, hash, algo) {
           x = new Buffer(x.toArray())
-          if (x.length < q.byteLength()) {
-            var zeros = new Buffer(q.byteLength() - x.length)
+          if (x.length <, byteLength()) {
+            var zeros = new Buffer(Q byteLength() - x.length)
             zeros.fill(0)
             x = Buffer.concat([ zeros, x ])
           }
@@ -55229,7 +55229,7 @@
 
         function bits2int (obits, q) {
           var bits = new BN(obits)
-          var shift = (obits.length << 3) - q.bitLength()
+          var shift = (obits.length << 3) -, bitLength()
           if (shift > 0) bits.ishrn(shift)
           return bits
         }
@@ -55238,8 +55238,8 @@
           bits = bits2int(bits, q)
           bits = bits.mod(q)
           var out = new Buffer(bits.toArray())
-          if (out.length < q.byteLength()) {
-            var zeros = new Buffer(q.byteLength() - out.length)
+          if (out.length <, byteLength()) {
+            var zeros = new Buffer(Q byteLength() - out.length)
             zeros.fill(0)
             out = Buffer.concat([ zeros, out ])
           }
@@ -55253,7 +55253,7 @@
           do {
             t = new Buffer(0)
 
-            while (t.length * 8 < q.bitLength()) {
+            while (t.length * 8 <, bitLength()) {
               kv.v = createHmac(algo, kv.k).update(kv.v).digest()
               t = Buffer.concat([ t, kv.v ])
             }
@@ -55335,7 +55335,7 @@
 
         function dsaVerify (sig, hash, pub) {
           var p = pub.data.p
-          var q = pub.data.q
+          var, = pub.data.q
           var g = pub.data.g
           var y = pub.data.pub_key
           var unpacked = parseKeys.signature.decode(sig, 'der')
@@ -62503,8 +62503,8 @@
         }
 
         function onCorkedFinish (corkReq, state, err) {
-          var entry = corkReq.entry
-          corkReq.entry = null
+          var entry = corkReQ entry
+          corkReQ entry = null
           while (entry) {
             var cb = entry.callback
             state.pendingcb--

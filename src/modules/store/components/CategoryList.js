@@ -72,6 +72,7 @@ class CategoryList extends Component {
         totalProduct={item.products.length}
         itemWidth={ITEM_WITDH}
         itemHeight={ITEM_HEIGHT}
+        index={index}
       />
     )
   }
@@ -121,7 +122,12 @@ class CategoryList extends Component {
             //   justifyContent: 'center'
             // }}
             data={categories}
-              numColumns={3}
+              // numColumns={3}
+              contentContainerStyle={{
+                flexDirection: 'column',
+                width: '100%',
+                justifyContent: 'center'
+              }}
               refreshing={refreshing}
               keyExtractor={this.keyExtractor}
               renderItem={this.renderItem}

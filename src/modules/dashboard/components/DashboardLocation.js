@@ -38,7 +38,7 @@ class DashboardPopularShops extends Component {
   }
 
   async requestLocationPermission() {
-    const { getUserLocation } = this.props
+    const { getUserLocation, getDashboardNearbyShops } = this.props
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -57,13 +57,14 @@ class DashboardPopularShops extends Component {
               error: null,
             })
             getUserLocation(this.state.latitude,this.state.longitude)
+            getDashboardNearbyShops(this.state.latitude,this.state.longitude)
             console.log(position)
           },
           (error) => {
             this.setState({ error: error.message })
             console.log(error)
           },
-          { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+          // { enableHighAccuracy: true, timeout: 20000 },
           // { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 },
         )
       } else {
@@ -75,9 +76,10 @@ class DashboardPopularShops extends Component {
   }
 
   onPress = () => {
-    // const { navigation } = this.props
+    const { getDashboardNearbyShops, latlng } = this.props
     // navigation.navigate(SCREENS.NearbyShop)
     this.requestLocationPermission()
+    // getDashboardNearbyShops(latlng.lat,latlng.lng)
   }
 
   render() {

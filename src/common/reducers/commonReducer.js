@@ -13,7 +13,8 @@ const defaultState = {
   cities: [],
   location: '',
   latlng: {},
-  style: []
+  style: [],
+  brands: []
 }
 
 const handlers = {
@@ -32,6 +33,10 @@ const handlers = {
   [actions.setStyle]: (state, action) => ({
     ...state,
     ...{ style: action.payload }
+  }),
+  [actions.setBrand]: (state, action) => ({
+    ...state,
+    ...{ brands: action.payload }
   }),
   [actions.setCountries]: (state, action) => ({
     ...state,

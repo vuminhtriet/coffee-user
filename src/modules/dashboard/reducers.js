@@ -16,7 +16,13 @@ const defaultState = {
   categoryProducts: [],
   searchProducts: [],
   searchShops: [],
-  banner: []
+  banner: [],
+  styles: [],
+  brands: [],
+  brandShops: [],
+  recommendProducts: [],
+  visitedProducts: [],
+  visitedShops: []
 }
 
 const handlers = {
@@ -68,13 +74,25 @@ const handlers = {
     ...state,
     ...{ todayProducts: action.payload }
   }),
-  [actions.getCategories]: (state, action) => ({
+  [actions.getStyles]: (state, action) => ({
     ...state,
-    ...{ categories: action.payload }
+    ...{ styles: action.payload }
   }),
   [actions.getCategoryProducts]: (state, action) => ({
     ...state,
     ...{ categoryProducts: action.payload }
+  }),
+  [actions.getBrands]: (state, action) => ({
+    ...state,
+    ...{ brands: action.payload }
+  }),
+  [actions.getBrandShops]: (state, action) => ({
+    ...state,
+    ...{ brandShops: action.payload }
+  }),
+  [actions.loadMoreBrandShops]: (state, action) => ({
+    ...state,
+    ...{ brandShops: [...state.brandShops, ...action.payload] }
   }),
   [actions.loadMoreCategoryProducts]: (state, action) => ({
     ...state,
@@ -99,6 +117,18 @@ const handlers = {
   [actions.getBanners]: (state, action) => ({
     ...state,
     ...{ banner: action.payload }
+  }),
+  [actions.getRecommendProducts]: (state, action) => ({
+    ...state,
+    ...{ recommendProducts: action.payload }
+  }),
+  [actions.getVisitedProducts]: (state, action) => ({
+    ...state,
+    ...{ visitedProducts: action.payload }
+  }),
+  [actions.getVisitedShops]: (state, action) => ({
+    ...state,
+    ...{ visitedShops: action.payload }
   })
 }
 

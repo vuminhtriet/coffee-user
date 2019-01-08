@@ -20,7 +20,7 @@ import { POINT_SORT_LIST } from '../../../common/models';
 const { width } = Dimensions.get('window')
 const NUMBER_OF_ITEM = 2
 const ITEM_WITDH = (width) / NUMBER_OF_ITEM
-const ITEM_HEIGHT = 260
+const ITEM_HEIGHT = 280
 const DEFAULT_SORT_TYPE = POINT_SORT_LIST.find(item => item.type === 1)
 
 class PointItem extends PureComponent {
@@ -95,7 +95,11 @@ class PointItem extends PureComponent {
               justifyContent: 'flex-start'
             }}>
               {item.shop && item.shop.address && item.shop.address.fullAddress
-              ? <Text numberOfLines = {2} style={{ fontSize:16 }}>{`${item.shop.address.fullAddress}`}</Text>
+              ? <Text numberOfLines = {2} style={{ fontSize:16 }}>
+              {`${item.shop.address.fullAddress}, ${isNaN(item.shop.address.districtName) 
+              ? '' : 'Quận '}${item.shop.address.districtName 
+                || ''}, ${item.shop.address.cityName || ''}`}
+              </Text>
               : <Text numberOfLines = {2} style={{ fontSize:16  }}>{`không xác định`}</Text>
               }
               
@@ -223,7 +227,7 @@ class PointManagement extends Component {
               <TouchableOpacity
                 // onPress={this.toggleSort}
               >
-                <Text style={{ fontSize: 16 }}>Tìm theo {sortType.title.toLowerCase()}</Text>
+                <Text style={{ fontSize: 16 }}>Sắp xếp theo {sortType.title.toLowerCase()}</Text>
               </TouchableOpacity>
             </View>
           }

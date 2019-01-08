@@ -147,6 +147,7 @@ export default class LoginForm extends Component {
                   password: undefined
                 }
               })}
+              autoCapitalize='none'
               secureTextEntry
               // defaultValue={pass}
               containerStyle={{ marginTop: 20 }}
@@ -157,7 +158,7 @@ export default class LoginForm extends Component {
               {errors.password}
             </FormValidationMessage>}
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
               onPress={this.forgetPassword}
             >
               <Text
@@ -170,7 +171,7 @@ export default class LoginForm extends Component {
                 }}>
                 Quên mật khẩu ?
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             {error && <FormValidationMessage>
               {error}
             </FormValidationMessage>}

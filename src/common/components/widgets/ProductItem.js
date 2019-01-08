@@ -170,9 +170,9 @@ class ProductItem extends Component {
                     style={{ paddingVertical: 10 }} />
                 </View>
                 <View>
-                  {/* <Text style={{ marginBottom: 0, paddingTop: 7, textAlign: 'left' }}>
-                    {` (${item.totalUserRating || 0})`}
-                  </Text> */}
+                  <Text style={{ marginBottom: 0, paddingTop: 7, textAlign: 'left' }}>
+                    {` (${item.numRating || 0})`}
+                  </Text>
                 </View>
               </View>
               {/* <View style={{ display: 'flex', flexDirection: 'row' }}>

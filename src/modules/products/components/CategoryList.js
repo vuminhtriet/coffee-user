@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import {
   FlatList,
   View,
-  Dimensions
+  Dimensions,
+  Text
 } from 'react-native'
 import { ListItem } from 'react-native-elements'
 import DefaultPage from '../../../common/hocs/defaultPage'
@@ -43,16 +44,19 @@ export default class CategoryList extends Component {
       <ListItem
         roundAvatar
         onPress={() => this.select(item)}
-        avatar={{source: require('../../../assets/placeholder.png')}}
+        // avatar={{source: require('../../../assets/placeholder.png')}}
         // {item.images && item.images.length > 0 ? { uri: item.images[0].fullUrl } : require('../../../assets/placeholder.png')}
         key={index}
-        title={item.name}
+        title={`${index + 1}. ${item.name}`}
+        // subtitle={`${item.products && item.products.length} đồ uống`}
+        subtitle={
+          <Text style={{marginLeft: 28}}>{`${item.products && item.products.length} đồ uống`}</Text>
+        }  
         rightIcon={
           categories.id === item.id
             ? { name: 'check', color: 'green' }
             : undefined
         }
-        subtitle={`${item.products && item.products.length} đồ uống`}
       />
     )
   }

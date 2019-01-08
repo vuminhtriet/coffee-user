@@ -5,6 +5,7 @@ import {
   View,
   TouchableOpacity
 } from 'react-native'
+import { ListItem } from 'react-native-elements'
 import { connect } from 'react-redux'
 import axios from 'axios'
 import { withNavigation } from 'react-navigation'
@@ -52,6 +53,7 @@ class CategoryItem extends PureComponent {
 
   render() {
     const {
+      index,
       image,
       name,
       totalProduct,
@@ -62,15 +64,15 @@ class CategoryItem extends PureComponent {
 
     return (
       <TouchableOpacity
-        style={{
-          width: itemWidth,
-          height: itemHeight,
-          flexDirection: 'column',
-          padding: 5
-        }}
-        onPress={this.onPress}
+        // style={{
+          // width: itemWidth,
+          // height: itemHeight,
+          // flexDirection: 'column',
+          // padding: 5
+        // }}
+        // onPress={this.onPress}
       >
-        <Image
+        {/* <Image
           style={{ height: 120, width: '100%' }}
           source={image ? { uri: image } : require('../../../assets/placeholder.png')}
         />
@@ -81,7 +83,23 @@ class CategoryItem extends PureComponent {
           <Text style={{ marginBottom: 0, textAlign: 'center', color: '#aaa5a5' }}>
             {`${totalProduct} đồ uống`}
           </Text>
-        </View>
+        </View> */}
+        <ListItem
+          roundAvatar
+          onPress={this.onPress}
+          // avatar={{source: require('../../../assets/placeholder.png')}}
+            // image
+            // ? { uri: image }
+            // : 
+            // require('../../../assets/placeholder.png')}
+          key={index}
+          title={`${index + 1}. ${name}`}
+        // subtitle={`${totalProduct} đồ uống`}
+        subtitle={
+          <Text style={{marginLeft: 28}}>{`${totalProduct} đồ uống`}</Text>
+        }  
+          rightIcon={undefined}
+        />
       </TouchableOpacity>
     )
   }

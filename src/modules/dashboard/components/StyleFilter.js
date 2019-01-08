@@ -68,9 +68,9 @@ export default class StyleFilter extends Component {
   render() {
     const { styles, closeModal, chosenStyle } = this.props
     const { errors } = this.state
-    const style = styles.find(item => `${item.styId}` === `${chosenStyle.styleId}`)
+    const style = styles.find(item => `${item.id}` === `${chosenStyle.styleId}`)
     if (styles.length === 13) {
-      styles.push({"styId": 14,"name":"Tất cả"})
+      styles.push({"id": 14,"name":"Tất cả"})
     }
     return (
       <View
@@ -82,7 +82,7 @@ export default class StyleFilter extends Component {
         }}
       >
         <View style={{ width: '100%', height: 40 }}>
-          <HeaderTitle title='Phong cách quán' />
+          <HeaderTitle onBack={closeModal} title='Phong cách quán' />
         </View>
         <SubHeader
           onLeftComponent={
@@ -120,7 +120,7 @@ export default class StyleFilter extends Component {
               hideTags
               single
               items={styles}
-              uniqueKey="styId"
+              uniqueKey="id"
               ref={(component) => { this.multiSelect = component }}
               onSelectedItemsChange={(text) => this._chooseStyle(text[0], 'styleId')}
               selectedItems={styles}

@@ -89,6 +89,7 @@ export default class StoreInformation extends Component {
               images={detail.shopFeaturedImages}
               shopName={detail.shopName}
               ratings={detail.reviewShops}
+              shop={detail}
             />
           </Modal>
         </View>

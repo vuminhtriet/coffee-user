@@ -151,7 +151,7 @@ export default class BookManagement extends PureComponent {
               <TouchableOpacity
                 onPress={this.toggleOption}
               >
-                <Text style={{ fontSize: 16 }}>Tìm theo {chosenOption.title.toLowerCase()}</Text>
+                <Text style={{ fontSize: 16 }}>Sắp xếp theo {chosenOption.title.toLowerCase()}</Text>
               </TouchableOpacity>
             </View>
           }

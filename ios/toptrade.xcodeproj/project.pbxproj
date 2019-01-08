@@ -1686,7 +1686,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.gts.toptrade;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gts.drinkaway;
 				PRODUCT_NAME = toptrade;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1719,7 +1719,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.gts.toptrade;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gts.drinkaway;
 				PRODUCT_NAME = toptrade;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

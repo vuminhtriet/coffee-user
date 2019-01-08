@@ -50,7 +50,7 @@ export default class PageCategoryProduct extends Component {
   async componentDidMount() {
     const { categoryId, shopId, getCategoryProducts } = this.props
     this.setState({ refreshing: true }, async () => {
-      await getCategoryProducts(categoryId, shopId)
+      await getCategoryProducts(categoryId, shopId,0, 'avgRating DESC')
       this.setState({ refreshing: false, page: 1, isLastedPage: false })
     })
   }
@@ -61,7 +61,7 @@ export default class PageCategoryProduct extends Component {
     const { sortType } = this.state
     const options = this.submitFilter()
     this.setState({ refreshing: true }, async () => {
-      await getCategoryProducts(categoryId, shopId, sortType.value, options)
+      await getCategoryProducts(categoryId, shopId,0, sortType.value, options)
       this.setState({ refreshing: false, page: 1, isLastedPage: false })
     })
   }
@@ -211,7 +211,7 @@ export default class PageCategoryProduct extends Component {
               <TouchableOpacity
                 onPress={this.toggleSort}
               >
-                <Text style={{ fontSize: 16 }}>Tìm theo {sortType.title.toLowerCase()}</Text>
+                <Text style={{ fontSize: 16 }}>Sắp xếp theo {sortType.title.toLowerCase()}</Text>
               </TouchableOpacity>
             </View>
           }

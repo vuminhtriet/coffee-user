@@ -47,6 +47,7 @@ export default class UserInformation extends Component {
     this.onChangeText = this.onChangeText.bind(this)
     this.onChangeValue = this.onChangeValue.bind(this)
     this.deleteUserPayment = this.deleteUserPayment.bind(this)
+    this.calculateAge = this.calculateAge.bind(this)
   }
 
   async deleteUserPayment (payment) {
@@ -65,6 +66,13 @@ export default class UserInformation extends Component {
     if (selectedCity){
       this.getDistrictInCity(selectedCity)
     }
+  }
+
+  calculateAge(birthdate) {
+    var birth = new Date(birthdate)
+    var ageDifMs = Date.now() - birth.getTime();
+    var ageDate = new Date(ageDifMs); // miliseconds from epoch
+    return Math.abs(ageDate.getUTCFullYear() - 1970)
   }
 
   submit () {
@@ -94,12 +102,14 @@ export default class UserInformation extends Component {
     if (!isEmpty(errors)) {
       this.setState({ errors })
     } else {
+      const age = this.calculateAge(birthdate)
       try {
         const request = update(token,
           {id: user.id,
           displayName,
           birthdate,
-          gender},
+          gender,
+          age},
           {selectedCity,
           selectedDistrict,
           address}

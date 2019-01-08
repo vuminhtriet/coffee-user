@@ -52,7 +52,7 @@ export default class UserCartDetail extends Component {
 
         {user &&
           <View style={{ flex: 1, paddingBottom: 10 }}>
-            <Text>{user.displayName} - {moment(item.createdAt).format('LLL')}</Text>
+            <Text>{user.displayName} - {moment(item.createdAt).format('DD-MM-YYYY HH:mm')}</Text>
           </View>
         }
 

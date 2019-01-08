@@ -50,7 +50,7 @@ class PopularShopItem extends Component {
           fontSize: 17, paddingLeft: 3}}>
               {`${item.shopName}`}
           </Text>
-          <View style = {{flexDirection: 'row', paddingLeft: 3, justifyContent: 'space-between'}}>
+          <View style = {{flexDirection: 'row', paddingLeft: 3}}>
             <Rating
               type='custom'
               fractions={1}
@@ -62,19 +62,25 @@ class PopularShopItem extends Component {
               ratingColor='#FF6A00'
               ratingBackgroundColor='transparent'
               style={{ paddingVertical: 10 }} />
+            <Text style={{ marginBottom: 0, paddingTop: 8, textAlign: 'left' }}>
+                    {` (${item.numRating || 0})`}
+                  </Text>
           </View>
-          <View style = {{ paddingLeft: 3, flexDirection: 'row'}}>
-          {item.address && item.address.fullAddress
-              ? <Text numberOfLines = {1} style={{ width: 140 }}>{`${item.address.fullAddress}`}</Text>
-              : <Text numberOfLines = {1} style={{ width: 140 }}>{`không xác định`}</Text>
+          <View style = {{ width: 180, paddingLeft: 3, flexDirection: 'row', justifyContent: 'space-between'}}>
+          {item.address && item.address.fullAddress && item.address.districtName && item.address.cityName
+              ? <Text numberOfLines = {1} style={{ flex: 3.2 }}>
+              {`${item.address.fullAddress}, ${isNaN(item.address.districtName) ? '' : 'Quận '}${item.address.districtName 
+                || ''}, ${item.address.cityName || ''}`}
+              </Text>
+              : <Text numberOfLines = {1} style={{ flex: 3.2 }}>{`không xác định`}</Text>
           }
           {item.shopLocation && item.shopLocation.lat && item.shopLocation.lng
             ? <Text numberOfLines = {1} style={{alignContent: 'flex-end', fontWeight: 'bold'
-            , alignItems: 'flex-end', justifyContent: 'flex-end', width: 60 }}>
+            , alignItems: 'flex-end', justifyContent: 'flex-end', flex: 1 }}>
               {`${getDistanceFromLatLonInKm(latlng.lat, latlng.lng, item.shopLocation.lat, item.shopLocation.lng)} km`} 
             </Text>
             : <Text numberOfLines = {1} style={{alignContent: 'flex-end', fontWeight: 'bold'
-            , alignItems: 'flex-end', justifyContent: 'flex-end', width: 60 }}>
+            , alignItems: 'flex-end', justifyContent: 'flex-end', flex: 1 }}>
               {``} 
             </Text>
           }

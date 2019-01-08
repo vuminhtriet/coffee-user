@@ -86,13 +86,36 @@ export default class BookDetail extends Component {
     const { deleteOrder, token, onBack, getOrders, id } = this.props
     Alert.alert(
       'Xác nhận',
-      'Bạn có muốn xóa đơn?',
+      'Bạn có muốn tạo đơn mới?',
       [
         { text: 'Hủy', onPress: () => { } },
         {
           text: 'OK', onPress: async () => {
             this.setState({ loading: true })
               const response = await deleteOrder(id)
+              if (response) {
+                await getOrders()
+                this.setState({ loading: false })
+                onBack()
+              }
+          }
+        }
+      ],
+      { cancelable: false }
+    )
+  }
+
+  updateOrder = async (status) => {
+    const { updateOrder, token, id, onBack, getOrders } = this.props
+    Alert.alert(
+      'Xác nhận',
+      'Bạn có muốn hủy đơn?',
+      [
+        { text: 'Thoát', onPress: () => { } },
+        {
+          text: 'OK', onPress: async () => {
+            this.setState({ loading: true })
+              const response = await updateOrder(id, status, token)
               if (response) {
                 await getOrders()
                 this.setState({ loading: false })
@@ -134,7 +157,11 @@ export default class BookDetail extends Component {
             marginTop: 15 }}>
             {order.shop.shopName}</Text>
             <Text style={{ fontWeight: 'bold', fontSize: 16, marginLeft: 15 }}>
-            {order.shop.address && order.shop.address.fullAddress}</Text> 
+            {order.shop.address && 
+              `${order.shop.address.fullAddress}, ${isNaN(order.shop.address.districtName) 
+                ? '' : 'Quận '}${order.shop.address.districtName 
+              || ''}, ${order.shop.address.cityName || ''}`}
+              </Text> 
             <Text style={{ fontWeight: 'bold', fontSize: 16, marginLeft: 15, marginBottom: 12 }}>
             {order.shop.shopPhoneNumber}</Text>
             {/* <Image
@@ -177,8 +204,8 @@ export default class BookDetail extends Component {
                 </Text>
             </View>
               <Text style={{ fontSize: 14, marginLeft: 48 }}>
-              {'Mã đặt là ' + order.orderCode + ' cho ' + order.customerAmount + 
-              ' người vào lúc ' + moment(order.orderTime).format('lll')}
+              {'Mã đặt là ' + order.orderCode.toUpperCase() + ' cho ' + order.customerAmount + 
+              ' người vào lúc ' + moment(order.orderTime).format('DD-MM-YYYY HH:mm')}
               {/* {JSON.stringify(order) || ''} */}
               </Text> 
           </View>
@@ -316,10 +343,38 @@ export default class BookDetail extends Component {
                     }}
                 />
                 <Text style={{ fontWeight: 'bold', paddingLeft: 10, fontSize: 18 }}>
-                Kết thúc (khách đã tới)
+                Kết thúc (đã tới)
                 </Text>
             </View>
             }
+
+          {order.status === 0 && 
+          <View
+            style={{
+              margin: 0,
+              width: undefined,
+              height: undefined
+            }}>
+            <View
+              style={{
+                width: undefined,
+                height: 60,
+                marginTop: 10,
+                flexDirection: 'row',
+                alignItems: 'center'
+              }}>
+              <View style={{ flex: 1 }}>
+                <Button title='Hủy đơn' onPress={() => this.updateOrder(1)} />
+              </View>
+              {/* <View style={{ flex: 1 }}>
+                <Button
+                  title='Đặt bàn'
+                  onPress={this.submit}
+                  backgroundColor='#E44C4C'
+                />
+              </View> */}
+            </View>
+          </View> }
 
           {order.status === 1 && 
           <View
@@ -337,7 +392,35 @@ export default class BookDetail extends Component {
                 alignItems: 'center'
               }}>
               <View style={{ flex: 1 }}>
-                <Button title='Xóa đơn' onPress={() => this.deleteBook()} />
+                <Button title='Tạo đơn mới' onPress={() => this.deleteBook()} />
+              </View>
+              {/* <View style={{ flex: 1 }}>
+                <Button
+                  title='Đặt bàn'
+                  onPress={this.submit}
+                  backgroundColor='#E44C4C'
+                />
+              </View> */}
+            </View>
+          </View> }
+
+          {order.status === 2 && 
+          <View
+            style={{
+              margin: 0,
+              width: undefined,
+              height: undefined
+            }}>
+            <View
+              style={{
+                width: undefined,
+                height: 60,
+                marginTop: 10,
+                flexDirection: 'row',
+                alignItems: 'center'
+              }}>
+              <View style={{ flex: 1 }}>
+                <Button title='Hủy đơn' onPress={() => this.updateOrder(1)} />
               </View>
               {/* <View style={{ flex: 1 }}>
                 <Button
@@ -365,7 +448,7 @@ export default class BookDetail extends Component {
                 alignItems: 'center'
               }}>
               <View style={{ flex: 1 }}>
-                <Button title='Xóa đơn' onPress={() => this.deleteBook()} />
+                <Button title='Tạo đơn mới' onPress={() => this.deleteBook()} />
               </View>
               {/* <View style={{ flex: 1 }}>
                 <Button

@@ -10,20 +10,21 @@ import {
   setUserLatLng
 } from '../../../common/actions/common'
 
-const mapDispatchToProps = (dispatch, props) => ({
+export const mapDispatchToProps = (dispatch, props) => ({
     getDashboardNearbyShops: async (lat,lng) => {
     try {
         const filter = {
-        "where":{
-            "shopLocation":{
-                "near":[
-                    lat,
-                    lng
-                ],
-                "maxDistance":100,
-                "unit":"kilometers"
-            }
-        }
+          "where":{
+              "shopLocation":{
+                  "near":[
+                      lat,
+                      lng
+                  ],
+                  "maxDistance":100,
+                  "unit":"kilometers"
+              }
+          },
+          "limit": 6
         }
       const url = `${TEST_URL}/api/shops?filter=${JSON.stringify(filter)}`
       const response = await axios({ url })

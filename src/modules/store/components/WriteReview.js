@@ -123,7 +123,7 @@ export default class WriteReview extends Component {
   }
 
   render() {
-    const { onBack, images, shopName, onButtonBack } = this.props
+    const { onBack, images, shopName, onButtonBack, shop } = this.props
     const { errors, rating, title, comment, loading } = this.state
     const isExistCover = images && images.length > 0 && images[0]
     const coverImage = isExistCover
@@ -158,8 +158,12 @@ export default class WriteReview extends Component {
                     : require('../../../assets/placeholder.png')}
                 />
               </View>
-              <View style={{ flex: 1, paddingLeft: 15 }}>
-                <Text style={{ fontWeight: 'bold', lineHeight: 20 }}>{shopName}</Text>
+              <View style={{ flex: 1, paddingLeft: 15, flexDirection: 'column' }}>
+                <Text style={{ fontWeight: 'bold', lineHeight: 20, fontSize: 20 }}>{shopName}</Text>
+                <Text style={{ marginTop: 10, fontSize: 18 }}>
+                {shop.address && 
+              `${shop.address.fullAddress}, ${isNaN(shop.address.districtName) ? '' : 'Quận '}${shop.address.districtName 
+              || ''}, ${shop.address.cityName || ''}`}</Text>
               </View>
             </View>
 

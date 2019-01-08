@@ -85,7 +85,7 @@ class DashboardNearbyShops extends Component {
           style={{ width: '100%', flexDirection: 'row', height: 40, alignItems: 'center', backgroundColor: '#FFFFFF' }}
         >
           <View style={{ flex: 1, paddingLeft: 10 }}>
-            <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#E64B47' }}>Thương hiệu gần bạn</Text>
+            <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#E64B47' }}>Quán cafe gần bạn</Text>
           </View>
           <View style={{ flex: 1, paddingRight: 10 }}>
             <TouchableOpacity onPress={this._onNavigateToNearbyShopsPage}>

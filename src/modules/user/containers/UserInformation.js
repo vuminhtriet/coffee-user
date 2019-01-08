@@ -10,6 +10,7 @@ import UserInformation from '../components/UserInformation'
 export const mapDispatchToProps = (dispatch, props) => ({
   update: (token, user, address) => {
     try {
+      console.log("user",user)
       const url = `${TEST_URL}/api/members/${user.id}`
       return loading(dispatch, async () => {
         const response = await fetch({
@@ -26,9 +27,16 @@ export const mapDispatchToProps = (dispatch, props) => ({
               cityId: address.selectedCity,
               districtId: address.selectedDistrict,
               fullAddress: address.address
-            }
+            },
+            age: user.age
+            // (() => {
+            //   var ageDifMs = Date.now() - user.birthdate.getTime();
+            //   var ageDate = new Date(ageDifMs); // miliseconds from epoch
+            //   return Math.abs(ageDate.getUTCFullYear() - 1970)
+            // })
           }
         }, dispatch)
+        console.log("age", response)
         // TODO: fetch register
         if (response && response.data) {
           // const addresses = await fetch({

@@ -25,7 +25,7 @@ export default class ShopsPage extends Component {
         style={{ flexDirection: 'column' }}
       >
         <View style={{ display: 'flex', width: '100%' }}>
-          <Header onBack={this.onBack} title='Thương hiệu gần bạn' />
+          <Header onBack={this.onBack} title='Quán cafe gần bạn' />
         </View>
         <PageNearbyShops/>
       </DefaultPage>

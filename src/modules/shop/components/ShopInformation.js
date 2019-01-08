@@ -5,10 +5,13 @@ import {
   Modal,
   TouchableOpacity,
   KeyboardAvoidingView,
-  Alert
+  Alert,
+  Text
 } from 'react-native'
 import QRCode from 'react-native-qrcode'
 import MultiSelect from '../../../libraries/components/MultipleSelect'
+import BrandListModal from '../../shop/components/BrandListModal'
+import ShopLocationMap from '../../shop/containers/ShopLocationMap'
 // import { Dropdown } from 'react-native-material-dropdown'
 import {
   Button,
@@ -31,19 +34,121 @@ export default class ShopInformation extends Component {
     this.state = {
       errors: {},
       districts: {},
+      mapOn: false,
       refreshing: false,
       disabled: false,
+      showOption: false,
       shopName: shop.shopName || '',
       website: shop.website || '',
       shopPhoneNumber: shop.shopPhoneNumber || '',
       selectedCity: (shop.address && `${shop.address.cityId}`) || '',
       selectedDistrict: (shop.address && `${shop.address.districtId}`) || '',
       fullAddress: (shop.address && `${shop.address.fullAddress}`) || '',
-      selectedStyle: (shop.style && `${shop.style.styId}`) || ''
+      selectedStyle: (shop.styleId && `${shop.styleId}`) || '',
+      selectedBrand: (shop.brandId && `${shop.brandId}`) || '',
+      tempLat: (shop.shopLocation && `${shop.shopLocation.lat}`) || null,
+      tempLng: (shop.shopLocation && `${shop.shopLocation.lng}`) || null
     }
     // this.getCities = this.getCities.bind(this)
     this.updateInformation = this.updateInformation.bind(this)
     this.onChangeText = this.onChangeText.bind(this)
+    this.toggleOption = this.toggleOption.bind(this)
+  }
+
+  toggleOption = () => {
+    const { showOption } = this.state
+    this.setState({
+      showOption: !showOption
+    })
+  }
+
+  closeFilter = () => {
+    this.setState({ showOption: false })
+  }
+
+  onSelect = (item) => {
+    const { selectedBrand, showOption } = this.state
+    this.setState({ selectedBrand: item, showOption: false })
+  }
+
+  openMap = () => {
+    const {
+      token,
+      navigation,
+      updateShop, 
+      shop,
+      getShopLatLong,
+      cities,
+      styles,
+      brands } = this.props
+    const { selectedCity, selectedDistrict, shopName, shopPhoneNumber,
+        website, fullAddress, districts, selectedStyle, selectedBrand
+      ,tempLat, tempLng, mapOn } = this.state
+
+    if(selectedCity && selectedDistrict && !tempLat && !tempLng){
+      const city = cities && cities.find(item => `${item.id}` === `${selectedCity}`)
+      const district = districts && districts.find(item => `${item.id}` === `${selectedDistrict}`)
+      const latlng = getShopLatLong(fullAddress.split(' ').join('+'), 
+        city.name.split(' ').join('+'), district.name.split(' ').join('+'))
+      this.setState({
+        tempLat: latlng && latlng.lat || null,
+        tempLng: latlng && latlng.lng || null
+      })
+    }
+    this.setState({ mapOn: !mapOn })
+  }
+
+  exitMap = () => {
+    const { mapOn } = this.state
+    this.setState({ mapOn: !mapOn })
+  }
+
+  setFullAddress = (data) => {
+    var address = data.formatted_address.replace(/\,/g,'')
+    data.address_components.map(component => {
+      if(component.types[0] === "administrative_area_level_1" || 
+      component.types[0] === "administrative_area_level_2" ||
+      component.types[0] === "country"){
+        address = address.replace(` ${component.long_name}`,'')
+      }
+    })
+    this.setState({ fullAddress: address })
+  }
+
+  setDistrictCity = (data) => {
+    const {
+      token,
+      navigation,
+      updateShop, 
+      shop,
+      getShopLatLong,
+      cities,
+      styles,
+      brands } = this.props
+    const { selectedCity, selectedDistrict, shopName, shopPhoneNumber,
+        website, fullAddress, districts, selectedStyle, selectedBrand
+      ,tempLat, tempLng } = this.state
+    data.address_components.map(component => {
+      console.log("đệ quy", component)
+      if(component.types[0] === "administrative_area_level_1"){
+        const city = cities && cities.find(item => `${item.name}` === `${component.long_name}`)
+        this.getDistrictInCity(city.id)
+        this.setState({ selectedCity: city.id })
+        console.log("TP", component.long_name)
+        console.log("city", city)
+      }
+      if(component.types[0] === "administrative_area_level_2"){
+        const district = districts && districts.find(
+          item => `${item.name}` === `${component.long_name.replace('Quận ','')}`)
+        this.setState({ selectedDistrict: district.id })
+        console.log("quận", component.long_name)
+        console.log("district", district)
+      }
+    })
+  }
+
+  setLatLng = (lat, lng) => {
+    this.setState({ tempLat: lat, tempLng: lng })
   }
 
   async updateInformation () {
@@ -54,9 +159,11 @@ export default class ShopInformation extends Component {
       shop,
       getShopLatLong,
       cities,
-      styles } = this.props
+      styles,
+      brands } = this.props
     const { selectedCity, selectedDistrict, shopName, shopPhoneNumber,
-        website, fullAddress, districts, selectedStyle } = this.state
+        website, fullAddress, districts, selectedStyle, selectedBrand
+      ,tempLat, tempLng } = this.state
     this.setState({ disabled: true })
     const errors = {}
     if (!shopName) {
@@ -74,6 +181,9 @@ export default class ShopInformation extends Component {
     if (!selectedStyle) {
       errors.selectedStyle = '* Thiếu phong cách quán'
     }
+    if (!selectedBrand) {
+      errors.selectedBrand = '* Thiếu thương hiệu'
+    }
     if (!shopPhoneNumber) {
       errors.shopPhoneNumber = '* Thiếu số điện thoại'
     }else if (!validatePhoneNumber(shopPhoneNumber)) {
@@ -84,12 +194,21 @@ export default class ShopInformation extends Component {
     }
     const city = cities && cities.find(item => `${item.id}` === `${selectedCity}`)
     const district = districts && districts.find(item => `${item.id}` === `${selectedDistrict}`)
-    const style = styles && styles.find(item => `${item.styId}` === `${selectedStyle}`)
-    const latlng = await getShopLatLong(fullAddress.split(' ').join('+'), 
+    const style = styles && styles.find(item => `${item.id}` === `${selectedStyle}`)
+    const brand = brands && brands.find(item => `${item.id}` === `${selectedBrand}`)
+    // if(!tempLat || !tempLng || tempLat === '' || tempLng === '') {
+      const latlng = await getShopLatLong(fullAddress.split(' ').join('+'), 
     city.name.split(' ').join('+'), district.name.split(' ').join('+'))
-    if (latlng && latlng.lat && latlng.lng){
+    //   this.setState({
+    //     tempLat: latlng && latlng.lat || null,
+    //     tempLng: latlng && latlng.lng || null
+    //   })
+    // }
+
+    if (latlng.lat && latlng.lng){
       const result = await updateShop(token, shop, shopName, shopPhoneNumber, website, 
-      selectedCity, selectedDistrict, selectedStyle, style.name, fullAddress, latlng.lat, latlng.lng)
+      selectedCity, city.name, selectedDistrict, district.name, selectedStyle, style.name, 
+      selectedBrand, brand.name, fullAddress, latlng.lat, latlng.lng)
       if (result) {
         return navigation.goBack()
       }
@@ -108,7 +227,19 @@ export default class ShopInformation extends Component {
   }
 
   onChangeText (text, field) {
-    const { errors } = this.state
+    const {
+      token,
+      navigation,
+      updateShop, 
+      shop,
+      getShopLatLong,
+      cities,
+      styles,
+      brands } = this.props
+    const { selectedCity, selectedDistrict, shopName, shopPhoneNumber,
+        website, fullAddress, districts, selectedStyle, selectedBrand
+      ,tempLat, tempLng, errors } = this.state
+
     this.setState({
       [field]: text,
       errors: {
@@ -118,8 +249,16 @@ export default class ShopInformation extends Component {
     })
     if(field == 'selectedCity'){
       this.getDistrictInCity(text)
-      this.setState({['selectedDistrict']: ''})
+      this.setState({['selectedDistrict']: ''
+      // , tempLat: null, tempLng: null
+    })
     }
+    // if(field == 'fullAddress'){
+    //   this.setState({ tempLat: null, tempLng: null })
+    // }
+    // if(field == 'selectedDistrict'){
+    //   this.setState({ tempLat: null, tempLng: null })
+    // }
   }
 
   componentDidMount () {
@@ -141,7 +280,8 @@ export default class ShopInformation extends Component {
         nationality: (addresses && `${addresses.countryId}`) || '',
         selectedCity: (addresses && `${addresses.cityId}`) || '',
         selectedDistrict: (addresses && `${addresses.districtId}`) || '',
-        selectedStyle: (shop.style && `${shop.style.styId}`) || '',
+        selectedStyle: (shop.styleId && `${shop.styleId}`) || '',
+        selectedBrand: (shop.brandId && `${shop.brandId}`) || '',
         address: (addresses && `${addresses.fullAddress}`) || '',
         errors: {}
       })
@@ -173,12 +313,16 @@ export default class ShopInformation extends Component {
       navigation,
       changeText,
       cities,
-      styles
+      styles,
+      brands,
+      shop
     } = this.props
     const { districts, errors, selectedCity, selectedDistrict, shopName, shopPhoneNumber,
-    website, fullAddress, disabled, selectedStyle } = this.state
+    website, fullAddress, disabled, selectedStyle, selectedBrand, showOption, mapOn,
+    tempLat, tempLng } = this.state
     const city = cities && cities.find(item => `${item.id}` === `${selectedCity}`)
-    const style = styles && styles.find(item => `${item.styId}` === `${selectedStyle}`)
+    const style = styles && styles.find(item => `${item.id}` === `${selectedStyle}`)
+    const brand = brands && brands.find(item => `${item.id}` === `${selectedBrand}`)
     const district = districts.length > 0  
     ? districts.find(item => `${item.id}` === `${selectedDistrict}`)
     : ''
@@ -217,7 +361,7 @@ export default class ShopInformation extends Component {
                 hideTags
                 single
                 items={styles || []}
-                uniqueKey='styId'
+                uniqueKey='id'
                 ref={(component) => { this.multiSelectDistrict = component }}
                 onSelectedItemsChange={(value) => this.onChangeText(value[0], 'selectedStyle')}
                 selectedItems={styles}
@@ -242,6 +386,44 @@ export default class ShopInformation extends Component {
             </View>
             {errors.selectedStyle &&
               (<FormValidationMessage>{errors.selectedStyle}</FormValidationMessage>)}
+
+            <FormLabel>
+              Thương hiệu
+            </FormLabel>
+            <TouchableOpacity
+              style={{
+                marginTop: 20,
+                marginHorizontal: 20,
+                flexDirection: 'column',
+                height: 55
+              }}
+              onPress={this.toggleOption}
+              // {<Text style={{ marginTop: 7 }}>
+              //   {!brand ? 'Chọn thương hiệu' : brand.name}</Text>}
+            >
+              <View
+                style= {{
+                  flexDirection: 'row',
+                  width: '100%',
+                  justifyContent: 'space-between',
+                  marginTop: 7
+                }}
+              >
+                <Text style={{color: 'black'}}>
+                  {!brand ? 'Chọn thương hiệu' : brand.name}
+                </Text>
+                <Icon
+                  key='icon'
+                  name='caret-right'
+                  type='font-awesome'
+                  size={20}
+                  color='#A9A9A9'
+                />
+              </View>
+              <View style={{marginTop: 10, width: '100%', height: 1, backgroundColor: '#DCDCDC'}}/>
+            </TouchableOpacity>
+            {errors.selectedBrand &&
+              (<FormValidationMessage>{errors.selectedBrand}</FormValidationMessage>)}
 
             <FormLabel>
               Thành phố
@@ -323,13 +505,39 @@ export default class ShopInformation extends Component {
             <FormLabel>
               Địa chỉ
             </FormLabel>
-            <FormInput
-              multiline
-              placeholder='Nhập địa chỉ đầy đủ'
-              value={fullAddress}
-              onChangeText={(text) => this.onChangeText(text, 'fullAddress')}
-              underlineColorAndroid='#CCC'
-            />
+            {/* <View style={{
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexDirection: 'row',
+              alignContent: 'center'              
+            }}> */}
+              <FormInput
+                multiline
+                placeholder='Nhập địa chỉ đầy đủ'
+                // containerStyle={{ width: '91%' }}
+                // style={{ width: '91%' }}
+                // inputStyle={{ width: '91%' }}
+                value={fullAddress}
+                onChangeText={(text) => this.onChangeText(text, 'fullAddress')}
+                underlineColorAndroid='#CCC'
+              />
+              {/* <Icon
+                name='map-pin'
+                size={25}
+                onPress={this.openMap}
+                type='feather'
+                containerStyle={{
+                  width: 25,
+                  height: 25,
+                  borderRadius: 0,
+                  position: 'absolute',
+                  zIndex: 2,
+                  top: 15,
+                  right: 13,
+                  paddingBottom: 0
+                }}
+              />
+            </View> */}
             {errors.fullAddress &&
               (<FormValidationMessage>{errors.fullAddress}</FormValidationMessage>)}
             <FormLabel>
@@ -349,6 +557,7 @@ export default class ShopInformation extends Component {
             </FormLabel>
             <FormInput
               placeholder='Nhập địa chỉ website'
+              autoCapitalize='none'
               value={website}
               onChangeText={(text) => this.onChangeText(text, 'website')}
               underlineColorAndroid='#CCC'
@@ -372,6 +581,34 @@ export default class ShopInformation extends Component {
             />
           </View>
         </View>
+        <Modal
+          animationType='none'
+          transparent
+          visible={showOption}
+        >
+          <BrandListModal
+            selectedBrand={selectedBrand}
+            onSelect={this.onSelect}
+            closeModal={this.closeFilter}
+            brands={brands}
+          />
+        </Modal>
+        {/* <Modal
+          animationType='slide'
+          transparent={false}
+          visible={mapOn}
+        >
+          <ShopLocationMap
+            onBack={this.exitMap}
+            setAddress={this.setFullAddress}
+            setLatlng={this.setLatLng}
+            setDistrictCity={this.setDistrictCity}
+            lat={tempLat}
+            lng={tempLng}
+            address={`${fullAddress}, ${district.name || ''}, ${city.name || ''}`}
+            shop={shop}
+          />
+        </Modal> */}
       </KeyboardAvoidingView>
     )
   }

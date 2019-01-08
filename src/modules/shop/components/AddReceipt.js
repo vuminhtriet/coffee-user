@@ -39,10 +39,12 @@ export default class AddReceipt extends Component {
       memberId: '',
       money: 0,
       point: 0,
+      rate: 0,
       errors: {},
       enableScrollViewScroll: true,
       disabled: false,
-      scan: false
+      scan: false,
+      scan1: false
     }
 
     this.submit = this.submit.bind(this)
@@ -50,6 +52,9 @@ export default class AddReceipt extends Component {
     this.onScanCancel = this.onScanCancel.bind(this)
     this.onScanSuccess = this.onScanSuccess.bind(this)
     this.onRequestQrScan = this.onRequestQrScan.bind(this)
+    this.onScanCancel1 = this.onScanCancel1.bind(this)
+    this.onScanSuccess1 = this.onScanSuccess1.bind(this)
+    this.onRequestQrScan1 = this.onRequestQrScan1.bind(this)
   }
 
   async submit () {
@@ -58,6 +63,7 @@ export default class AddReceipt extends Component {
       code,
       money,
       point,
+      rate,
       memberId,
       enableScrollViewScroll,
       disabled,
@@ -84,6 +90,11 @@ export default class AddReceipt extends Component {
       errors.money = '* Thiếu giá tiền.'
     }else if (!validatePhoneNumber(money)) {
       errors.money = '* Giá tiền không hợp lệ.'
+    }
+    if (!rate) {
+      errors.rate = '* Thiếu tỉ lệ.'
+    }else if (!validatePhoneNumber(rate)) {
+      errors.rate = '* Tỉ lệ không hợp lệ.'
     }
 
     if (!isEmpty(errors)) {
@@ -125,7 +136,7 @@ export default class AddReceipt extends Component {
       } else if (response === 'denied') {
         Alert.alert(
           'Yêu cầu truy cập camera',
-          'Người dùng nên cho phép camera để quét mã Qr. Mở cài đặt và cho phép.',
+          'Người dùng vui lòng cho phép truy cập camera để quét mã Qr. Mở cài đặt và cho phép.',
           [
             { text: `Không cho`, onPress: () => { }, style: 'cancel' },
             {
@@ -137,6 +148,40 @@ export default class AddReceipt extends Component {
       } else if (response === 'authorized') {
         this.setState({
           scan: true
+        })
+      }
+    })
+  }
+
+  onRequestQrScan1 () {
+    // this.setState({
+    //   scan: true
+    // })
+    Permissions.check('camera', 'always').then(response => {
+      if (response === 'undetermined') {
+        Permissions.request('camera', 'always')
+          .then(response => {
+            if (response === 'authorized') {
+              this.setState({
+                scan1: true
+              })
+            }
+          })
+      } else if (response === 'denied') {
+        Alert.alert(
+          'Yêu cầu truy cập camera',
+          'Người dùng nên cho phép camera để quét mã Qr. Mở cài đặt và cho phép.',
+          [
+            { text: `Không cho`, onPress: () => { }, style: 'cancel' },
+            {
+              text: `Mở cài đặt`,
+              onPress: () => Permissions.canOpenSettings() && Permissions.openSettings()
+            }
+          ]
+        )
+      } else if (response === 'authorized') {
+        this.setState({
+          scan1: true
         })
       }
     })
@@ -156,8 +201,22 @@ export default class AddReceipt extends Component {
     })
   }
 
+  onScanSuccess1 (data) {
+    const { memberId } = this.state
+    this.setState({
+      scan1: false,
+      code: data
+    })
+  }
+
+  onScanCancel1 () {
+    this.setState({
+      scan1: false
+    })
+  }
+
   onChangeText (text, field) {
-    const { errors } = this.state
+    const { errors, rate, money } = this.state
     this.setState({
       [field]: text,
       errors: {
@@ -167,7 +226,12 @@ export default class AddReceipt extends Component {
     })
     if(field === 'money'){
       this.setState({
-        point: text / 10000
+        point: (text * rate).toFixed(0)
+      })
+    }
+    if(field === 'rate'){
+      this.setState({
+        point: (text * money).toFixed(0)
       })
     }
   }
@@ -177,11 +241,13 @@ export default class AddReceipt extends Component {
       errors,
       code,
       money,
+      rate,
       point,
       memberId,
       enableScrollViewScroll,
       disabled,
-      scan
+      scan,
+      scan1
     } = this.state
     // const { countries } = this.props
     return (
@@ -201,31 +267,32 @@ export default class AddReceipt extends Component {
           
           <View
             style={{
-              width: 80,
-              height: 80,
+              width: '100%',
+              height: 65,
+              paddingTop: 19,
               justifyContent: 'center',
-              alignItems: 'center'
+              alignItems: 'center',
+              flexDirection: 'row'
             }}>
-            <Icon
-              name='qrcode-scan'
-              size={40}
-              onPress={this.onRequestQrScan}
-              type='material-community'
-              containerStyle={{
-                width: 80,
-                height: 80,
-                borderRadius: 20,
-                position: 'absolute',
-                zIndex: 2,
-                top: 5,
-                right: 5
-              }}
+              <Icon
+                name='qrcode-scan'
+                size={40}
+                onPress={this.onRequestQrScan}
+                type='material-community'
+                // containerStyle={{
+                //   width: 80,
+                //   height: 80,
+                //   borderRadius: 20,
+                //   position: 'absolute',
+                //   zIndex: 2,
+                //   top: 5,
+                //   right: 5
+                // }}
               />
+              <FormValidationMessage containerStyle={{ paddingBottom: 10 }}>
+                * Chọn icon để quét mã QR người dùng
+              </FormValidationMessage>
           </View>
-
-          <FormValidationMessage containerStyle={{ paddingBottom: 10, backgroundColor: '#FFFFFF' }}>
-            * Chọn camera để quét mã QR người dùng
-          </FormValidationMessage>
 
           <Card
             containerStyle={{
@@ -248,22 +315,49 @@ export default class AddReceipt extends Component {
             <FormLabel>
                 Mã hóa đơn
               </FormLabel>
+
+            <View style={{
+              // justifyContent: 'space-between',
+              alignItems: 'center',
+              flexDirection: 'row',
+              alignContent: 'center'              
+            }}>
             <FormInput
               value={code}
-              containerStyle={{ margin: 0, padding: 0 }}
-              style={{ marginLeft: 0, padding: 0 }}
-              inputStyle={{ marginLeft: 7, padding: 0, textDecorationColor: 'black', color: 'black' }}
+              containerStyle={{width: '85%'}}
+              // style={{width: 50}}
+              inputStyle={{ 
+                marginLeft: 2, textDecorationColor: 'black', color: 'black' }}
               placeholder='Nhập mã hóa đơn'
               onChangeText={(text) => {
                 this.onChangeText(text, 'code') }}
             />
+            <Icon
+              name='qrcode-scan'
+              size={25}
+              onPress={this.onRequestQrScan1}
+              type='material-community'
+              // containerStyle={{
+              //   width: 80,
+              //   height: 80,
+              //   borderRadius: 20,
+              //   position: 'absolute',
+              //   zIndex: 2,
+              //   top: 5,
+              //   right: -15,
+              //   paddingBottom: 50
+              // }}
+            />
+
+            </View>
+
             {errors.code &&
               (<FormValidationMessage>{errors.code}</FormValidationMessage>)}
 
             <FormLabel>
                 Số tiền
               </FormLabel>
-            <View style={{ width: undefined }}>
+            <View style={{ width: '100%' }}>
               <TextInputMask
                 ref={ref => (this.inputRef = ref)}
                 type={'money'}
@@ -274,7 +368,7 @@ export default class AddReceipt extends Component {
                   precision: 0
                 }}
                 style={{ 
-                   fontSize: 15, marginLeft: 16
+                   fontSize: 15, marginLeft: 15, width: '86%'
                 }}
                 value={ money}
                 onChangeText={(text) => {
@@ -284,7 +378,22 @@ export default class AddReceipt extends Component {
               (<FormValidationMessage>{errors.money}</FormValidationMessage>)}
 
               <FormLabel>
-                Số điểm (10000đ = 1 điểm)
+                Tỉ lệ đổi tiền sang điểm
+              </FormLabel>
+              <FormInput
+                value={rate}
+                inputStyle={{ width: '100%', textDecorationColor: 'black', color: 'black' }}
+                containerStyle={{width: '86%'}}
+                placeholder='Nhập tỉ lệ đổi'
+                onChangeText={(text) => {
+                  this.onChangeText(text, 'rate') }}
+                keyboardType='numeric'
+              />
+              {errors.rate &&
+              (<FormValidationMessage>{errors.rate}</FormValidationMessage>)}
+
+              <FormLabel>
+                Số điểm (tỉ lệ đổi x số tiền)
               </FormLabel>
               <Text style={{ fontSize: 17, marginTop: 7, marginLeft: 20, color: 'black' }}>
                 {point}</Text>   
@@ -312,6 +421,21 @@ export default class AddReceipt extends Component {
               cancelButtonTitle={'Cancel'}
               onSucess={this.onScanSuccess}
               onCancel={this.onScanCancel}
+              cancelButtonVisible
+              enableScanning />
+          </View>
+        </Modal>
+
+        <Modal
+          animationType='slide'
+          transparent={false}
+          visible={scan1}
+        >
+          <View style={{ width: '100%', height: '100%' }}>
+            <QRScan
+              cancelButtonTitle={'Cancel'}
+              onSucess={this.onScanSuccess1}
+              onCancel={this.onScanCancel1}
               cancelButtonVisible
               enableScanning />
           </View>

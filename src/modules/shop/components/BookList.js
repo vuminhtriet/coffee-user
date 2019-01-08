@@ -5,7 +5,8 @@ import {
   View,
   TouchableOpacity,
   Dimensions,
-  Image
+  Image,
+  Alert
 } from 'react-native'
 import { Card, Button } from 'react-native-elements'
 import {
@@ -18,18 +19,20 @@ import {
 import moment from 'moment'
 
 const { width } = Dimensions.get('window')
-const NUMBER_OF_ITEM = 2
+const NUMBER_OF_ITEM = 1
 const ITEM_WITDH = (width) / NUMBER_OF_ITEM
-const ITEM_HEIGHT = 280
+const ITEM_HEIGHT = 130
 
 class OrderItem extends PureComponent {
+
   render() {
     const {
       id,
       itemWidth,
       itemPress,
       itemHeight,
-      item
+      item,
+      updateOrder
     } = this.props
     let status = ''
     if(item.status === 0) {
@@ -58,53 +61,170 @@ class OrderItem extends PureComponent {
       >
 
         <View style={{ flexDirection: 'row',
-          padding: 5,
-          flex: 1}}>
+          padding: 5, alignContent: 'center', alignItems: 'center',
+          flex: 1, justifyContent: 'space-between' }}>
           <View style= {{flexDirection: 'column'}}>
-          {/* {item.member && item.member.userPhoto && item.member.userPhoto.length > 0
-            ? <Image
-              style={{ height: 155 }}
-              source={{ uri: item.member.userPhoto }}
-            /> : <Image
-              style={{ height: 155, width: '100%' }}
-              source={{ uri : 'https://qualiscare.com/wp-content/uploads/2017/08/default-user.png' }}
-            />
-          } */}
+
           <Text numberOfLines = {1} style={{ fontWeight: 'bold',
           fontSize: 17}}>
               {`${item.customerName}`}
           </Text>
           <Text numberOfLines = {1} style={{ }}>{`SĐT: ${item.customerPhone}`}</Text>
           <Text numberOfLines = {2} style={{ }}>
-          {`${moment(item.orderTime).format('lll')}`}</Text>
-          {item.status === 0 &&
-          <Text numberOfLines = {1} style={{alignContent: 'flex-end', fontWeight: 'bold'
-            , alignItems: 'flex-end', justifyContent: 'flex-end', fontSize: 18, color: '#E0C4BE'}}>
-              {`Chờ xác nhận`} 
-            </Text>}
-          {item.status === 1 &&
-          <Text numberOfLines = {1} style={{alignContent: 'flex-end', fontWeight: 'bold'
-            , alignItems: 'flex-end', justifyContent: 'flex-end', fontSize: 18, color: 'red'}}>
-              {`Đã hủy`} 
-            </Text>}
-          {item.status === 2 &&
-          <Text numberOfLines = {1} style={{alignContent: 'flex-end', fontWeight: 'bold'
-            , alignItems: 'flex-end', justifyContent: 'flex-end', fontSize: 18, color: 'green'}}>
-              {`Đã xác nhận`} 
-            </Text>}
-          {item.status === 3 &&
-          <Text numberOfLines = {1} style={{alignContent: 'flex-end', fontWeight: 'bold'
-            , alignItems: 'flex-end', justifyContent: 'flex-end', fontSize: 18, color: 'green'}}>
-              {`Kết thúc`} 
-            </Text>}
-            {/* <Text numberOfLines = {1} style={{alignContent: 'flex-end', fontWeight: 'bold', marginBottom: 0
-            , alignItems: 'flex-end', justifyContent: 'flex-end', fontSize: 18, color: '#E0C4BE'}}>
-              {item.status} 
-            </Text> */}
-          </View>
-          {/* <View style={{width: 20}}/> */}
-        </View>
+          {`Ngày đặt: ${moment(item.orderTime).format('DD-MM-YYYY HH:mm')}`}</Text>
+          <Text numberOfLines = {2} style={{ }}>
+          {`Ngày tạo: ${moment(item.dateCreatedAt).format('DD-MM-YYYY HH:mm')}`}</Text>
 
+          {item.status === 0 &&
+            <Text numberOfLines = {1} style={{alignContent: 'flex-end', fontWeight: 'bold'
+              , alignItems: 'flex-end', justifyContent: 'flex-end', fontSize: 18, color: '#E0C4BE'}}>
+                {`Chờ xác nhận`} 
+              </Text>}
+            {item.status === 1 &&
+            <Text numberOfLines = {1} style={{alignContent: 'flex-end', fontWeight: 'bold'
+              , alignItems: 'flex-end', justifyContent: 'flex-end', fontSize: 18, color: 'red'}}>
+                {`Đã hủy`} 
+              </Text>}
+            {item.status === 2 &&
+            <Text numberOfLines = {1} style={{alignContent: 'flex-end', fontWeight: 'bold'
+              , alignItems: 'flex-end', justifyContent: 'flex-end', fontSize: 18, color: 'green'}}>
+                {`Đã xác nhận`} 
+              </Text>}
+            {item.status === 3 &&
+            <Text numberOfLines = {1} style={{alignContent: 'flex-end', fontWeight: 'bold'
+              , alignItems: 'flex-end', justifyContent: 'flex-end', fontSize: 18, color: 'green'}}>
+                {`Kết thúc`} 
+              </Text>}
+
+          </View>
+            {/* {item.status === 0 &&
+            <Text numberOfLines = {1} style={{alignContent: 'flex-end', fontWeight: 'bold'
+              , alignItems: 'flex-end', justifyContent: 'flex-end', fontSize: 18, color: '#E0C4BE'}}>
+                {`Chờ xác nhận`} 
+              </Text>}
+            {item.status === 1 &&
+            <Text numberOfLines = {1} style={{alignContent: 'flex-end', fontWeight: 'bold'
+              , alignItems: 'flex-end', justifyContent: 'flex-end', fontSize: 18, color: 'red'}}>
+                {`Đã hủy`} 
+              </Text>}
+            {item.status === 2 &&
+            <Text numberOfLines = {1} style={{alignContent: 'flex-end', fontWeight: 'bold'
+              , alignItems: 'flex-end', justifyContent: 'flex-end', fontSize: 18, color: 'green'}}>
+                {`Đã xác nhận`} 
+              </Text>}
+            {item.status === 3 &&
+            <Text numberOfLines = {1} style={{alignContent: 'flex-end', fontWeight: 'bold'
+              , alignItems: 'flex-end', justifyContent: 'flex-end', fontSize: 18, color: 'green'}}>
+                {`Kết thúc`} 
+              </Text>} */}
+              {item.status === 0 &&
+              <View
+                style={{
+                  margin: 0,
+                  width: undefined,
+                  height: undefined
+                }}>
+                <View
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    // marginTop: 10,
+                    flexDirection: 'column',
+                    // alignItems: 'center'
+                  }}>
+                  {/* <View style={{ height: 10 }}> */}
+                    <Button 
+                    buttonStyle={{ marginTop: 10,height: 35 }}
+                    title='Hủy đơn' 
+                    onPress={() => updateOrder(item.id, 1)} />
+                  {/* </View> */}
+                  {/* <View style={{ height: 10, marginTop: 5 }}> */}
+                    <Button
+                      title='Xác nhận'
+                      onPress={() => updateOrder(item.id, 2)}
+                      backgroundColor='#E44C4C'
+                      buttonStyle={{ marginTop: 10, height: 35 }}
+                    />
+                  {/* </View> */}
+                </View>
+              </View>}
+
+              {/* {item.status === 1 &&
+              <View
+                style={{
+                  margin: 0,
+                  width: undefined,
+                  height: undefined
+                }}>
+                <View
+                  style={{
+                    width: undefined,
+                    height: 60,
+                    marginTop: 10,
+                    flexDirection: 'row',
+                    alignItems: 'center'
+                  }}>
+                  <View style={{ flex: 1 }}>
+                    <Button title='Đơn đã bị hủy' 
+                    disable={true} />
+                  </View>
+                </View>
+              </View>} */}
+
+              {item.status === 2 &&
+              <View
+                style={{
+                  margin: 0,
+                  width: undefined,
+                  height: undefined
+                }}>
+                <View
+                  style={{
+                    width: undefined,
+                    height: 100,
+                    // marginTop: 10,
+                    flexDirection: 'column',
+                    // alignItems: 'center'
+                  }}>
+                  {/* <View style={{ width: 50, height: 50 }}> */}
+                    <Button 
+                    buttonStyle={{ marginTop: 10, height: 35 }}
+                    title='Hủy đơn' onPress={() => updateOrder(item.id, 1)} />
+                  {/* </View> */}
+                  {/* <View style={{ width: 50, height: 50 }}> */}
+                    <Button
+                      title='Xác nhận đã tới'
+                      onPress={() => updateOrder(item.id, 3)}
+                      buttonStyle={{ marginTop: 10, height: 35 }}
+                      backgroundColor='#E44C4C'
+                    />
+                  {/* </View> */}
+                </View>
+              </View>}
+
+              {/* {item.status === 3 &&
+              <View
+                style={{
+                  margin: 0,
+                  width: undefined,
+                  height: undefined
+                }}>
+                <View
+                  style={{
+                    width: undefined,
+                    height: 60,
+                    marginTop: 10,
+                    flexDirection: 'row',
+                    alignItems: 'center'
+                  }}>
+                  <View style={{ flex: 1 }}>
+                    <Button title='Đã tới - kết thúc đơn' 
+                    disable={true} />
+                  </View>
+                </View>
+              </View>} */}
+        </View>
+        <View style={{marginTop: 12, width: '100%', height: 1, backgroundColor: '#DCDCDC'}}/>
 
       </TouchableOpacity>
     )
@@ -116,8 +236,31 @@ export default class BookList extends PureComponent {
     super(props)
     this.state = {
       refreshing: false,
-      itemWidth: 140
+      itemWidth: 170,
+      loading: false
     }
+  }
+
+  updateOrder = async (id, status) => {
+    const { updateOrder, token, getOrders } = this.props
+    Alert.alert(
+      'Xác nhận',
+      'Bạn có muốn cập nhật lại tình trạng đơn?',
+      [
+        { text: 'Hủy', onPress: () => { } },
+        {
+          text: 'OK', onPress: async () => {
+            this.setState({ loading: true })
+              const response = await updateOrder(id, status, token)
+              if (response) {
+                await getOrders()
+                this.setState({ loading: false })
+              }
+          }
+        }
+      ],
+      { cancelable: false }
+    )
   }
 
   onRefresh = () => {
@@ -217,6 +360,7 @@ export default class BookList extends PureComponent {
         itemHeight={ITEM_HEIGHT}
         item={item}
         itemPress={itemPress}
+        updateOrder={this.updateOrder}
       />
     )
   }
@@ -227,7 +371,7 @@ export default class BookList extends PureComponent {
     return (
       <FlatList
         data={data}
-        numColumns={2}
+        // numColumns={2}
         refreshing={refreshing}
         extraData={data}
         keyExtractor={this._keyExtractor}

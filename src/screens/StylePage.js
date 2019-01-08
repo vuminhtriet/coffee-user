@@ -4,9 +4,9 @@ import {
 } from 'react-native'
 import Header from '../common/components/elements/HeaderTitle'
 import DefaultPage from '../common/hocs/defaultPage'
-import PageCategories from '../modules/dashboard/containers/PageCategories'
+import PageStyles from '../modules/dashboard/containers/PageStyles'
 
-export default class DashboardPage extends Component {
+export default class StylePage extends Component {
 
   constructor (props) {
     super(props)
@@ -24,9 +24,9 @@ export default class DashboardPage extends Component {
         style={{ flexDirection: 'column' }}
       >
         <View style={{ width: '100%' }}>
-          <Header onBack={this.onBack} title='All Categories' />
+          <Header onBack={this.onBack} title='Tất cả phong cách' />
         </View>
-        <PageCategories />
+        <PageStyles />
       </DefaultPage>
     )
   }

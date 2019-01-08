@@ -1,4 +1,4 @@
-package com.gts.toptrade;
+package com.gts.drinkaway;
 
 import android.app.Application;
 
@@ -15,6 +15,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.airbnb.android.react.maps.MapsPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -46,7 +47,8 @@ public class MainApplication extends Application implements ReactApplication {
             new RNFirebaseAuthPackage(),
             new RNFirebaseFirestorePackage(),
             new RNFirebaseStoragePackage(),
-            new RCTCameraPackage()
+            new RCTCameraPackage(),
+            new MapsPackage()
       );
     }
 

@@ -26,7 +26,7 @@ const mapDispatchToProps = (dispatch, props) => ({
             memberId: receipt.memberId,
             code: receipt.code,
             money: receipt.money,
-            point: receipt.point,
+            point: parseInt(receipt.point),
             shopId: shop.id,
             dateCreatedAt: date
           }

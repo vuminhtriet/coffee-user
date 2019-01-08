@@ -15,7 +15,8 @@ export default class Loading extends Component {
       getShippingTypes,
       getCities,
       getDefaultLocation,
-      getStyle
+      getStyle,
+      getBrand
     } = this.props
     await Promise.all([
       // getCountries().catch(() => { }),
@@ -25,7 +26,8 @@ export default class Loading extends Component {
       // getShippingTypes().catch(() => { })
       getCities().catch(() => { }),
       getDefaultLocation().catch(() => { }),
-      getStyle().catch(() => { })
+      getStyle().catch(() => { }),
+      getBrand().catch(() => { })
     ])
     navigation.navigate(SCREENS.TabStack)
   }

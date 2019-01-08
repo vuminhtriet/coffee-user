@@ -15,7 +15,7 @@ import { SCREENS } from '../../../common/screens'
 const { width } = Dimensions.get('window')
 const ITEM_WITDH = 200
 // (width - 10) / 2
-const ITEM_HEIGHT = 202
+const ITEM_HEIGHT = 222
 
 class DashboardPopularShops extends Component {
   constructor(props) {
@@ -133,7 +133,7 @@ class DashboardPopularShops extends Component {
           style={{ width: '100%', flexDirection: 'row', height: 40, alignItems: 'center', backgroundColor: '#FFFFFF' }}
         >
           <View style={{ flex: 1, paddingLeft: 10 }}>
-            <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#E64B47' }}>Thương hiệu phổ biến</Text>
+            <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#E64B47' }}>Quán cafe phổ biến</Text>
           </View>
           <View style={{ flex: 1, paddingRight: 10 }}>
             <TouchableOpacity onPress={this._onNavigateToPopularShopsPage}>
@@ -144,9 +144,10 @@ class DashboardPopularShops extends Component {
 
         <View style={{ paddingHorizontal: 5 }}>
           <FlatList
-            showsHorizontalScrollIndicator={false}
+            // showsHorizontalScrollIndicator={false}
             data={shops}
-            horizontal
+            // horizontal
+            numColumns={2}
             refreshing={refreshing}
             keyExtractor={this._keyExtractor}
             renderItem={this._renderItem}

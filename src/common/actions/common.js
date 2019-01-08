@@ -24,3 +24,4 @@ export const setUserLatLng = createAction('setUserLatLng')
 export const setUserLocation = createAction('setUserLocation')
 
 export const setStyle = createAction('setStyle')
+export const setBrand = createAction('setBrand')

@@ -5,7 +5,8 @@ import {
   Dimensions,
   Image,
   Animated,
-  ActivityIndicator
+  ActivityIndicator,
+  Modal
 } from 'react-native'
 import { TabViewAnimated, TabBar } from 'react-native-tab-view'
 import HeaderSearchProduct from '../../../common/components/elements/HeaderSearchProduct';
@@ -14,6 +15,7 @@ import StoreInformation from '../containers/StoreInformation';
 import { TEST_URL } from '../../../common/models'
 import axios from 'axios'
 import CategoryList from '../containers/CategoryList';
+import StoreLocationMap from '../containers/StoreLocationMap';
 import ProductList from '../containers/ProductList';
 import { SCREENS } from '../../../common/screens'
 import HeaderTitle from '../../../common/components/elements/HeaderTitle';
@@ -30,6 +32,7 @@ export default class StoreHeader extends Component {
       cover: {},
       index: 0,
       categories: null,
+      mapOn: false,
       orders: [],
       routes: [
         { key: 'information', title: 'Thông tin' },
@@ -43,8 +46,9 @@ export default class StoreHeader extends Component {
   }
 
   componentDidMount() {
-    const { getStoreInformation, id, user } = this.props
+    const { getStoreInformation, id, user, updateClick } = this.props
     id && getStoreInformation(id)
+    user && updateClick(user, id)
 
     const filter = {
       "include":{
@@ -110,6 +114,11 @@ export default class StoreHeader extends Component {
     }
   }
 
+  openMap = () => {
+    const { mapOn } = this.state
+    this.setState({ mapOn: !mapOn })
+  }
+
   handleIndexChange(index) {
     this.setState({ index })
   }
@@ -151,6 +160,7 @@ export default class StoreHeader extends Component {
 
   render() {
     const { detail, navigation } = this.props
+    const { mapOn } = this.state
     const cover = detail && detail.shopFeaturedImages ? detail.shopFeaturedImages[0] : null
     const logo = detail && detail.shopLogo ? detail.shopLogo : null
     // const cover = ''
@@ -272,6 +282,25 @@ export default class StoreHeader extends Component {
                     </Text>
                   </View> */}
                 </View>
+                <View style={{ marginRight: 0 }}>
+                  <Text
+                    style={{
+                      textAlign:'center',
+                      paddingHorizontal: 10,
+                      paddingVertical: 5,
+                      color: '#fff',
+                      fontSize: 16,
+                      borderRadius: 8,
+                      borderWidth: 1,
+                      borderColor: '#fff',
+                      width: 95,
+                      backgroundColor: '#6F4E37'
+                    }}
+                    onPress={this.openMap}
+                  >
+                    Xem trên bản đồ
+                  </Text>
+                </View>
               </View>
               <TabViewAnimated
                 style={{ flex: 1 }}
@@ -294,6 +323,16 @@ export default class StoreHeader extends Component {
               <ActivityIndicator size="large" color="#6F4E37" />
             </View>
         }
+        <Modal
+          animationType='slide'
+          transparent={false}
+          visible={mapOn}
+        >
+          <StoreLocationMap
+            onBack={this.openMap}
+            shop={detail}
+          />
+        </Modal>
       </View>
     )
   }
